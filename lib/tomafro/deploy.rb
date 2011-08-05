@@ -36,8 +36,13 @@ Capistrano::Configuration.instance(:must_exist).load do
   # deploying user's ssh key than fiddle with keys on a server.
   ssh_options[:forward_agent] = true
 
+  # If key forwarding isn't possible, git may show a password prompt, which will not work with
+  # capistrano unless `:pty` is set to `true`.
+  default_run_options[:pty] = true
+
   namespace :deploy do
     # Before any deployments can take place, the `deploy:setup` task must be run.
+    desc "Prepare servers for deployment"
     task :setup, :except => {:no_release => true} do
       transaction do
         clone_code
@@ -52,6 +57,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     # The main deployment task (called with `cap deploy`).
+    desc "Deploy the latest application code"
     task :default do
       transaction do
         update_code
@@ -75,11 +81,13 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     # After a successful deployment, the app is restarted.  By default, this does nothing. It
     # should be overridden either in the main `Capfile` or in another recipe.
+    desc "Restart the application following a deploy"
     task :restart do
     end
 
     # To rollback a release, the latest tag is deleted, and `HEAD` reset to the previous release
     # (if one exists).
+    desc "Rollback to the previous release"
     namespace :rollback do
       task :default do
         if latest_tag
