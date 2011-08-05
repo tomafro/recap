@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>bundler.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../../tomafro-deploy.html">tomafro-deploy.rb</a>
+          <a class="source" href="../deploy.html">deploy.rb</a>
+          <a class="source" href="bundler.html">bundler.rb</a>
+          <a class="source" href="capistrano_extensions.html">capistrano_extensions.rb</a>
+          <a class="source" href="foreman.html">foreman.rb</a>
+          <a class="source" href="version.html">version.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>bundler.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        <p>The bundler recipe ensures that the application bundle is installed whenever the code is updated.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="no">Capistrano</span><span class="o">::</span><span class="no">Configuration</span><span class="o">.</span><span class="n">instance</span><span class="p">(</span><span class="ss">:must_exist</span><span class="p">)</span><span class="o">.</span><span class="n">load</span> <span class="k">do</span>
+  <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_gemfile</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">/Gemfile&quot;</span><span class="p">}</span>
+  <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_gemfile_lock</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">/Gemfile.lock&quot;</span><span class="p">}</span>
+  <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_dir</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">/.bundle/gems&quot;</span><span class="p">}</span>
+
+  <span class="n">namespace</span> <span class="ss">:bundle</span> <span class="k">do</span>
+    <span class="n">namespace</span> <span class="ss">:install</span> <span class="k">do</span>
+      <span class="n">desc</span> <span class="s2">&quot;Install the latest gem bundle only if Gemfile.lock has changed&quot;</span>
+      <span class="n">task</span> <span class="ss">:if_changed</span> <span class="k">do</span>
+        <span class="k">if</span> <span class="n">deployed_file_changed?</span><span class="p">(</span><span class="n">bundle_gemfile_lock</span><span class="p">)</span>
+          <span class="n">top</span><span class="o">.</span><span class="n">bundle</span><span class="o">.</span><span class="n">install</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+
+      <span class="n">desc</span> <span class="s2">&quot;Install the latest gem bundle&quot;</span>
+      <span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
+        <span class="k">if</span> <span class="n">deployed_file_exists?</span><span class="p">(</span><span class="n">bundle_gemfile</span><span class="p">)</span>
+          <span class="n">bundler</span> <span class="s2">&quot;install --gemfile </span><span class="si">#{</span><span class="n">bundle_gemfile</span><span class="si">}</span><span class="s2"> --path </span><span class="si">#{</span><span class="n">bundle_dir</span><span class="si">}</span><span class="s2"> --deployment --quiet --without development test&quot;</span>
+        <span class="k">else</span>
+          <span class="nb">puts</span> <span class="s2">&quot;Skipping bundle:install as no Gemfile found&quot;</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>After deploy clones or updates the code, install the latest bundle (if needed)</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">after</span> <span class="s1">&#39;deploy:clone_code&#39;</span><span class="p">,</span> <span class="s1">&#39;bundle:install:if_changed&#39;</span>
+  <span class="n">after</span> <span class="s1">&#39;deploy:update_code&#39;</span><span class="p">,</span> <span class="s1">&#39;bundle:install:if_changed&#39;</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

@@ -30,6 +30,11 @@ module Tomafro
       def bundler(command)
         run "cd #{deploy_to} && bundle #{command}"
       end
+
+      # Run a command as root in the given directory using a full shell
+      def run_as_root(command, pwd = deploy_to)
+        sudo "su - root -c 'cd #{pwd} && #{command}'"
+      end
     end
   end
 end

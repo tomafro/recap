@@ -4,6 +4,8 @@
 # folders and no symlinking.
 
 require 'tomafro/deploy/capistrano_extensions'
+require 'tomafro/deploy/bundler'
+require 'tomafro/deploy/foreman'
 
 Capistrano::Configuration.instance(:must_exist).load do
   # The [CapistranoExtensions](deploy/capistrano_extensions.html) module includes some useful shortcuts to make working with capistrano
@@ -13,6 +15,12 @@ Capistrano::Configuration.instance(:must_exist).load do
   # To use this recipe, both the application's name and its git repository are required.
   set(:application) { abort "You must set the name of your application in your Capfile, e.g.: set :application, 'tomafro.net'" }
   set(:repository) { abort "You must set the git respository location in your Capfile, e.g.: set :respository, 'git@github.com/tomafro/tomafro.net'"}
+
+  # The recipe assumes that the application code will be run as a dedicated user, with any user who
+  # deploys the code added as a member of the application's group.  By default, both the user and
+  # group are given the same name as the application.
+  set(:application_user) { application }
+  set(:application_group) { application_user }
 
   # Deployments can be made from any branch. `master` is used by default.
   set(:branch, 'master')
@@ -25,7 +33,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   set(:release_tag) { "#{Time.now.utc.strftime("%Y%m%d%H%M%S")}"}
 
   # On tagging a release, a message is also recorded alongside the tag.  This message can contain
-  # anything; its contents are ignored by the recipe.
+  # anything - its contents are ignored by the recipe.
   set(:release_message, "Deployed at #{Time.now}")
 
   # Some tasks need to know the `latest_tag`, which is the most recent successful deployment.  If no
@@ -36,16 +44,17 @@ Capistrano::Configuration.instance(:must_exist).load do
   # deploying user's ssh key than fiddle with keys on a server.
   ssh_options[:forward_agent] = true
 
-  # If key forwarding isn't possible, git may show a password prompt, which will not work with
-  # capistrano unless `:pty` is set to `true`.
+  # If key forwarding isn't possible, git may show a password prompt, which stalls capistrano unless
+  # `:pty` is set to `true`.
   default_run_options[:pty] = true
 
   namespace :deploy do
-    # Before any deployments can take place, the `deploy:setup` task must be run.
+    # The `deploy:setup` task prepares all the servers for the deployment.
     desc "Prepare servers for deployment"
     task :setup, :except => {:no_release => true} do
       transaction do
         clone_code
+        change_ownership
       end
     end
 
@@ -56,11 +65,19 @@ Capistrano::Configuration.instance(:must_exist).load do
       git "clone #{repository} #{deploy_to}"
     end
 
+    # All files are modified to be owned by the application group, and both readable and writable
+    # by any member of that group (deploying users and the application itself).
+    task :change_ownership, :except => {:no_release => true} do
+      sudo "chown -R :#{application_group} #{deploy_to}"
+      sudo "chmod -R g+srw #{deploy_to}"
+    end
+
     # The main deployment task (called with `cap deploy`).
     desc "Deploy the latest application code"
     task :default do
       transaction do
         update_code
+        change_ownership
         tag
       end
       restart
