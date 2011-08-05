@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = Tomafro::Deploy::VERSION
   s.authors     = ["Tom Ward"]
   s.email       = ["tom@popdog.net"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "https://github.com/tomafro/tomafro-deploy"
+  s.summary     = %q{GIT based deployment recipes for Capistrano}
+  s.description = %q{GIT based deployment recipes for Capistrano}
 
   s.rubyforge_project = "tomafro-deploy"
 
