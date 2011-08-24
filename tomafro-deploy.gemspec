@@ -19,5 +19,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency('capistrano', '~>2.6.0')
+  s.add_development_dependency('rake', '~>0.9.2')
   s.add_development_dependency('rocco', '~>0.8.1')
 end
