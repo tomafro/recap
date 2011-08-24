@@ -8,8 +8,6 @@ require 'tomafro/deploy/bundler'
 require 'tomafro/deploy/foreman'
 
 Capistrano::Configuration.instance(:must_exist).load do
-  # The [CapistranoExtensions](deploy/capistrano_extensions.html) module includes some useful
-  # shortcuts to make working with capistrano easier.
   extend Tomafro::Deploy::CapistranoExtensions
 
   # To use this recipe, both the application's name and its git repository are required.
@@ -18,7 +16,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   # The recipe assumes that the application code will be run as a dedicated user.  Any any user who
   # can deploy the application should be added as a member of the application's group.  By default,
-  # both the user and group take the same name as the application.
+  # both the application user and group take the same name as the application.
   set(:application_user) { application }
   set(:application_group) { application_user }
 
@@ -26,16 +24,16 @@ Capistrano::Configuration.instance(:must_exist).load do
   set(:branch, 'master')
 
   # Unlike a standard capistrano deployment, all releases are stored directly in the `deploy_to`
-  # directory.  The default is `/var/apps/#{application}`, but any location can be used.
+  # directory.  The default is `/var/apps/#{application}`.
   set(:deploy_to)   { "/var/apps/#{application}" }
 
-  # Each release is marked by a unique tag, generated with the current timestamp.  This can be
-  # changed to something different, but the sort order of the tag names is important; later tags
-  # should come after earlier tags when sorting.
+  # Each release is marked by a unique tag, generated with the current timestamp.  Whil this can be
+  # changed, it's not recommended, as the sort order of the tag names is important; later tags must 
+  # be listed after earlier tags.
   set(:release_tag) { "#{Time.now.utc.strftime("%Y%m%d%H%M%S")}"}
 
   # On tagging a release, a message is also recorded alongside the tag.  This message can contain
-  # anything - its contents are ignored by the recipe.
+  # anything useful - its contents are not important for the recipe.
   set(:release_message, "Deployed at #{Time.now}")
 
   # Some tasks need to know the `latest_tag` - the most recent successful deployment.  If no
@@ -43,10 +41,10 @@ Capistrano::Configuration.instance(:must_exist).load do
   set(:latest_tag) { latest_tag_from_repository }
 
   # To authenticate with github or other git servers, it is easier (and cleaner) to forward the
-  # deploying user's ssh key than fiddle with keys on a server.
+  # deploying user's ssh key than manage keys on deployment servers.
   ssh_options[:forward_agent] = true
 
-  # If key forwarding isn't possible, git may show a password prompt, which stalls capistrano unless
+  # If key forwarding isn't possible, git may show a password prompt which stalls capistrano unless
   # `:pty` is set to `true`.
   default_run_options[:pty] = true
 
@@ -76,7 +74,8 @@ Capistrano::Configuration.instance(:must_exist).load do
       sudo "chmod -R g+srw #{deploy_to}"
     end
 
-    # The main deployment task (called with `cap deploy`).
+    # The main deployment task (called with `cap deploy`) deploys the latest application code to all
+    # servers, tags the release and restarts the application.
     desc "Deploy the latest application code"
     task :default do
       transaction do
@@ -107,7 +106,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     # To rollback a release, the latest tag is deleted, and `HEAD` reset to the previous release
-    # (if one exists).
+    # (if one exists).  Finally the application is restarted again.
     desc "Rollback to the previous release"
     namespace :rollback do
       task :default do
@@ -117,6 +116,7 @@ Capistrano::Configuration.instance(:must_exist).load do
             git "reset --hard #{previous_tag}"
           end
         end
+        restart
       end
     end
 
