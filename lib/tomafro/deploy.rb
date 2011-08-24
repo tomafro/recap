@@ -1,24 +1,24 @@
 # Inspired by [this blog post](https://github.com/blog/470-deployment-script-spring-cleaning), this
-# recipe uses git's strengths to deploy applications faster and more simply than the standard
-# capistrano deployment.  It deploys apps to a single directory. with no shared, current or releases
-# folders and no symlinking.
+# recipe uses git's strengths to deploy applications in a faster, simpler manner than the standard
+# capistrano deployment.  Deployments are made to a single directory. with no `shared`, `current` or
+# `releases` folders, and no symlinking.
 
 require 'tomafro/deploy/capistrano_extensions'
 require 'tomafro/deploy/bundler'
 require 'tomafro/deploy/foreman'
 
 Capistrano::Configuration.instance(:must_exist).load do
-  # The [CapistranoExtensions](deploy/capistrano_extensions.html) module includes some useful shortcuts to make working with capistrano
-  # easier.
+  # The [CapistranoExtensions](deploy/capistrano_extensions.html) module includes some useful
+  # shortcuts to make working with capistrano easier.
   extend Tomafro::Deploy::CapistranoExtensions
 
   # To use this recipe, both the application's name and its git repository are required.
   set(:application) { abort "You must set the name of your application in your Capfile, e.g.: set :application, 'tomafro.net'" }
   set(:repository) { abort "You must set the git respository location in your Capfile, e.g.: set :respository, 'git@github.com/tomafro/tomafro.net'"}
 
-  # The recipe assumes that the application code will be run as a dedicated user, with any user who
-  # deploys the code added as a member of the application's group.  By default, both the user and
-  # group are given the same name as the application.
+  # The recipe assumes that the application code will be run as a dedicated user.  Any any user who
+  # can deploy the application should be added as a member of the application's group.  By default,
+  # both the user and group take the same name as the application.
   set(:application_user) { application }
   set(:application_group) { application_user }
 
@@ -29,14 +29,16 @@ Capistrano::Configuration.instance(:must_exist).load do
   # directory.  The default is `/var/apps/#{application}`, but any location can be used.
   set(:deploy_to)   { "/var/apps/#{application}" }
 
-  # Each release is marked by a unique tag, generated with the current timestamp.
+  # Each release is marked by a unique tag, generated with the current timestamp.  This can be
+  # changed to something different, but the sort order of the tag names is important; later tags
+  # should come after earlier tags when sorting.
   set(:release_tag) { "#{Time.now.utc.strftime("%Y%m%d%H%M%S")}"}
 
   # On tagging a release, a message is also recorded alongside the tag.  This message can contain
   # anything - its contents are ignored by the recipe.
   set(:release_message, "Deployed at #{Time.now}")
 
-  # Some tasks need to know the `latest_tag`, which is the most recent successful deployment.  If no
+  # Some tasks need to know the `latest_tag` - the most recent successful deployment.  If no
   # deployments have been made, this will be `nil`.
   set(:latest_tag) { latest_tag_from_repository }
 
@@ -58,15 +60,17 @@ Capistrano::Configuration.instance(:must_exist).load do
       end
     end
 
-    # The deployment directory is created and the repository is cloned into it.
+    # The deployment directory is created (if it doesn't already exist) and the repository is cloned
+    # into it.
     task :clone_code, :except => {:no_release => true} do
-      on_rollback { run "rm -rf #{deploy_to}"}
       run "mkdir -p #{deploy_to}"
       git "clone #{repository} #{deploy_to}"
     end
 
     # All files are modified to be owned by the application group, and both readable and writable
-    # by any member of that group (deploying users and the application itself).
+    # by any member of that group (deploying users and the application itself).  The sticky bit is
+    # also set set, so future files (such as logs and pids) are also accessible by the application
+    # group.
     task :change_ownership, :except => {:no_release => true} do
       sudo "chown -R :#{application_group} #{deploy_to}"
       sudo "chmod -R g+srw #{deploy_to}"
@@ -96,8 +100,8 @@ Capistrano::Configuration.instance(:must_exist).load do
       git "tag #{release_tag} -m '#{release_message}'"
     end
 
-    # After a successful deployment, the app is restarted.  By default, this does nothing. It
-    # should be overridden either in the main `Capfile` or in another recipe.
+    # After a successful deployment, the app is restarted.  In the most basic deployments this does
+    # nothing, but other recipes may override it, or attach tasks it's before or after hooks.
     desc "Restart the application following a deploy"
     task :restart do
     end
@@ -114,6 +118,13 @@ Capistrano::Configuration.instance(:must_exist).load do
           end
         end
       end
+    end
+
+    # In case of emergency or when manually testing deployment, it can be useful to remove all 
+    # previously deployed files before starting again.
+    desc "Remove all deployed files"
+    task :destroy do
+      sudo "rm -rf #{deploy_to}"
     end
   end
 end
