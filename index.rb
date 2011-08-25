@@ -6,4 +6,4 @@
 # their extensions.
 
 # The code is available [on github](http://github.com/tomafro/tomafro-deploy) and released under the
-# [MIT License](http://github.com/tomafro/tomafro-deploy/LICENSE)
+# [MIT License](https://github.com/tomafro/tomafro-deploy/blob/master/LICENSE)
