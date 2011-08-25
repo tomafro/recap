@@ -12,7 +12,7 @@
     Jump To &hellip;
     <div id="jump_wrapper">
       <div id="jump_page">
-          <a class="source" href="../tomafro-deploy.html">tomafro-deploy.rb</a>
+          <a class="source" href="../../index.html">index.rb</a>
           <a class="source" href="deploy.html">deploy.rb</a>
           <a class="source" href="deploy/bundler.html">bundler.rb</a>
           <a class="source" href="deploy/capistrano_extensions.html">capistrano_extensions.rb</a>
@@ -44,25 +44,14 @@ capistrano deployment.  Deployments are made to a single directory. with no <cod
 <span class="nb">require</span> <span class="s1">&#39;tomafro/deploy/bundler&#39;</span>
 <span class="nb">require</span> <span class="s1">&#39;tomafro/deploy/foreman&#39;</span>
 
-<span class="no">Capistrano</span><span class="o">::</span><span class="no">Configuration</span><span class="o">.</span><span class="n">instance</span><span class="p">(</span><span class="ss">:must_exist</span><span class="p">)</span><span class="o">.</span><span class="n">load</span> <span class="k">do</span></pre></div>
+<span class="no">Capistrano</span><span class="o">::</span><span class="no">Configuration</span><span class="o">.</span><span class="n">instance</span><span class="p">(</span><span class="ss">:must_exist</span><span class="p">)</span><span class="o">.</span><span class="n">load</span> <span class="k">do</span>
+  <span class="kp">extend</span> <span class="no">Tomafro</span><span class="o">::</span><span class="no">Deploy</span><span class="o">::</span><span class="no">CapistranoExtensions</span></pre></div>
       </td>
     </tr>
     <tr id='section-2'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-2">&#182;</a>
-        </div>
-        <p>The <a href="deploy/capistrano_extensions.html">CapistranoExtensions</a> module includes some useful
-shortcuts to make working with capistrano easier.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>  <span class="kp">extend</span> <span class="no">Tomafro</span><span class="o">::</span><span class="no">Deploy</span><span class="o">::</span><span class="no">CapistranoExtensions</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-3'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-3">&#182;</a>
         </div>
         <p>To use this recipe, both the application&rsquo;s name and its git repository are required.</p>
       </td>
@@ -71,24 +60,24 @@ shortcuts to make working with capistrano easier.</p>
   <span class="n">set</span><span class="p">(</span><span class="ss">:repository</span><span class="p">)</span> <span class="p">{</span> <span class="nb">abort</span> <span class="s2">&quot;You must set the git respository location in your Capfile, e.g.: set :respository, &#39;git@github.com/tomafro/tomafro.net&#39;&quot;</span><span class="p">}</span></pre></div>
       </td>
     </tr>
-    <tr id='section-4'>
+    <tr id='section-3'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-4">&#182;</a>
+          <a class="pilcrow" href="#section-3">&#182;</a>
         </div>
         <p>The recipe assumes that the application code will be run as a dedicated user.  Any any user who
 can deploy the application should be added as a member of the application&rsquo;s group.  By default,
-both the user and group take the same name as the application.</p>
+both the application user and group take the same name as the application.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:application_user</span><span class="p">)</span> <span class="p">{</span> <span class="n">application</span> <span class="p">}</span>
   <span class="n">set</span><span class="p">(</span><span class="ss">:application_group</span><span class="p">)</span> <span class="p">{</span> <span class="n">application_user</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
-    <tr id='section-5'>
+    <tr id='section-4'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-5">&#182;</a>
+          <a class="pilcrow" href="#section-4">&#182;</a>
         </div>
         <p>Deployments can be made from any branch. <code>master</code> is used by default.</p>
       </td>
@@ -96,16 +85,29 @@ both the user and group take the same name as the application.</p>
         <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:branch</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span><span class="p">)</span></pre></div>
       </td>
     </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>Unlike a standard capistrano deployment, all releases are stored directly in the <code>deploy_to</code>
+directory.  The default is <code>/var/apps/#{application}</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:deploy_to</span><span class="p">)</span>   <span class="p">{</span> <span class="s2">&quot;/var/apps/</span><span class="si">#{</span><span class="n">application</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></pre></div>
+      </td>
+    </tr>
     <tr id='section-6'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-6">&#182;</a>
         </div>
-        <p>Unlike a standard capistrano deployment, all releases are stored directly in the <code>deploy_to</code>
-directory.  The default is <code>/var/apps/#{application}</code>, but any location can be used.</p>
+        <p>Each release is marked by a unique tag, generated with the current timestamp.  Whil this can be
+changed, it&rsquo;s not recommended, as the sort order of the tag names is important; later tags must 
+be listed after earlier tags.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:deploy_to</span><span class="p">)</span>   <span class="p">{</span> <span class="s2">&quot;/var/apps/</span><span class="si">#{</span><span class="n">application</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></pre></div>
+        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:release_tag</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m%d%H%M%S&quot;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-7'>
@@ -113,30 +115,17 @@ directory.  The default is <code>/var/apps/#{application}</code>, but any locati
         <div class="pilwrap">
           <a class="pilcrow" href="#section-7">&#182;</a>
         </div>
-        <p>Each release is marked by a unique tag, generated with the current timestamp.  This can be
-changed to something different, but the sort order of the tag names is important; later tags
-should come after earlier tags when sorting.</p>
+        <p>On tagging a release, a message is also recorded alongside the tag.  This message can contain
+anything useful &ndash; its contents are not important for the recipe.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:release_tag</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m%d%H%M%S&quot;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span></pre></div>
+        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:release_message</span><span class="p">,</span> <span class="s2">&quot;Deployed at </span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></pre></div>
       </td>
     </tr>
     <tr id='section-8'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-8">&#182;</a>
-        </div>
-        <p>On tagging a release, a message is also recorded alongside the tag.  This message can contain
-anything &ndash; its contents are ignored by the recipe.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:release_message</span><span class="p">,</span> <span class="s2">&quot;Deployed at </span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-9'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-9">&#182;</a>
         </div>
         <p>Some tasks need to know the <code>latest_tag</code> &ndash; the most recent successful deployment.  If no
 deployments have been made, this will be <code>nil</code>.</p>
@@ -145,24 +134,24 @@ deployments have been made, this will be <code>nil</code>.</p>
         <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:latest_tag</span><span class="p">)</span> <span class="p">{</span> <span class="n">latest_tag_from_repository</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
-    <tr id='section-10'>
+    <tr id='section-9'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-10">&#182;</a>
+          <a class="pilcrow" href="#section-9">&#182;</a>
         </div>
         <p>To authenticate with github or other git servers, it is easier (and cleaner) to forward the
-deploying user&rsquo;s ssh key than fiddle with keys on a server.</p>
+deploying user&rsquo;s ssh key than manage keys on deployment servers.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>  <span class="n">ssh_options</span><span class="o">[</span><span class="ss">:forward_agent</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span></pre></div>
       </td>
     </tr>
-    <tr id='section-11'>
+    <tr id='section-10'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-11">&#182;</a>
+          <a class="pilcrow" href="#section-10">&#182;</a>
         </div>
-        <p>If key forwarding isn&rsquo;t possible, git may show a password prompt, which stalls capistrano unless
+        <p>If key forwarding isn&rsquo;t possible, git may show a password prompt which stalls capistrano unless
 <code>:pty</code> is set to <code>true</code>.</p>
       </td>
       <td class=code>
@@ -171,10 +160,10 @@ deploying user&rsquo;s ssh key than fiddle with keys on a server.</p>
   <span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span></pre></div>
       </td>
     </tr>
-    <tr id='section-12'>
+    <tr id='section-11'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-12">&#182;</a>
+          <a class="pilcrow" href="#section-11">&#182;</a>
         </div>
         <p>The <code>deploy:setup</code> task prepares all the servers for the deployment.</p>
       </td>
@@ -188,10 +177,10 @@ deploying user&rsquo;s ssh key than fiddle with keys on a server.</p>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-13'>
+    <tr id='section-12'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-13">&#182;</a>
+          <a class="pilcrow" href="#section-12">&#182;</a>
         </div>
         <p>The deployment directory is created (if it doesn&rsquo;t already exist) and the repository is cloned
 into it.</p>
@@ -203,10 +192,10 @@ into it.</p>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-14'>
+    <tr id='section-13'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-14">&#182;</a>
+          <a class="pilcrow" href="#section-13">&#182;</a>
         </div>
         <p>All files are modified to be owned by the application group, and both readable and writable
 by any member of that group (deploying users and the application itself).  The sticky bit is
@@ -220,12 +209,13 @@ group.</p>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-15'>
+    <tr id='section-14'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-15">&#182;</a>
+          <a class="pilcrow" href="#section-14">&#182;</a>
         </div>
-        <p>The main deployment task (called with <code>cap deploy</code>).</p>
+        <p>The main deployment task (called with <code>cap deploy</code>) deploys the latest application code to all
+servers, tags the release and restarts the application.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>    <span class="n">desc</span> <span class="s2">&quot;Deploy the latest application code&quot;</span>
@@ -239,10 +229,10 @@ group.</p>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-16'>
+    <tr id='section-15'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-16">&#182;</a>
+          <a class="pilcrow" href="#section-15">&#182;</a>
         </div>
         <p>Fetch the latest changes, then update <code>HEAD</code> to the deployment branch.</p>
       </td>
@@ -254,10 +244,10 @@ group.</p>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-17'>
+    <tr id='section-16'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-17">&#182;</a>
+          <a class="pilcrow" href="#section-16">&#182;</a>
         </div>
         <p>Tag <code>HEAD</code> with the release tag and message</p>
       </td>
@@ -268,10 +258,10 @@ group.</p>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-18'>
+    <tr id='section-17'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-18">&#182;</a>
+          <a class="pilcrow" href="#section-17">&#182;</a>
         </div>
         <p>After a successful deployment, the app is restarted.  In the most basic deployments this does
 nothing, but other recipes may override it, or attach tasks it&rsquo;s before or after hooks.</p>
@@ -282,13 +272,13 @@ nothing, but other recipes may override it, or attach tasks it&rsquo;s before or
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-19'>
+    <tr id='section-18'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-19">&#182;</a>
+          <a class="pilcrow" href="#section-18">&#182;</a>
         </div>
         <p>To rollback a release, the latest tag is deleted, and <code>HEAD</code> reset to the previous release
-(if one exists).</p>
+(if one exists).  Finally the application is restarted again.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>    <span class="n">desc</span> <span class="s2">&quot;Rollback to the previous release&quot;</span>
@@ -300,14 +290,15 @@ nothing, but other recipes may override it, or attach tasks it&rsquo;s before or
             <span class="n">git</span> <span class="s2">&quot;reset --hard </span><span class="si">#{</span><span class="n">previous_tag</span><span class="si">}</span><span class="s2">&quot;</span>
           <span class="k">end</span>
         <span class="k">end</span>
+        <span class="n">restart</span>
       <span class="k">end</span>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-20'>
+    <tr id='section-19'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-20">&#182;</a>
+          <a class="pilcrow" href="#section-19">&#182;</a>
         </div>
         <p>In case of emergency or when manually testing deployment, it can be useful to remove all 
 previously deployed files before starting again.</p>
