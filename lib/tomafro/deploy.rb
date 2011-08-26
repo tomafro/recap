@@ -1,6 +1,6 @@
 # Inspired by [this blog post](https://github.com/blog/470-deployment-script-spring-cleaning), this
 # recipe uses git's strengths to deploy applications in a faster, simpler manner than the standard
-# capistrano deployment.  Deployments are made to a single directory. with no `shared`, `current` or
+# capistrano deployment.  Deployments are made to a single directory, with no `shared`, `current` or
 # `releases` folders, and no symlinking.
 
 require 'tomafro/deploy/capistrano_extensions'
