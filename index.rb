@@ -1,9 +1,15 @@
-# A simple, opinionated set of deployment recipes for capistrano, using git, bundler and foreman to
-# manage application deployments.
+# This is the annotated source code and documentation for
+# [tomafro-deploy](http://github.com/tomafro/tomafro-deploy), a simple, opinionated set of capistrano
+# deployment recipes.  Inspired by
+# [this blog post](https://github.com/blog/470-deployment-script-spring-cleaning), these recipes use
+# git's strengths to deploy applications in a faster, simpler manner than a standard capistrano
+# deployment.  Using git to manage release versions means apps can be deployed to a single directory.
+# There's no need for `releases`, `shared` or `current` folders, and no symlinking.
 
-# Most of the documentation can be found with the [main recipe](lib/tomafro/deploy.html), while the
-# [bundler](lib/tomafro/deploy/bundler.html) and [foreman](lib/tomafro/deploy/foreman.html) recipes document
-# their extensions.
+# The main deployment tasks are defined in [tomafro/deploy.rb](lib/tomafro/deploy.html).
+
+# In addition, there are extensions for [bundler](lib/tomafro/deploy/bundler.html) and
+# [foreman](lib/tomafro/deploy/foreman.html).
 
 # The code is available [on github](http://github.com/tomafro/tomafro-deploy) and released under the
 # [MIT License](https://github.com/tomafro/tomafro-deploy/blob/master/LICENSE)
