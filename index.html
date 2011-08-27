@@ -34,8 +34,13 @@
         <div class="pilwrap">
           <a class="pilcrow" href="#section-1">&#182;</a>
         </div>
-        <p>A simple, opinionated set of deployment recipes for capistrano, using git, bundler and foreman to
-manage application deployments.</p>
+        <p>This is the annotated source code and documentation for
+<a href="http://github.com/tomafro/tomafro-deploy">tomafro-deploy</a>, a simple, opinionated set of capistrano
+deployment recipes.  Inspired by
+<a href="https://github.com/blog/470-deployment-script-spring-cleaning">this blog post</a>, these recipes use
+git&rsquo;s strengths to deploy applications in a faster, simpler manner than a standard capistrano
+deployment.  Using git to manage release versions means apps can be deployed to a single directory.
+There&rsquo;s no need for <code>releases</code>, <code>shared</code> or <code>current</code> folders, and no symlinking.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -46,9 +51,7 @@ manage application deployments.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-2">&#182;</a>
         </div>
-        <p>Most of the documentation can be found with the <a href="lib/tomafro/deploy.html">main recipe</a>, while the
-<a href="lib/tomafro/deploy/bundler.html">bundler</a> and <a href="lib/tomafro/deploy/foreman.html">foreman</a> recipes document
-their extensions.</p>
+        <p>The main deployment tasks are defined in <a href="lib/tomafro/deploy.html">tomafro/deploy.rb</a>.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -58,6 +61,18 @@ their extensions.</p>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>In addition, there are extensions for <a href="lib/tomafro/deploy/bundler.html">bundler</a> and
+<a href="lib/tomafro/deploy/foreman.html">foreman</a>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
         </div>
         <p>The code is available <a href="http://github.com/tomafro/tomafro-deploy">on github</a> and released under the
 <a href="https://github.com/tomafro/tomafro-deploy/blob/master/LICENSE">MIT License</a></p>
