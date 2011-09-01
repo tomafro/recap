@@ -1,6 +1,7 @@
 require 'tomafro/deploy/capistrano_extensions'
 require 'tomafro/deploy/bundler'
 require 'tomafro/deploy/foreman'
+require 'tomafro/deploy/preflight'
 
 Capistrano::Configuration.instance(:must_exist).load do
   extend Tomafro::Deploy::CapistranoExtensions
@@ -23,7 +24,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   set(:deploy_to)   { "/var/apps/#{application}" }
 
   # Each release is marked by a unique tag, generated with the current timestamp.  Whil this can be
-  # changed, it's not recommended, as the sort order of the tag names is important; later tags must 
+  # changed, it's not recommended, as the sort order of the tag names is important; later tags must
   # be listed after earlier tags.
   set(:release_tag) { "#{Time.now.utc.strftime("%Y%m%d%H%M%S")}"}
 
@@ -115,7 +116,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       end
     end
 
-    # In case of emergency or when manually testing deployment, it can be useful to remove all 
+    # In case of emergency or when manually testing deployment, it can be useful to remove all
     # previously deployed files before starting again.
     desc "Remove all deployed files"
     task :destroy do
