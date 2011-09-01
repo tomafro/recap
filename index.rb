@@ -11,5 +11,8 @@
 # In addition, there are extensions for [bundler](lib/tomafro/deploy/bundler.html) and
 # [foreman](lib/tomafro/deploy/foreman.html).
 
+# For (limited) compatability with other existing recipes, see 
+# [compatibility](lib/tomafro/deploy/compatibility.html)
+
 # The code is available [on github](http://github.com/tomafro/tomafro-deploy) and released under the
 # [MIT License](https://github.com/tomafro/tomafro-deploy/blob/master/LICENSE)

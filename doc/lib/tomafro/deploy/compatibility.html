@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>compatibility.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../../../index.html">index.rb</a>
+          <a class="source" href="../deploy.html">deploy.rb</a>
+          <a class="source" href="bundler.html">bundler.rb</a>
+          <a class="source" href="capistrano_extensions.html">capistrano_extensions.rb</a>
+          <a class="source" href="compatibility.html">compatibility.rb</a>
+          <a class="source" href="foreman.html">foreman.rb</a>
+          <a class="source" href="version.html">version.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>compatibility.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        <p><code>tomafro-deploy</code> isn&rsquo;t intended to be compatible with tasks (such as those within the <code>bundler</code>
+or <code>whenever</code> projects) that are built on the original capistrano deployment recipes.  At times
+though there are tasks that would work, but for some missing (and redundant) settings.  </p>
+
+<p>Including this recipe adds these legacy settings, but provides no guarantee that original tasks
+will work.  Many are based on assumptions about the deployment layout that no longer hold true.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="no">Capistrano</span><span class="o">::</span><span class="no">Configuration</span><span class="o">.</span><span class="n">instance</span><span class="p">(</span><span class="ss">:must_exist</span><span class="p">)</span><span class="o">.</span><span class="n">load</span> <span class="k">do</span>
+  <span class="kp">extend</span> <span class="no">Tomafro</span><span class="o">::</span><span class="no">Deploy</span><span class="o">::</span><span class="no">CapistranoExtensions</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>As <code>git</code> to manages releases, all deployments are placed directly in the <code>deploy_to</code> folder.  The
+<code>current_path</code> is always this directory (no symlinking required).</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:current_path</span><span class="p">)</span> <span class="p">{</span> <span class="n">deploy_to</span> <span class="p">}</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
