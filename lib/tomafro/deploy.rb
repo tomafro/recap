@@ -90,7 +90,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     # Tag `HEAD` with the release tag and message
     task :tag, :except => {:no_release => true} do
-      on_rollback { git "tag -d #{current_tag}" }
+      on_rollback { git "tag -d #{release_tag}" }
       git "tag #{release_tag} -m '#{release_message}'"
     end
 
