@@ -9,7 +9,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 The application user '#{application_user}' doesn't exist.  You can create this user by logging into the server and running:
 
     sudo useradd #{application_user}
-        }
+\n}
       end
 
       if capture("id -g #{application_group} > /dev/null 2>&1; echo $?").strip != "0"
@@ -18,7 +18,7 @@ The application group '#{application_group}' doesn't exist.  You can create this
 
     sudo groupadd #{application_group}
     sudo usermod --append -G #{application_group} #{application_user}
-        }
+\n}
       end
 
       if capture('git config user.name || true').strip.empty? || capture('git config user.email || true').strip.empty?
