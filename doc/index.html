@@ -18,6 +18,7 @@
           <a class="source" href="lib/tomafro/deploy/capistrano_extensions.html">capistrano_extensions.rb</a>
           <a class="source" href="lib/tomafro/deploy/compatibility.html">compatibility.rb</a>
           <a class="source" href="lib/tomafro/deploy/foreman.html">foreman.rb</a>
+          <a class="source" href="lib/tomafro/deploy/preflight.html">preflight.rb</a>
           <a class="source" href="lib/tomafro/deploy/version.html">version.rb</a>
       </div>
     </div>
@@ -52,7 +53,9 @@ There&rsquo;s no need for <code>releases</code>, <code>shared</code> or <code>cu
         <div class="pilwrap">
           <a class="pilcrow" href="#section-2">&#182;</a>
         </div>
-        <p>The main deployment tasks are defined in <a href="lib/tomafro/deploy.html">tomafro/deploy.rb</a>.</p>
+        <p>The main deployment tasks are defined in <a href="lib/tomafro/deploy.html">tomafro/deploy.rb</a>.  Automatic
+checks to ensure servers are correctly setup are in 
+<a href="lib/tomafro/deploy/preflight.html">tomafro/deploy/preflight.rb</a>.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>

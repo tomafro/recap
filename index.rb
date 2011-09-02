@@ -6,7 +6,9 @@
 # deployment.  Using git to manage release versions means apps can be deployed to a single directory.
 # There's no need for `releases`, `shared` or `current` folders, and no symlinking.
 
-# The main deployment tasks are defined in [tomafro/deploy.rb](lib/tomafro/deploy.html).
+# The main deployment tasks are defined in [tomafro/deploy.rb](lib/tomafro/deploy.html).  Automatic
+# checks to ensure servers are correctly setup are in 
+# [tomafro/deploy/preflight.rb](lib/tomafro/deploy/preflight.html).
 
 # In addition, there are extensions for [bundler](lib/tomafro/deploy/bundler.html) and
 # [foreman](lib/tomafro/deploy/foreman.html).
