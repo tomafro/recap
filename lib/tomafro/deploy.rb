@@ -57,8 +57,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     # The deployment directory is created (if it doesn't already exist) and the repository is cloned
     # into it.
     task :clone_code, :except => {:no_release => true} do
-      run "mkdir -p #{deploy_to}"
-      git "clone #{repository} #{deploy_to}"
+      run "mkdir -p #{File.expand_path(deploy_to + "/..")}"
+      run "git clone #{repository} #{deploy_to}"
     end
 
     # All files are modified to be owned by the application group, and both readable and writable
