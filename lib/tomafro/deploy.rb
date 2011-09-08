@@ -66,8 +66,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     # also set set, so future files (such as logs and pids) are also accessible by the application
     # group.
     task :change_ownership, :except => {:no_release => true} do
-      sudo "chown -R :#{application_group} #{deploy_to}"
-      sudo "chmod -R g+srw #{deploy_to}"
+      run "chown -R :#{application_group} #{deploy_to}"
+      run "chmod -R g+srw #{deploy_to}"
     end
 
     # The main deployment task (called with `cap deploy`) deploys the latest application code to all
