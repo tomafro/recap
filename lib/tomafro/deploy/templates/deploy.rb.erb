@@ -1,8 +1,0 @@
-require 'tomafro/deploy'
-
-set(:application, "<%= name %>")
-
-set(:repository,  "<%= repository %>")
-set(:branch, 'master')
-
-set(:deploy_to)   { "/var/apps/#{application}" }

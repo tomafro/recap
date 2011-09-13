@@ -18,7 +18,6 @@ module Tomafro
         self.name = options["name"] || guess_name
         self.repository = options["repo"] || guess_repository
         template 'Capfile.erb', 'Capfile'
-        template 'deploy.rb.erb', 'config/deploy.rb'
       end
 
       private
