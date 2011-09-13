@@ -1,0 +1,3 @@
+require 'tomafro/deploy/cli'
+Tomafro::Deploy::CLI.start
+
