@@ -21,7 +21,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc "Install the latest gem bundle only if Gemfile.lock has changed"
       task :if_changed do
         if deployed_file_changed?(bundle_gemfile_lock)
-          top.bundle.install
+          top.bundle.install.default
         end
       end
 
