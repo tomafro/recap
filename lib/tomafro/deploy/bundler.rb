@@ -30,7 +30,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc "Install the latest gem bundle"
       task :default do
         if deployed_file_exists?(bundle_gemfile)
-          bundler "install --gemfile #{bundle_gemfile} --path #{bundle_dir} --deployment --quiet --without #{bundle_without}"
+          bundler "install --gemfile #{bundle_gemfile} --path #{bundle_dir} --deployment --quiet --binstubs --without #{bundle_without}"
         else
           puts "Skipping bundle:install as no Gemfile found"
         end
