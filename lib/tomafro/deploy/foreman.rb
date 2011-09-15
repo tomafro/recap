@@ -7,7 +7,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     task :export, :roles => :app do
       if procfile_exists?
-        run_as_root "bundle exec foreman export #{foreman_export_format} #{foreman_export_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log"
+        as_root "bundle exec foreman export #{foreman_export_format} #{foreman_export_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log"
       end
     end
 

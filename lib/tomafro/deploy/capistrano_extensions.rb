@@ -11,18 +11,24 @@ module Tomafro
         capture "cd #{deploy_to} && git #{command}"
       end
 
+      # Run a command as the given user using a full login shell
+      def as_user(user, command, pwd = deploy_to)
+        sudo "su - #{user} -c -l 'cd #{pwd} && #{command}'"
+      end
+
+      # Run a command as root using a full login shell
+      def as_root(command, pwd = deploy_to)
+        as_user 'root', command
+      end
+
+      # Run a command as the application user using a full login shell
       def as_app(command, pwd = deploy_to)
-        sudo "su - #{application_user} -c -l 'cd #{pwd} && #{command}'"
+        as_user application_user, command
       end
 
       # Run a bundle command in the `deploy_to` directory
       def bundler(command)
         as_app "bundle #{command}"
-      end
-
-      # Run a command as root using a full shell within the `deploy_to` directory
-      def run_as_root(command, pwd = deploy_to)
-        sudo "su - root -c 'cd #{pwd} && #{command}'"
       end
 
       # Find the latest tag from the repository.  As `git tag` returns tags in order, and our release
