@@ -47,7 +47,7 @@ module Tomafro
       # successful deployment this will always return true.
       def deployed_file_changed?(path)
         return true unless latest_tag
-        capture_git("diff --exit-code #{latest_tag} origin/#{branch} #{path} > /dev/null; echo $?").strip != "0"
+        capture_git("diff --exit-code #{latest_tag} origin/#{branch} #{path} > /dev/null; echo $?").strip == "1"
       end
     end
   end
