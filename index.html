@@ -16,9 +16,11 @@
           <a class="source" href="lib/tomafro/deploy.html">deploy.rb</a>
           <a class="source" href="lib/tomafro/deploy/bundler.html">bundler.rb</a>
           <a class="source" href="lib/tomafro/deploy/capistrano_extensions.html">capistrano_extensions.rb</a>
+          <a class="source" href="lib/tomafro/deploy/cli.html">cli.rb</a>
           <a class="source" href="lib/tomafro/deploy/compatibility.html">compatibility.rb</a>
           <a class="source" href="lib/tomafro/deploy/foreman.html">foreman.rb</a>
           <a class="source" href="lib/tomafro/deploy/preflight.html">preflight.rb</a>
+          <a class="source" href="lib/tomafro/deploy/rails.html">rails.rb</a>
           <a class="source" href="lib/tomafro/deploy/version.html">version.rb</a>
       </div>
     </div>
@@ -53,9 +55,7 @@ There&rsquo;s no need for <code>releases</code>, <code>shared</code> or <code>cu
         <div class="pilwrap">
           <a class="pilcrow" href="#section-2">&#182;</a>
         </div>
-        <p>The main deployment tasks are defined in <a href="lib/tomafro/deploy.html">tomafro/deploy.rb</a>.  Automatic
-checks to ensure servers are correctly setup are in 
-<a href="lib/tomafro/deploy/preflight.html">tomafro/deploy/preflight.rb</a>.</p>
+        <p>These deployment recipes try to do the following:</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -66,8 +66,14 @@ checks to ensure servers are correctly setup are in
         <div class="pilwrap">
           <a class="pilcrow" href="#section-3">&#182;</a>
         </div>
-        <p>In addition, there are extensions for <a href="lib/tomafro/deploy/bundler.html">bundler</a> and
-<a href="lib/tomafro/deploy/foreman.html">foreman</a>.</p>
+        <ul>
+<li><p>Run all commands as the <code>application_user</code>, loading the full user environment.  The only
+exceptions are <code>git</code> commands (which often rely on SSH agent forwarding for authentication), and anything
+that requires <code>sudo</code>.</p></li>
+<li><p>Use <code>git</code> to avoid unecessary work.  If the <code>Gemfile.lock</code> hasn&rsquo;t changed, there&rsquo;s no need to run
+<code>bundle install</code>.  Similarly if there are no new migrations, why do <code>rake db:migrate</code>.  Faster deploys
+mean more frequent deploys, which in our experience leads to better applications.</p></li>
+</ul>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -78,17 +84,62 @@ checks to ensure servers are correctly setup are in
         <div class="pilwrap">
           <a class="pilcrow" href="#section-4">&#182;</a>
         </div>
-        <p>For (limited) compatability with other existing recipes, see 
-<a href="lib/tomafro/deploy/compatibility.html">compatibility</a></p>
+        <ul>
+<li>Avoid the use of <code>sudo</code> (other than to change to the <code>application_user</code>).  As much as possible, <code>sudo</code>
+is only used to <code>su</code> to the <code>application_user</code> before running a command.  To avoid typing a password
+to perform the majority of deployment tasks, this code can be added to
+<code>/etc/sudoers.d/application</code> (change <code>application</code> to the name of your app).</li>
+</ul>
       </td>
       <td class=code>
-        <div class='highlight'><pre></pre></div>
+        <div class='highlight'><pre><span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /sbin/s</span><span class="n">tart</span> <span class="n">application</span><span class="o">*</span>
+<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /sbin/s</span><span class="n">top</span> <span class="n">application</span><span class="o">*</span>
+<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /sbin/</span><span class="n">restart</span> <span class="n">application</span><span class="o">*</span>
+<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /bin/su</span> <span class="o">-</span> <span class="n">application</span><span class="o">*</span>
+<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /bin/su</span> <span class="n">application</span><span class="o">*</span></pre></div>
       </td>
     </tr>
     <tr id='section-5'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>The main deployment tasks are defined in <a href="lib/tomafro/deploy.html">tomafro/deploy.rb</a>.  Automatic
+checks to ensure servers are correctly setup are in
+<a href="lib/tomafro/deploy/preflight.html">tomafro/deploy/preflight.rb</a>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>In addition, there are extensions for <a href="lib/tomafro/deploy/bundler.html">bundler</a> and
+<a href="lib/tomafro/deploy/foreman.html">foreman</a>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>For (limited) compatability with other existing recipes, see
+<a href="lib/tomafro/deploy/compatibility.html">compatibility</a></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
         </div>
         <p>The code is available <a href="http://github.com/tomafro/tomafro-deploy">on github</a> and released under the
 <a href="https://github.com/tomafro/tomafro-deploy/blob/master/LICENSE">MIT License</a></p>

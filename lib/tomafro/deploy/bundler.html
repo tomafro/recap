@@ -16,7 +16,11 @@
           <a class="source" href="../deploy.html">deploy.rb</a>
           <a class="source" href="bundler.html">bundler.rb</a>
           <a class="source" href="capistrano_extensions.html">capistrano_extensions.rb</a>
+          <a class="source" href="cli.html">cli.rb</a>
+          <a class="source" href="compatibility.html">compatibility.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
+          <a class="source" href="preflight.html">preflight.rb</a>
+          <a class="source" href="rails.html">rails.rb</a>
           <a class="source" href="version.html">version.rb</a>
       </div>
     </div>
@@ -100,7 +104,7 @@ places under <code>.bundle/gems</code>.</p>
         <div class='highlight'><pre>      <span class="n">desc</span> <span class="s2">&quot;Install the latest gem bundle only if Gemfile.lock has changed&quot;</span>
       <span class="n">task</span> <span class="ss">:if_changed</span> <span class="k">do</span>
         <span class="k">if</span> <span class="n">deployed_file_changed?</span><span class="p">(</span><span class="n">bundle_gemfile_lock</span><span class="p">)</span>
-          <span class="n">top</span><span class="o">.</span><span class="n">bundle</span><span class="o">.</span><span class="n">install</span>
+          <span class="n">top</span><span class="o">.</span><span class="n">bundle</span><span class="o">.</span><span class="n">install</span><span class="o">.</span><span class="n">default</span>
         <span class="k">end</span>
       <span class="k">end</span></pre></div>
       </td>
@@ -117,7 +121,7 @@ a previous deployment)</p>
         <div class='highlight'><pre>      <span class="n">desc</span> <span class="s2">&quot;Install the latest gem bundle&quot;</span>
       <span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
         <span class="k">if</span> <span class="n">deployed_file_exists?</span><span class="p">(</span><span class="n">bundle_gemfile</span><span class="p">)</span>
-          <span class="n">bundler</span> <span class="s2">&quot;install --gemfile </span><span class="si">#{</span><span class="n">bundle_gemfile</span><span class="si">}</span><span class="s2"> --path </span><span class="si">#{</span><span class="n">bundle_dir</span><span class="si">}</span><span class="s2"> --deployment --quiet --without </span><span class="si">#{</span><span class="n">bundle_without</span><span class="si">}</span><span class="s2">&quot;</span>
+          <span class="n">bundler</span> <span class="s2">&quot;install --gemfile </span><span class="si">#{</span><span class="n">bundle_gemfile</span><span class="si">}</span><span class="s2"> --path </span><span class="si">#{</span><span class="n">bundle_dir</span><span class="si">}</span><span class="s2"> --deployment --quiet --binstubs --without </span><span class="si">#{</span><span class="n">bundle_without</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">else</span>
           <span class="nb">puts</span> <span class="s2">&quot;Skipping bundle:install as no Gemfile found&quot;</span>
         <span class="k">end</span>
