@@ -49,15 +49,16 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :setup, :except => {:no_release => true} do
       transaction do
         clone_code
-        change_ownership
       end
     end
 
     # The deployment directory is created (if it doesn't already exist) and the repository is cloned
     # into it.
     task :clone_code, :except => {:no_release => true} do
-      run "mkdir -p #{File.expand_path(deploy_to + "/..")}"
-      run "git clone #{repository} #{deploy_to}"
+      sudo "mkdir -p #{File.expand_path(deploy_to + "/..")}"
+      run "git clone #{repository} $HOME/#{application}.tmp"
+      sudo "mv $HOME/#{application}.tmp #{deploy_to}"
+      top.deploy.change_ownership
     end
 
     # All files are modified to be owned by the application group, and both readable and writable
@@ -65,8 +66,8 @@ Capistrano::Configuration.instance(:must_exist).load do
     # also set set, so future files (such as logs and pids) are also accessible by the application
     # group.
     task :change_ownership, :except => {:no_release => true} do
-      run "chown -R :#{application_group} #{deploy_to}"
-      run "chmod -R g+srw #{deploy_to}"
+      run "find #{deploy_to} -user `whoami` ! -group #{application_group} -exec chown :#{application_group} {} \\;"
+      run "find #{deploy_to} -user `whoami` -exec chmod g+srw {} \\;"
     end
 
     # The main deployment task (called with `cap deploy`) deploys the latest application code to all
@@ -75,7 +76,6 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :default do
       transaction do
         update_code
-        change_ownership
         tag
       end
       restart
@@ -86,6 +86,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       on_rollback { git "reset --hard #{latest_tag}" if latest_tag }
       git "fetch"
       git "reset --hard origin/#{branch}"
+      top.deploy.change_ownership
     end
 
     # Tag `HEAD` with the release tag and message

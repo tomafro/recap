@@ -11,9 +11,13 @@ module Tomafro
         capture "cd #{deploy_to} && git #{command}"
       end
 
+      def as_app(command, pwd = deploy_to)
+        sudo "su - #{application_user} -c -l 'cd #{pwd} && #{command}'"
+      end
+
       # Run a bundle command in the `deploy_to` directory
       def bundler(command)
-        run "cd #{deploy_to} && bundle #{command}"
+        as_app "bundle #{command}"
       end
 
       # Run a command as root using a full shell within the `deploy_to` directory
@@ -33,7 +37,7 @@ module Tomafro
         capture("cd #{deploy_to} && [ -f #{path} ]; echo $?").strip == "0"
       end
 
-      # Has the given path been created or changed since the previous deployment?  During the first 
+      # Has the given path been created or changed since the previous deployment?  During the first
       # successful deployment this will always return true.
       def deployed_file_changed?(path)
         return true unless latest_tag
