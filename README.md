@@ -1,3 +1,3 @@
-[tomafro-deploy](http://github.com/tomafro/tomafro-deploy) is a simple, opinionated set of capistrano deployment recipes, using git's strengths to deploy applications in a fast and simple manner.
+[tomafro-deploy](http://github.com/tomafro/tomafro-deploy) is a simple, EXPERIMENTAL, opinionated set of capistrano deployment recipes, using git's strengths to deploy applications in a fast and simple manner.
 
 The main documentation can be found at [http://projects.tomafro.net/tomafro-deploy](http://projects.tomafro.net/tomafro-deploy), while the code is available [on github](https://github.com/tomafro/tomafro-deploy) and released under the [MIT License](https://github.com/tomafro/tomafro-deploy/blob/master/LICENSE).
