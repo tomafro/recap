@@ -1,6 +1,5 @@
 require 'tomafro/deploy/capistrano_extensions'
 require 'tomafro/deploy/bundler'
-require 'tomafro/deploy/foreman'
 require 'tomafro/deploy/preflight'
 
 Capistrano::Configuration.instance(:must_exist).load do
