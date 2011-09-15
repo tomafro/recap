@@ -1,16 +1,6 @@
 module Tomafro
   module Deploy
     module CapistranoExtensions
-      # Run a git command in the `deploy_to` directory
-      def git(command)
-        run "cd #{deploy_to} && git #{command}"
-      end
-
-      # Capture the result of a git command run within the `deploy_to` directory
-      def capture_git(command)
-        capture "cd #{deploy_to} && git #{command}"
-      end
-
       # Run a command as the given user using a full login shell
       def as_user(user, command, pwd = deploy_to)
         sudo "su - #{user} -c -l 'cd #{pwd} && #{command}'"
@@ -24,6 +14,16 @@ module Tomafro
       # Run a command as the application user using a full login shell
       def as_app(command, pwd = deploy_to)
         as_user application_user, command
+      end
+
+      # Run a git command in the `deploy_to` directory
+      def git(command)
+        run "cd #{deploy_to} && git #{command}"
+      end
+
+      # Capture the result of a git command run within the `deploy_to` directory
+      def capture_git(command)
+        capture "cd #{deploy_to} && git #{command}"
       end
 
       # Run a bundle command in the `deploy_to` directory
