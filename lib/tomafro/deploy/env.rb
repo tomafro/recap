@@ -19,7 +19,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     def write_environment(env)
       env.keys.sort.collect do |v|
-        "#{v}=#{env[v]}" unless env[v].nil? || env[v].empty?
+        "#{v}=#{env[v]}" unless env[v].nil? || env[v] == ""
       end.compact.join("\n")
     end
 
