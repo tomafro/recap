@@ -1,17 +1,17 @@
 module Tomafro
   module Deploy
     module CapistranoExtensions
-      # Run a command as the given user using a full login shell
+      # Run a command as the given user
       def as_user(user, command, pwd = deploy_to)
-        sudo "su - #{user} -c -l 'cd #{pwd} && #{command}'"
+        sudo "su - #{user} -c 'cd #{pwd} && #{command}'"
       end
 
-      # Run a command as root using a full login shell
+      # Run a command as root
       def as_root(command, pwd = deploy_to)
         as_user 'root', command, pwd
       end
 
-      # Run a command as the application user using a full login shell
+      # Run a command as the application user
       def as_app(command, pwd = deploy_to)
         as_user application_user, command, pwd
       end
