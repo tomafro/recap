@@ -8,12 +8,12 @@ module Tomafro
 
       # Run a command as root using a full login shell
       def as_root(command, pwd = deploy_to)
-        as_user 'root', command
+        as_user 'root', command, pwd
       end
 
       # Run a command as the application user using a full login shell
       def as_app(command, pwd = deploy_to)
-        as_user application_user, command
+        as_user application_user, command, pwd
       end
 
       # Run a git command in the `deploy_to` directory
