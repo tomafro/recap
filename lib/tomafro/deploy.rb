@@ -22,7 +22,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   # directory.  The default is `/var/apps/#{application}`.
   set(:deploy_to)   { "/var/apps/#{application}" }
 
-  # Each release is marked by a unique tag, generated with the current timestamp.  Whil this can be
+  # Each release is marked by a unique tag, generated with the current timestamp.  While this can be
   # changed, it's not recommended, as the sort order of the tag names is important; later tags must
   # be listed after earlier tags.
   set(:release_tag) { "#{Time.now.utc.strftime("%Y%m%d%H%M%S")}"}
