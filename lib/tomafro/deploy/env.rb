@@ -19,7 +19,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     def write_environment(env)
       env.keys.sort.collect do |v|
-        "#{v}=#{env[v]}" unless env[v].nil? || env[v] == ""
+        "#{v}=#{env[v]}" unless env[v].nil? || env[v].empty?
       end.compact.join("\n")
     end
 
@@ -28,8 +28,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     task :set do
-      additions = variables.inject({}) do |memo, (k, v)|
-        memo[k.to_s[1..-1]] = v if k.to_s[0] == "_"
+      variables = ARGV[1..-1].select { |arg| arg =~ /^\w=/ }
+      additions = variables.inject({}) do |memo, variable|
+        k, v = variable.split("=")
+        memo[k] = v
         memo
       end
       env = write_environment(current_environment.merge(additions))
