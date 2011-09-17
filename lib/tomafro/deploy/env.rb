@@ -1,6 +1,6 @@
 # N.B. To get the environment loaded on every shell invocation add the following to .profile:
 #
-#     if [ -s "$HOME/.env" ]; then echo "hi"; fi
+#     if [ -s "$HOME/.env" ]; then export $(cat $HOME/.env); fi
 #
 # This will eventually be done automatically
 
