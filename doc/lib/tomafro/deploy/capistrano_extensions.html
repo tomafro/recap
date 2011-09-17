@@ -18,6 +18,7 @@
           <a class="source" href="capistrano_extensions.html">capistrano_extensions.rb</a>
           <a class="source" href="cli.html">cli.rb</a>
           <a class="source" href="compatibility.html">compatibility.rb</a>
+          <a class="source" href="env.html">env.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
           <a class="source" href="preflight.html">preflight.rb</a>
           <a class="source" href="rails.html">rails.rb</a>
@@ -51,11 +52,11 @@
         <div class="pilwrap">
           <a class="pilcrow" href="#section-2">&#182;</a>
         </div>
-        <p>Run a command as the given user using a full login shell</p>
+        <p>Run a command as the given user</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>      <span class="k">def</span> <span class="nf">as_user</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">pwd</span> <span class="o">=</span> <span class="n">deploy_to</span><span class="p">)</span>
-        <span class="n">sudo</span> <span class="s2">&quot;su - </span><span class="si">#{</span><span class="n">user</span><span class="si">}</span><span class="s2"> -c -l &#39;cd </span><span class="si">#{</span><span class="n">pwd</span><span class="si">}</span><span class="s2"> &amp;&amp; </span><span class="si">#{</span><span class="n">command</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+        <span class="n">sudo</span> <span class="s2">&quot;su - </span><span class="si">#{</span><span class="n">user</span><span class="si">}</span><span class="s2"> -c &#39;cd </span><span class="si">#{</span><span class="n">pwd</span><span class="si">}</span><span class="s2"> &amp;&amp; </span><span class="si">#{</span><span class="n">command</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
       <span class="k">end</span></pre></div>
       </td>
     </tr>
@@ -64,11 +65,11 @@
         <div class="pilwrap">
           <a class="pilcrow" href="#section-3">&#182;</a>
         </div>
-        <p>Run a command as root using a full login shell</p>
+        <p>Run a command as root</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>      <span class="k">def</span> <span class="nf">as_root</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">pwd</span> <span class="o">=</span> <span class="n">deploy_to</span><span class="p">)</span>
-        <span class="n">as_user</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">command</span>
+        <span class="n">as_user</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">pwd</span>
       <span class="k">end</span></pre></div>
       </td>
     </tr>
@@ -77,11 +78,11 @@
         <div class="pilwrap">
           <a class="pilcrow" href="#section-4">&#182;</a>
         </div>
-        <p>Run a command as the application user using a full login shell</p>
+        <p>Run a command as the application user</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>      <span class="k">def</span> <span class="nf">as_app</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">pwd</span> <span class="o">=</span> <span class="n">deploy_to</span><span class="p">)</span>
-        <span class="n">as_user</span> <span class="n">application_user</span><span class="p">,</span> <span class="n">command</span>
+        <span class="n">as_user</span> <span class="n">application_user</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">pwd</span>
       <span class="k">end</span></pre></div>
       </td>
     </tr>
