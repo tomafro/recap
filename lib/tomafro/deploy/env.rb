@@ -8,15 +8,19 @@ Capistrano::Configuration.instance(:must_exist).load do
   namespace :env do
     set(:environment_file) { "/home/#{application_user}/.env" }
 
+    def extract_environment(declarations)
+      declarations.inject({}) do |env, line|
+        if line =~ /\A([A-Za-z_]+)=(.*)\z/
+          env[$1] = $2.strip
+        end
+        env
+      end
+    end
+
     def current_environment
       @current_environment ||= begin
         if deployed_file_exists?(environment_file)
-          capture("cat #{environment_file}").split("\n").inject({}) do |env, line|
-            if line =~ /\A([A-Za-z_]+)=(.*)\z/
-              env[$1] = $2.strip
-            end
-            env
-          end
+          extract_environment(capture("cat #{environment_file}").split("\n"))
         else
           {}
         end
@@ -34,12 +38,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
 
     task :set do
-      variables = ARGV[1..-1].select { |arg| arg =~ /^\w=/ }
-      additions = variables.inject({}) do |memo, variable|
-        k, v = variable.split("=")
-        memo[k] = v
-        memo
-      end
+      additions = extract_environment(ARGV[1..-1])
       env = write_environment(current_environment.merge(additions))
       as_app "echo #{env.inspect} > #{environment_file}"
     end
