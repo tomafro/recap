@@ -7,7 +7,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         if deployed_file_exists?(environment_file)
           capture("cat #{environment_file}").split("\n").inject({}) do |env, line|
             if line =~ /\A([A-Za-z_]+)=(.*)\z/
-              env[$1] = $2
+              env[$1] = $2.strip
             end
             env
           end

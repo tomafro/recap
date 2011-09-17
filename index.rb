@@ -43,5 +43,11 @@
 # For (limited) compatability with other existing recipes, see
 # [compatibility](lib/tomafro/deploy/compatibility.html)
 
+# ### Deployment target ###
+
+# These recipes have been run successful against Ubuntu.
+
+# The application should be run as the application user; if using Apache and Passenger, you should set the `PassengerDefaultUser` directive to be the same as the `application_user`.
+
 # The code is available [on github](http://github.com/tomafro/tomafro-deploy) and released under the
 # [MIT License](https://github.com/tomafro/tomafro-deploy/blob/master/LICENSE)
