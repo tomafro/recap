@@ -1,3 +1,9 @@
+# N.B. To get the environment loaded on every shell invocation add the following to .profile:
+#
+#     if [ -s "$HOME/.env" ]; then echo "hi"; fi
+#
+# This will eventually be done automatically
+
 Capistrano::Configuration.instance(:must_exist).load do
   namespace :env do
     set(:environment_file) { "/home/#{application_user}/.env" }
