@@ -33,7 +33,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       end.compact.join("\n")
     end
 
-    task :read do
+    task :default do
       puts write_environment(current_environment)
     end
 
