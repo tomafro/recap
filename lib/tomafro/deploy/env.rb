@@ -40,7 +40,11 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :set do
       additions = extract_environment(ARGV[1..-1])
       env = write_environment(current_environment.merge(additions))
-      as_app "echo #{env.inspect} > #{environment_file}"
+      if env.empty?
+        as_app "rm -f #{environment_file}"
+      else
+        as_app "echo #{env.inspect} > #{environment_file}"
+      end
     end
   end
 end
