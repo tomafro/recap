@@ -44,23 +44,3 @@ Capistrano::Configuration.instance(:must_exist).load do
     end
   end
 end
-
-
-class Env
-  def self.read(filename)
-    if File.exists?(filename)
-      File.read(filename).split("\n").inject({}) do |env, line|
-        if line =~ /\A([A-Za-z_]+)=(.*)\z/
-          env[$1] = $2
-        end
-        env
-      end
-    end
-  end
-
-  def self.write(environment, filename)
-    environment.keys.sort.collect do |v|
-      "#{v}=#{environment[v]}"
-    end.join("\n")
-  end
-end
