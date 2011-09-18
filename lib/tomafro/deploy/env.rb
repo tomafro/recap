@@ -46,5 +46,13 @@ Capistrano::Configuration.instance(:must_exist).load do
         as_app "echo #{env.inspect} > #{environment_file}"
       end
     end
+
+    task :edit do
+      require 'tmpdir'
+      tmp_environment_file = File.join(Dir.tmpdir, "env")
+      get(environment_file, tmp_environment_file)
+      `$EDITOR #{tmp_environment_file}`
+      upload(tmp_environment_file, environment_file)
+    end
   end
 end
