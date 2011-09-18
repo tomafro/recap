@@ -99,6 +99,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :tag, :except => {:no_release => true} do
       on_rollback { git "tag -d #{release_tag}" }
       git "tag #{release_tag} -m '#{release_message}'"
+      top.deploy.change_ownership
     end
 
     # After a successful deployment, the app is restarted.  In the most basic deployments this does
