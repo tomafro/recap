@@ -26,6 +26,7 @@ module Tomafro
 
       def edit_file(path)
         if editor = ENV['DEPLOY_EDITOR'] || ENV['EDITOR']
+          as_app "touch #{path} && chmod g+rw #{path}"
           local_path = Tempfile.new('deploy-edit').path
           get(path, local_path)
           `#{editor} #{local_path}`
