@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module Tomafro
   module Deploy
     module CapistranoExtensions
@@ -20,6 +22,17 @@ module Tomafro
       def put_as_app(string, path)
         as_app "touch #{path} && chmod g+rw #{path}"
         put string, path
+      end
+
+      def edit_file(path)
+        if editor = ENV['DEPLOY_EDITOR'] || ENV['EDITOR']
+          local_path = Tempfile.new('deploy-edit').path
+          get(path, local_path)
+          `#{editor} #{local_path}`
+          upload(local_path, path)
+        else
+          abort "To edit a remote file, either the EDITOR or DEPLOY_EDITOR environment variables must be set"
+        end
       end
 
       # Run a git command in the `deploy_to` directory

@@ -46,5 +46,9 @@ Capistrano::Configuration.instance(:must_exist).load do
         put_as_app env, environment_file
       end
     end
+
+    task :edit do
+      edit_file environment_file
+    end
   end
 end
