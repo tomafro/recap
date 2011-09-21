@@ -16,6 +16,12 @@ module Tomafro
         as_user application_user, command, pwd
       end
 
+      # Put a string into a file as the application user
+      def put_as_app(string, path)
+        as_app "touch #{path} && chmod g+rw #{path}"
+        put string, path
+      end
+
       # Run a git command in the `deploy_to` directory
       def git(command)
         run "cd #{deploy_to} && git #{command}"

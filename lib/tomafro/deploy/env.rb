@@ -43,7 +43,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       if env.empty?
         as_app "rm -f #{environment_file}"
       else
-        as_app "echo #{env.inspect} > #{environment_file}"
+        put_as_app env, environment_file
       end
     end
   end
