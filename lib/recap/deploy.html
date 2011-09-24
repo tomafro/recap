@@ -93,10 +93,10 @@ both the application user and group take the same name as the application.</p>
           <a class="pilcrow" href="#section-5">&#182;</a>
         </div>
         <p>Unlike a standard capistrano deployment, all releases are stored directly in the <code>deploy_to</code>
-directory.  The default is <code>/var/apps/#{application}</code>.</p>
+directory.  The default is <code>/home/#{application_user}/apps/#{application}</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:deploy_to</span><span class="p">)</span>   <span class="p">{</span> <span class="s2">&quot;/var/apps/</span><span class="si">#{</span><span class="n">application</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></pre></div>
+        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:deploy_to</span><span class="p">)</span>   <span class="p">{</span> <span class="s2">&quot;/home/</span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="s2">/apps/</span><span class="si">#{</span><span class="n">application</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-6'>
