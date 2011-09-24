@@ -23,6 +23,7 @@ module Recap
       put string, path
     end
 
+    # Edit a file on the remote server, using a local editor
     def edit_file(path)
       if editor = ENV['DEPLOY_EDITOR'] || ENV['EDITOR']
         as_app "touch #{path} && chmod g+rw #{path}"
