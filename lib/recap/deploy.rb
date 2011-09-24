@@ -19,8 +19,8 @@ Capistrano::Configuration.instance(:must_exist).load do
   set(:branch, 'master')
 
   # Unlike a standard capistrano deployment, all releases are stored directly in the `deploy_to`
-  # directory.  The default is `/var/apps/#{application}`.
-  set(:deploy_to)   { "/var/apps/#{application}" }
+  # directory.  The default is `/home/#{application_user}/apps/#{application}`.
+  set(:deploy_to)   { "/home/#{application_user}/apps/#{application}" }
 
   # Each release is marked by a unique tag, generated with the current timestamp.  While this can be
   # changed, it's not recommended, as the sort order of the tag names is important; later tags must
