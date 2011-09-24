@@ -7,11 +7,9 @@ Gem::Specification.new do |s|
   s.version     = Recap::VERSION
   s.authors     = ["Tom Ward"]
   s.email       = ["tom@popdog.net"]
-  s.homepage    = "https://github.com/freerange/recap"
+  s.homepage    = "http://code.gofreerange.com/recap"
   s.summary     = %q{GIT based deployment recipes for Capistrano}
   s.description = %q{GIT based deployment recipes for Capistrano}
-
-  s.rubyforge_project = "recap"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
