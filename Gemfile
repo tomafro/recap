@@ -1,4 +1,4 @@
 source "http://rubygems.org"
 
-# Specify your gem's dependencies in tomafro-deploy.gemspec
+# Specify your gem's dependencies in recap.gemspec
 gemspec

@@ -1,9 +1,9 @@
-require 'tomafro/deploy/capistrano_extensions'
-require 'tomafro/deploy/bundler'
-require 'tomafro/deploy/preflight'
+require 'recap/capistrano_extensions'
+require 'recap/bundler'
+require 'recap/preflight'
 
 Capistrano::Configuration.instance(:must_exist).load do
-  extend Tomafro::Deploy::CapistranoExtensions
+  extend Recap::CapistranoExtensions
 
   # To use this recipe, both the application's name and its git repository are required.
   set(:application) { abort "You must set the name of your application in your Capfile, e.g.: set :application, 'tomafro.net'" }

@@ -1,5 +1,5 @@
 # This is the annotated source code and documentation for
-# [tomafro-deploy](http://github.com/tomafro/tomafro-deploy), a simple, opinionated set of capistrano
+# [recap](http://github.com/freerange/recap), a simple, opinionated set of capistrano
 # deployment recipes.  Inspired by
 # [this blog post](https://github.com/blog/470-deployment-script-spring-cleaning), these recipes use
 # git's strengths to deploy applications in a faster, simpler manner than a standard capistrano
@@ -33,15 +33,15 @@
 
 # ### Code layout ###
 
-# The main deployment tasks are defined in [tomafro/deploy.rb](lib/tomafro/deploy.html).  Automatic
+# The main deployment tasks are defined in [recap.rb](lib/recap.html).  Automatic
 # checks to ensure servers are correctly setup are in
-# [tomafro/deploy/preflight.rb](lib/tomafro/deploy/preflight.html).
+# [recap/preflight.rb](lib/recap/preflight.html).
 
-# In addition, there are extensions for [bundler](lib/tomafro/deploy/bundler.html) and
-# [foreman](lib/tomafro/deploy/foreman.html).
+# In addition, there are extensions for [bundler](lib/recap/bundler.html) and
+# [foreman](lib/recap/foreman.html).
 
 # For (limited) compatability with other existing recipes, see
-# [compatibility](lib/tomafro/deploy/compatibility.html)
+# [compatibility](lib/recap/compatibility.html)
 
 # ### Deployment target ###
 
@@ -49,5 +49,5 @@
 
 # The application should be run as the application user; if using Apache and Passenger, you should set the `PassengerDefaultUser` directive to be the same as the `application_user`.
 
-# The code is available [on github](http://github.com/tomafro/tomafro-deploy) and released under the
-# [MIT License](https://github.com/tomafro/tomafro-deploy/blob/master/LICENSE)
+# The code is available [on github](http://github.com/freerange/recap) and released under the
+# [MIT License](https://github.com/freerange/recap/blob/master/LICENSE)

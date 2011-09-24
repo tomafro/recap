@@ -13,16 +13,16 @@
     <div id="jump_wrapper">
       <div id="jump_page">
           <a class="source" href="../../index.html">index.rb</a>
+          <a class="source" href="bundler.html">bundler.rb</a>
+          <a class="source" href="capistrano_extensions.html">capistrano_extensions.rb</a>
+          <a class="source" href="cli.html">cli.rb</a>
+          <a class="source" href="compatibility.html">compatibility.rb</a>
           <a class="source" href="deploy.html">deploy.rb</a>
-          <a class="source" href="deploy/bundler.html">bundler.rb</a>
-          <a class="source" href="deploy/capistrano_extensions.html">capistrano_extensions.rb</a>
-          <a class="source" href="deploy/cli.html">cli.rb</a>
-          <a class="source" href="deploy/compatibility.html">compatibility.rb</a>
-          <a class="source" href="deploy/env.html">env.rb</a>
-          <a class="source" href="deploy/foreman.html">foreman.rb</a>
-          <a class="source" href="deploy/preflight.html">preflight.rb</a>
-          <a class="source" href="deploy/rails.html">rails.rb</a>
-          <a class="source" href="deploy/version.html">version.rb</a>
+          <a class="source" href="env.html">env.rb</a>
+          <a class="source" href="foreman.html">foreman.rb</a>
+          <a class="source" href="preflight.html">preflight.rb</a>
+          <a class="source" href="rails.html">rails.rb</a>
+          <a class="source" href="version.html">version.rb</a>
       </div>
     </div>
   </div>
@@ -42,12 +42,12 @@
         
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;tomafro/deploy/capistrano_extensions&#39;</span>
-<span class="nb">require</span> <span class="s1">&#39;tomafro/deploy/bundler&#39;</span>
-<span class="nb">require</span> <span class="s1">&#39;tomafro/deploy/preflight&#39;</span>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap/capistrano_extensions&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;recap/bundler&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;recap/preflight&#39;</span>
 
 <span class="no">Capistrano</span><span class="o">::</span><span class="no">Configuration</span><span class="o">.</span><span class="n">instance</span><span class="p">(</span><span class="ss">:must_exist</span><span class="p">)</span><span class="o">.</span><span class="n">load</span> <span class="k">do</span>
-  <span class="kp">extend</span> <span class="no">Tomafro</span><span class="o">::</span><span class="no">Deploy</span><span class="o">::</span><span class="no">CapistranoExtensions</span></pre></div>
+  <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">CapistranoExtensions</span></pre></div>
       </td>
     </tr>
     <tr id='section-2'>
@@ -309,6 +309,7 @@ servers, tags the release and restarts the application.</p>
         <div class='highlight'><pre>    <span class="n">task</span> <span class="ss">:tag</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">}</span> <span class="k">do</span>
       <span class="n">on_rollback</span> <span class="p">{</span> <span class="n">git</span> <span class="s2">&quot;tag -d </span><span class="si">#{</span><span class="n">release_tag</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
       <span class="n">git</span> <span class="s2">&quot;tag </span><span class="si">#{</span><span class="n">release_tag</span><span class="si">}</span><span class="s2"> -m &#39;</span><span class="si">#{</span><span class="n">release_message</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+      <span class="n">top</span><span class="o">.</span><span class="n">deploy</span><span class="o">.</span><span class="n">change_ownership</span>
     <span class="k">end</span></pre></div>
       </td>
     </tr>

@@ -1,4 +1,4 @@
-# Before `tomafro-deploy` will work correctly, a small amount of setup work needs to be performed on
+# Before `recap` will work correctly, a small amount of setup work needs to be performed on
 # all target servers.
 #
 # First, each user who can deploy the app needs to have an account on each server, and must be able

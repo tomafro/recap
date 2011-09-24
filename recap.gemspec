@@ -1,17 +1,17 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "tomafro/deploy/version"
+require "recap/version"
 
 Gem::Specification.new do |s|
-  s.name        = "tomafro-deploy"
-  s.version     = Tomafro::Deploy::VERSION
+  s.name        = "recap"
+  s.version     = Recap::VERSION
   s.authors     = ["Tom Ward"]
   s.email       = ["tom@popdog.net"]
-  s.homepage    = "https://github.com/tomafro/tomafro-deploy"
+  s.homepage    = "https://github.com/freerange/recap"
   s.summary     = %q{GIT based deployment recipes for Capistrano}
   s.description = %q{GIT based deployment recipes for Capistrano}
 
-  s.rubyforge_project = "tomafro-deploy"
+  s.rubyforge_project = "recap"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
