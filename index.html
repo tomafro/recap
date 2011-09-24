@@ -13,16 +13,16 @@
     <div id="jump_wrapper">
       <div id="jump_page">
           <a class="source" href="index.html">index.rb</a>
-          <a class="source" href="lib/tomafro/deploy.html">deploy.rb</a>
-          <a class="source" href="lib/tomafro/deploy/bundler.html">bundler.rb</a>
-          <a class="source" href="lib/tomafro/deploy/capistrano_extensions.html">capistrano_extensions.rb</a>
-          <a class="source" href="lib/tomafro/deploy/cli.html">cli.rb</a>
-          <a class="source" href="lib/tomafro/deploy/compatibility.html">compatibility.rb</a>
-          <a class="source" href="lib/tomafro/deploy/env.html">env.rb</a>
-          <a class="source" href="lib/tomafro/deploy/foreman.html">foreman.rb</a>
-          <a class="source" href="lib/tomafro/deploy/preflight.html">preflight.rb</a>
-          <a class="source" href="lib/tomafro/deploy/rails.html">rails.rb</a>
-          <a class="source" href="lib/tomafro/deploy/version.html">version.rb</a>
+          <a class="source" href="lib/recap/bundler.html">bundler.rb</a>
+          <a class="source" href="lib/recap/capistrano_extensions.html">capistrano_extensions.rb</a>
+          <a class="source" href="lib/recap/cli.html">cli.rb</a>
+          <a class="source" href="lib/recap/compatibility.html">compatibility.rb</a>
+          <a class="source" href="lib/recap/deploy.html">deploy.rb</a>
+          <a class="source" href="lib/recap/env.html">env.rb</a>
+          <a class="source" href="lib/recap/foreman.html">foreman.rb</a>
+          <a class="source" href="lib/recap/preflight.html">preflight.rb</a>
+          <a class="source" href="lib/recap/rails.html">rails.rb</a>
+          <a class="source" href="lib/recap/version.html">version.rb</a>
       </div>
     </div>
   </div>
@@ -40,7 +40,7 @@
           <a class="pilcrow" href="#section-1">&#182;</a>
         </div>
         <p>This is the annotated source code and documentation for
-<a href="http://github.com/tomafro/tomafro-deploy">tomafro-deploy</a>, a simple, opinionated set of capistrano
+<a href="http://github.com/freerange/recap">recap</a>, a simple, opinionated set of capistrano
 deployment recipes.  Inspired by
 <a href="https://github.com/blog/470-deployment-script-spring-cleaning">this blog post</a>, these recipes use
 git&rsquo;s strengths to deploy applications in a faster, simpler manner than a standard capistrano
@@ -133,9 +133,9 @@ to perform the majority of deployment tasks, this code can be added to
         <div class="pilwrap">
           <a class="pilcrow" href="#section-8">&#182;</a>
         </div>
-        <p>The main deployment tasks are defined in <a href="lib/tomafro/deploy.html">tomafro/deploy.rb</a>.  Automatic
+        <p>The main deployment tasks are defined in <a href="lib/recap.html">recap.rb</a>.  Automatic
 checks to ensure servers are correctly setup are in
-<a href="lib/tomafro/deploy/preflight.html">tomafro/deploy/preflight.rb</a>.</p>
+<a href="lib/recap/preflight.html">recap/preflight.rb</a>.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -146,8 +146,8 @@ checks to ensure servers are correctly setup are in
         <div class="pilwrap">
           <a class="pilcrow" href="#section-9">&#182;</a>
         </div>
-        <p>In addition, there are extensions for <a href="lib/tomafro/deploy/bundler.html">bundler</a> and
-<a href="lib/tomafro/deploy/foreman.html">foreman</a>.</p>
+        <p>In addition, there are extensions for <a href="lib/recap/bundler.html">bundler</a> and
+<a href="lib/recap/foreman.html">foreman</a>.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -159,7 +159,7 @@ checks to ensure servers are correctly setup are in
           <a class="pilcrow" href="#section-10">&#182;</a>
         </div>
         <p>For (limited) compatability with other existing recipes, see
-<a href="lib/tomafro/deploy/compatibility.html">compatibility</a></p>
+<a href="lib/recap/compatibility.html">compatibility</a></p>
       </td>
       <td class=code>
         <div class='highlight'><pre></pre></div>
@@ -203,8 +203,8 @@ checks to ensure servers are correctly setup are in
         <div class="pilwrap">
           <a class="pilcrow" href="#section-14">&#182;</a>
         </div>
-        <p>The code is available <a href="http://github.com/tomafro/tomafro-deploy">on github</a> and released under the
-<a href="https://github.com/tomafro/tomafro-deploy/blob/master/LICENSE">MIT License</a></p>
+        <p>The code is available <a href="http://github.com/freerange/recap">on github</a> and released under the
+<a href="https://github.com/freerange/recap/blob/master/LICENSE">MIT License</a></p>
 
       </td>
       <td class=code>
