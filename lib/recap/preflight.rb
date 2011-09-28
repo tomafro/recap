@@ -27,7 +27,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   namespace :preflight do
     task :check do
       # First check the `application_user` exists
-      if capture("id #{application_user} > /dev/null 2>&1; echo $?").strip != "0"
+      if exit_code("id #{application_user}").strip != "0"
         abort %{
 The application user '#{application_user}' doesn't exist.  You can create this user by logging into the server and running:
 
@@ -36,7 +36,7 @@ The application user '#{application_user}' doesn't exist.  You can create this u
       end
 
       # Then the `application_group`
-      if capture("id -g #{application_group} > /dev/null 2>&1; echo $?").strip != "0"
+      if exit_code("id -g #{application_group}") != "0"
         abort %{
 The application group '#{application_group}' doesn't exist.  You can create this group by logging into the server and running:
 

@@ -51,6 +51,10 @@ module Recap
       as_app "bundle #{command}"
     end
 
+    def exit_code(command)
+      capture("#{command} > /dev/null 2>&1; echo $?").strip
+    end
+
     # Find the latest tag from the repository.  As `git tag` returns tags in order, and our release
     # tags are timestamps, the latest tag will always be the last in the list.
     def latest_tag_from_repository
@@ -60,14 +64,14 @@ module Recap
 
     # Does the given file exist within the deployment directory?
     def deployed_file_exists?(path)
-      capture("cd #{deploy_to} && [ -f #{path} ]; echo $?").strip == "0"
+      exit_code("cd #{deploy_to} && [ -f #{path} ]") == "0"
     end
 
     # Has the given path been created or changed since the previous deployment?  During the first
     # successful deployment this will always return true.
     def deployed_file_changed?(path)
       return true unless latest_tag
-      capture_git("diff --exit-code #{latest_tag} origin/#{branch} #{path} > /dev/null; echo $?").strip == "1"
+      exit_code("cd #{deploy_to} && git diff --exit-code #{latest_tag} origin/#{branch} #{path}") == "1"
     end
   end
 end
