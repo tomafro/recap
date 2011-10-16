@@ -54,25 +54,11 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     # Clone the repository into the deployment directory.
     task :clone_code, :except => {:no_release => true} do
-      # This is a slightly complicated process, as git doesn't allow us to clone into an existing
-      # directory.  To get around this, using `sudo` we create the base deployment folder (if it
-      # doesn't already exist).
-      sudo "mkdir -p #{File.expand_path(deploy_to + "/..")}"
-      # Next, clone our code into a temporary location.  This is necessary as our user might not have
-      # permission to write in the base deployment folder.
-      run "git clone #{repository} $HOME/#{application}.tmp"
-      # Again using `sudo`, move the temporary clone to its final destination.
-      sudo "mv $HOME/#{application}.tmp #{deploy_to}"
-      # Finally ensure that members of the `application_group` can read and write all files.
-      top.deploy.change_ownership
-    end
-
-    # Any files that have been created or updated by our user need to have thier permissions changed to
-    # ensure they can be read and written by and member of the `application_group` (deploying users and
-    # the application itself).
-    task :change_ownership, :except => {:no_release => true} do
-      run "find #{deploy_to} -user `whoami` ! -group #{application_group} -exec chown :#{application_group} {} \\;"
-      run "find #{deploy_to} -user `whoami` -exec chmod g+rw {} \\;"
+      # Before cloning, the directory needs to exist and be both readable and writable by the group
+      as_app "mkdir -p #{deploy_to}", "~"
+      as_app "chmod g+rw #{deploy_to}"
+      # Then clone the code
+      git "clone #{repository} ."
     end
 
     # The main deployment task (called with `cap deploy`) deploys the latest application code to all
@@ -91,8 +77,6 @@ Capistrano::Configuration.instance(:must_exist).load do
       on_rollback { git "reset --hard #{latest_tag}" if latest_tag }
       git "fetch"
       git "reset --hard origin/#{branch}"
-      # Finally ensure that the members of the `application_group` can read and write all files.
-      top.deploy.change_ownership
     end
 
     # Tag `HEAD` with the release tag and message

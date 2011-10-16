@@ -38,12 +38,12 @@ module Recap
 
     # Run a git command in the `deploy_to` directory
     def git(command)
-      run "cd #{deploy_to} && git #{command}"
+      run "cd #{deploy_to} && umask 002 && sg #{application_group} -c \"git #{command}\""
     end
 
     # Capture the result of a git command run within the `deploy_to` directory
     def capture_git(command)
-      capture "cd #{deploy_to} && git #{command}"
+      capture "cd #{deploy_to} && umask 002 && sg #{application_group} -c 'git #{command}'"
     end
 
     # Run a bundle command in the `deploy_to` directory
