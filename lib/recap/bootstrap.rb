@@ -14,7 +14,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       sudo "chmod 755 #{application_home}"
       as_app "touch .profile", "~"
 
-      if exit_code(%{grep 'if \\[ -s "\\$HOME\\/\\.env" ]; then export \\$(cat \\$HOME\\/\\.env); fi' /home/blanche/.profile}) != "0"
+      if exit_code(%{grep 'if \\[ -s "\\$HOME\\/\\.env" ]; then export \\$(cat \\$HOME\\/\\.env); fi' $HOME/.profile}) != "0"
         as_app %{echo >> .profile && echo "if [ -s \\"\\$HOME/.env\\" ]; then export \\$(cat \\$HOME/.env); fi" >> .profile}, "~"
       end
     end
