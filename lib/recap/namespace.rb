@@ -1,4 +1,5 @@
 require 'capistrano'
+require 'recap/capistrano_extensions'
 
 module Recap::Namespace
   def self.default_config

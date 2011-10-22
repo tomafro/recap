@@ -68,5 +68,7 @@ module Recap
       return true unless latest_tag
       exit_code("cd #{deploy_to} && git diff --exit-code #{latest_tag} origin/#{branch} #{path}") == "1"
     end
+
+    Capistrano::Configuration.send :include, self
   end
 end
