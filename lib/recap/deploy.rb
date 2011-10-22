@@ -1,3 +1,4 @@
+require 'recap'
 require 'recap/capistrano_extensions'
 require 'recap/bundler'
 require 'recap/preflight'

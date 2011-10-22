@@ -46,11 +46,6 @@ module Recap
       capture "cd #{deploy_to} && umask 002 && sg #{application_group} -c 'git #{command}'"
     end
 
-    # Run a bundle command in the `deploy_to` directory
-    def bundler(command)
-      as_app "bundle #{command}"
-    end
-
     def exit_code(command)
       capture("#{command} > /dev/null 2>&1; echo $?").strip
     end
