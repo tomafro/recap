@@ -17,4 +17,4 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = "-fn --color"
 end
 
-task default: :spec
+task :default => :spec
