@@ -16,3 +16,5 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.pattern = "spec/**/*_spec.rb"
   t.rspec_opts = "-fn --color"
 end
+
+task default: :spec
