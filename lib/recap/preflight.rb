@@ -17,14 +17,16 @@
 # This preflight recipe checks each of these things in turn, and attempts to give helpful advice
 # should a check fail.
 
-Capistrano::Configuration.instance(:must_exist).load do
-  # The preflight check is pretty quick, so run it before every `deploy:setup` and `deploy`
-  before 'deploy:setup', 'preflight:check'
-  before 'deploy', 'preflight:check'
-
-  set(:remote_username) { capture('whoami').strip }
+module Recap::Preflight
+  extend Recap::Namespace
 
   namespace :preflight do
+    # The preflight check is pretty quick, so run it before every `deploy:setup` and `deploy`
+    before 'deploy:setup', 'preflight:check'
+    before 'deploy', 'preflight:check'
+
+    set(:remote_username) { capture('whoami').strip }
+
     task :check do
       # First check the `application_user` exists
       if exit_code("id #{application_user}").strip != "0"

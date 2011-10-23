@@ -1,6 +1,8 @@
 require 'recap/deploy'
 
-Capistrano::Configuration.instance(:must_exist).load do
+module Recap::Rails
+  extend Recap::Namespace
+
   namespace :rails do
     namespace :db do
       task :load_schema do
@@ -15,8 +17,8 @@ Capistrano::Configuration.instance(:must_exist).load do
         end
       end
     end
-  end
 
-  after "deploy:clone_code", "rails:db:load_schema"
-  after "deploy:update_code", "rails:db:migrate"
+    after "deploy:clone_code", "rails:db:load_schema"
+    after "deploy:update_code", "rails:db:migrate"
+  end
 end

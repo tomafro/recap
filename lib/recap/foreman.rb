@@ -1,4 +1,6 @@
-Capistrano::Configuration.instance(:must_exist).load do
+module Recap::Foreman
+  extend Recap::Namespace
+
   namespace :foreman do
     set(:procfile) {"#{deploy_to}/Procfile"}
     set(:foreman_export_format, "upstart")

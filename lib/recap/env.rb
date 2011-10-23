@@ -4,7 +4,9 @@
 #
 # This will eventually be done automatically
 
-Capistrano::Configuration.instance(:must_exist).load do
+module Recap::Env
+  extend Recap::Namespace
+
   namespace :env do
     set(:environment_file) { "/home/#{application_user}/.env" }
 

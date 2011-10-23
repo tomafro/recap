@@ -1,10 +1,10 @@
-Capistrano::Configuration.instance(:must_exist).load do
-  set(:remote_username) { capture('whoami').strip }
-  set(:application_home) { "/home/#{application_user}"}
-  
-  # grep 'if \[ -s "\$HOME\/\.env" ]; then export \$(cat \$HOME\/\.env); fi' /home/blanche/.profile
+module Recap::Bootstrap
+  extend Recap::Namespace
 
   namespace :bootstrap do
+    set(:remote_username) { capture('whoami').strip }
+    set(:application_home) { "/home/#{application_user}"}
+
     task :application do
       if exit_code("id #{application_user}").strip != "0"
         sudo "useradd #{application_user} -d #{application_home}"
