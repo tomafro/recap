@@ -13,6 +13,8 @@
     <div id="jump_wrapper">
       <div id="jump_page">
           <a class="source" href="../../index.html">index.rb</a>
+          <a class="source" href="../recap.html">recap.rb</a>
+          <a class="source" href="bootstrap.html">bootstrap.rb</a>
           <a class="source" href="bundler.html">bundler.rb</a>
           <a class="source" href="capistrano_extensions.html">capistrano_extensions.rb</a>
           <a class="source" href="cli.html">cli.rb</a>
@@ -20,6 +22,7 @@
           <a class="source" href="deploy.html">deploy.rb</a>
           <a class="source" href="env.html">env.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
+          <a class="source" href="namespace.html">namespace.rb</a>
           <a class="source" href="preflight.html">preflight.rb</a>
           <a class="source" href="rails.html">rails.rb</a>
           <a class="source" href="version.html">version.rb</a>
@@ -42,7 +45,10 @@
         <p>The bundler recipe ensures that the application bundle is installed whenever the code is updated.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="no">Capistrano</span><span class="o">::</span><span class="no">Configuration</span><span class="o">.</span><span class="n">instance</span><span class="p">(</span><span class="ss">:must_exist</span><span class="p">)</span><span class="o">.</span><span class="n">load</span> <span class="k">do</span></pre></div>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Recap::Bundler</span>
+  <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">Namespace</span>
+
+  <span class="n">namespace</span> <span class="ss">:bundle</span> <span class="k">do</span></pre></div>
       </td>
     </tr>
     <tr id='section-2'>
@@ -53,7 +59,7 @@
         <p>Each bundle is declared in a <code>Gemfile</code>, by default in the root of the application directory</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_gemfile</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">/Gemfile&quot;</span> <span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_gemfile</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">/Gemfile&quot;</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-3'>
@@ -64,7 +70,7 @@
         <p>As well as a <code>Gemfile</code>, application repositories should also contain a <code>Gemfile.lock</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_gemfile_lock</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">bundle_gemfile</span><span class="si">}</span><span class="s2">.lock&quot;</span> <span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_gemfile_lock</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">bundle_gemfile</span><span class="si">}</span><span class="s2">.lock&quot;</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-4'>
@@ -73,10 +79,10 @@
           <a class="pilcrow" href="#section-4">&#182;</a>
         </div>
         <p>An application&rsquo;s gems are installed within the application directory.  By default they are
-places under <code>.bundle/gems</code>.</p>
+placed under <code>vendor/gems</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_dir</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">/.bundle/gems&quot;</span> <span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_path</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">/vendor/gems&quot;</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-5'>
@@ -88,16 +94,27 @@ places under <code>.bundle/gems</code>.</p>
 <code>assets</code> groups are skipped.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_without</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;development test assets&quot;</span> <span class="p">}</span>
-
-  <span class="n">namespace</span> <span class="ss">:bundle</span> <span class="k">do</span>
-    <span class="n">namespace</span> <span class="ss">:install</span> <span class="k">do</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_without</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;development test assets&quot;</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-6'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>The main bundle install command uses all the settings above, together with the <code>&mdash;deployment</code>,
+<code>&mdash;binstubs</code> and <code>&mdash;quiet</code> flags</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_install_command</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;bundle install --gemfile </span><span class="si">#{</span><span class="n">bundle_gemfile</span><span class="si">}</span><span class="s2"> --path </span><span class="si">#{</span><span class="n">bundle_path</span><span class="si">}</span><span class="s2"> --deployment --quiet --binstubs --without </span><span class="si">#{</span><span class="n">bundle_without</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+
+    <span class="n">namespace</span> <span class="ss">:install</span> <span class="k">do</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
         </div>
         <p>After cloning or updating the code, we only install the bundle if the <code>Gemfile</code> has changed.</p>
       </td>
@@ -110,10 +127,10 @@ places under <code>.bundle/gems</code>.</p>
       <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-7'>
+    <tr id='section-8'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-7">&#182;</a>
+          <a class="pilcrow" href="#section-8">&#182;</a>
         </div>
         <p>Occassionally it&rsquo;s useful to force an install (such as if something has gone wrong in
 a previous deployment)</p>
@@ -121,28 +138,28 @@ a previous deployment)</p>
       <td class=code>
         <div class='highlight'><pre>      <span class="n">desc</span> <span class="s2">&quot;Install the latest gem bundle&quot;</span>
       <span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
-        <span class="k">if</span> <span class="n">deployed_file_exists?</span><span class="p">(</span><span class="n">bundle_gemfile</span><span class="p">)</span>
-          <span class="n">bundler</span> <span class="s2">&quot;install --gemfile </span><span class="si">#{</span><span class="n">bundle_gemfile</span><span class="si">}</span><span class="s2"> --path </span><span class="si">#{</span><span class="n">bundle_dir</span><span class="si">}</span><span class="s2"> --deployment --quiet --binstubs --without </span><span class="si">#{</span><span class="n">bundle_without</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">deployed_file_exists?</span><span class="p">(</span><span class="n">bundle_gemfile_lock</span><span class="p">)</span>
+          <span class="n">as_app</span> <span class="n">bundle_install_command</span>
         <span class="k">else</span>
           <span class="nb">puts</span> <span class="s2">&quot;Skipping bundle:install as no Gemfile found&quot;</span>
         <span class="k">end</span>
       <span class="k">end</span>
-    <span class="k">end</span>
-  <span class="k">end</span></pre></div>
+    <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-8'>
+    <tr id='section-9'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-8">&#182;</a>
+          <a class="pilcrow" href="#section-9">&#182;</a>
         </div>
         <p>To install the bundle automatically each time the code is updated or cloned, hooks are added to
 the <code>deploy:clone_code</code> and <code>deploy:update_code</code> tasks.</p>
 
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">after</span> <span class="s1">&#39;deploy:clone_code&#39;</span><span class="p">,</span> <span class="s1">&#39;bundle:install:if_changed&#39;</span>
-  <span class="n">after</span> <span class="s1">&#39;deploy:update_code&#39;</span><span class="p">,</span> <span class="s1">&#39;bundle:install:if_changed&#39;</span>
+        <div class='highlight'><pre>    <span class="n">after</span> <span class="s1">&#39;deploy:clone_code&#39;</span><span class="p">,</span> <span class="s1">&#39;bundle:install:if_changed&#39;</span>
+    <span class="n">after</span> <span class="s1">&#39;deploy:update_code&#39;</span><span class="p">,</span> <span class="s1">&#39;bundle:install:if_changed&#39;</span>
+  <span class="k">end</span>
 <span class="k">end</span></pre></div>
       </td>
     </tr>
