@@ -13,6 +13,8 @@
     <div id="jump_wrapper">
       <div id="jump_page">
           <a class="source" href="../../index.html">index.rb</a>
+          <a class="source" href="../recap.html">recap.rb</a>
+          <a class="source" href="bootstrap.html">bootstrap.rb</a>
           <a class="source" href="bundler.html">bundler.rb</a>
           <a class="source" href="capistrano_extensions.html">capistrano_extensions.rb</a>
           <a class="source" href="cli.html">cli.rb</a>
@@ -20,6 +22,7 @@
           <a class="source" href="deploy.html">deploy.rb</a>
           <a class="source" href="env.html">env.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
+          <a class="source" href="namespace.html">namespace.rb</a>
           <a class="source" href="preflight.html">preflight.rb</a>
           <a class="source" href="rails.html">rails.rb</a>
           <a class="source" href="version.html">version.rb</a>
@@ -59,7 +62,10 @@ application specific files.  Each deploying user should be added to the applicat
 should a check fail.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="no">Capistrano</span><span class="o">::</span><span class="no">Configuration</span><span class="o">.</span><span class="n">instance</span><span class="p">(</span><span class="ss">:must_exist</span><span class="p">)</span><span class="o">.</span><span class="n">load</span> <span class="k">do</span></pre></div>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Recap::Preflight</span>
+  <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">Namespace</span>
+
+  <span class="n">namespace</span> <span class="ss">:preflight</span> <span class="k">do</span></pre></div>
       </td>
     </tr>
     <tr id='section-2'>
@@ -70,12 +76,11 @@ should a check fail.</p>
         <p>The preflight check is pretty quick, so run it before every <code>deploy:setup</code> and <code>deploy</code></p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">before</span> <span class="s1">&#39;deploy:setup&#39;</span><span class="p">,</span> <span class="s1">&#39;preflight:check&#39;</span>
-  <span class="n">before</span> <span class="s1">&#39;deploy&#39;</span><span class="p">,</span> <span class="s1">&#39;preflight:check&#39;</span>
+        <div class='highlight'><pre>    <span class="n">before</span> <span class="s1">&#39;deploy:setup&#39;</span><span class="p">,</span> <span class="s1">&#39;preflight:check&#39;</span>
+    <span class="n">before</span> <span class="s1">&#39;deploy&#39;</span><span class="p">,</span> <span class="s1">&#39;preflight:check&#39;</span>
 
-  <span class="n">set</span><span class="p">(</span><span class="ss">:remote_username</span><span class="p">)</span> <span class="p">{</span> <span class="n">capture</span><span class="p">(</span><span class="s1">&#39;whoami&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span> <span class="p">}</span>
+    <span class="n">set</span><span class="p">(</span><span class="ss">:remote_username</span><span class="p">)</span> <span class="p">{</span> <span class="n">capture</span><span class="p">(</span><span class="s1">&#39;whoami&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span> <span class="p">}</span>
 
-  <span class="n">namespace</span> <span class="ss">:preflight</span> <span class="k">do</span>
     <span class="n">task</span> <span class="ss">:check</span> <span class="k">do</span></pre></div>
       </td>
     </tr>
@@ -87,7 +92,7 @@ should a check fail.</p>
         <p>First check the <code>application_user</code> exists</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="k">if</span> <span class="n">capture</span><span class="p">(</span><span class="s2">&quot;id </span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="s2"> &gt; /dev/null 2&gt;&amp;1; echo $?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span>
+        <div class='highlight'><pre>      <span class="k">if</span> <span class="n">exit_code</span><span class="p">(</span><span class="s2">&quot;id </span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span>
         <span class="nb">abort</span> <span class="sx">%{</span>
 <span class="sx">The application user &#39;</span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="sx">&#39; doesn&#39;t exist.  You can create this user by logging into the server and running:</span>
 
@@ -104,7 +109,7 @@ should a check fail.</p>
         <p>Then the <code>application_group</code></p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="k">if</span> <span class="n">capture</span><span class="p">(</span><span class="s2">&quot;id -g </span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="s2"> &gt; /dev/null 2&gt;&amp;1; echo $?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span>
+        <div class='highlight'><pre>      <span class="k">if</span> <span class="n">exit_code</span><span class="p">(</span><span class="s2">&quot;id -g </span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span>
         <span class="nb">abort</span> <span class="sx">%{</span>
 <span class="sx">The application group &#39;</span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="sx">&#39; doesn&#39;t exist.  You can create this group by logging into the server and running:</span>
 

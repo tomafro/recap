@@ -13,6 +13,8 @@
     <div id="jump_wrapper">
       <div id="jump_page">
           <a class="source" href="../../index.html">index.rb</a>
+          <a class="source" href="../recap.html">recap.rb</a>
+          <a class="source" href="bootstrap.html">bootstrap.rb</a>
           <a class="source" href="bundler.html">bundler.rb</a>
           <a class="source" href="capistrano_extensions.html">capistrano_extensions.rb</a>
           <a class="source" href="cli.html">cli.rb</a>
@@ -20,6 +22,7 @@
           <a class="source" href="deploy.html">deploy.rb</a>
           <a class="source" href="env.html">env.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
+          <a class="source" href="namespace.html">namespace.rb</a>
           <a class="source" href="preflight.html">preflight.rb</a>
           <a class="source" href="rails.html">rails.rb</a>
           <a class="source" href="version.html">version.rb</a>
@@ -42,12 +45,18 @@
         
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap/capistrano_extensions&#39;</span>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;recap/capistrano_extensions&#39;</span>
+
+<span class="nb">require</span> <span class="s1">&#39;recap/bootstrap&#39;</span>
 <span class="nb">require</span> <span class="s1">&#39;recap/bundler&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;recap/env&#39;</span>
 <span class="nb">require</span> <span class="s1">&#39;recap/preflight&#39;</span>
 
-<span class="no">Capistrano</span><span class="o">::</span><span class="no">Configuration</span><span class="o">.</span><span class="n">instance</span><span class="p">(</span><span class="ss">:must_exist</span><span class="p">)</span><span class="o">.</span><span class="n">load</span> <span class="k">do</span>
-  <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">CapistranoExtensions</span></pre></div>
+<span class="k">module</span> <span class="nn">Recap::Deploy</span>
+  <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">Namespace</span>
+
+  <span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span></pre></div>
       </td>
     </tr>
     <tr id='section-2'>
@@ -58,8 +67,8 @@
         <p>To use this recipe, both the application&rsquo;s name and its git repository are required.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:application</span><span class="p">)</span> <span class="p">{</span> <span class="nb">abort</span> <span class="s2">&quot;You must set the name of your application in your Capfile, e.g.: set :application, &#39;tomafro.net&#39;&quot;</span> <span class="p">}</span>
-  <span class="n">set</span><span class="p">(</span><span class="ss">:repository</span><span class="p">)</span> <span class="p">{</span> <span class="nb">abort</span> <span class="s2">&quot;You must set the git respository location in your Capfile, e.g.: set :respository, &#39;git@github.com/tomafro/tomafro.net&#39;&quot;</span><span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:application</span><span class="p">)</span> <span class="p">{</span> <span class="nb">abort</span> <span class="s2">&quot;You must set the name of your application in your Capfile, e.g.: set :application, &#39;tomafro.net&#39;&quot;</span> <span class="p">}</span>
+    <span class="n">set</span><span class="p">(</span><span class="ss">:repository</span><span class="p">)</span> <span class="p">{</span> <span class="nb">abort</span> <span class="s2">&quot;You must set the git respository location in your Capfile, e.g.: set :respository, &#39;git@github.com/tomafro/tomafro.net&#39;&quot;</span><span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-3'>
@@ -72,8 +81,8 @@ can deploy the application should be added as a member of the application&rsquo;
 both the application user and group take the same name as the application.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:application_user</span><span class="p">)</span> <span class="p">{</span> <span class="n">application</span> <span class="p">}</span>
-  <span class="n">set</span><span class="p">(</span><span class="ss">:application_group</span><span class="p">)</span> <span class="p">{</span> <span class="n">application_user</span> <span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:application_user</span><span class="p">)</span> <span class="p">{</span> <span class="n">application</span> <span class="p">}</span>
+    <span class="n">set</span><span class="p">(</span><span class="ss">:application_group</span><span class="p">)</span> <span class="p">{</span> <span class="n">application_user</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-4'>
@@ -84,7 +93,7 @@ both the application user and group take the same name as the application.</p>
         <p>Deployments can be made from any branch. <code>master</code> is used by default.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:branch</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span><span class="p">)</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:branch</span><span class="p">,</span> <span class="s1">&#39;master&#39;</span><span class="p">)</span></pre></div>
       </td>
     </tr>
     <tr id='section-5'>
@@ -96,7 +105,7 @@ both the application user and group take the same name as the application.</p>
 directory.  The default is <code>/home/#{application_user}/apps/#{application}</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:deploy_to</span><span class="p">)</span>   <span class="p">{</span> <span class="s2">&quot;/home/</span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="s2">/apps/</span><span class="si">#{</span><span class="n">application</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:deploy_to</span><span class="p">)</span>   <span class="p">{</span> <span class="s2">&quot;/home/</span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="s2">/apps/</span><span class="si">#{</span><span class="n">application</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-6'>
@@ -109,7 +118,7 @@ changed, it&rsquo;s not recommended, as the sort order of the tag names is impor
 be listed after earlier tags.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:release_tag</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m%d%H%M%S&quot;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:release_tag</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m%d%H%M%S&quot;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-7'>
@@ -121,7 +130,7 @@ be listed after earlier tags.</p>
 anything useful &ndash; its contents are not important for the recipe.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:release_message</span><span class="p">,</span> <span class="s2">&quot;Deployed at </span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:release_message</span><span class="p">,</span> <span class="s2">&quot;Deployed at </span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></pre></div>
       </td>
     </tr>
     <tr id='section-8'>
@@ -133,7 +142,7 @@ anything useful &ndash; its contents are not important for the recipe.</p>
 deployments have been made, this will be <code>nil</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">set</span><span class="p">(</span><span class="ss">:latest_tag</span><span class="p">)</span> <span class="p">{</span> <span class="n">latest_tag_from_repository</span> <span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:latest_tag</span><span class="p">)</span> <span class="p">{</span> <span class="n">latest_tag_from_repository</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-9'>
@@ -145,7 +154,7 @@ deployments have been made, this will be <code>nil</code>.</p>
 deploying user&rsquo;s ssh key than manage keys on deployment servers.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">ssh_options</span><span class="o">[</span><span class="ss">:forward_agent</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">ssh_options</span><span class="o">[</span><span class="ss">:forward_agent</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span></pre></div>
       </td>
     </tr>
     <tr id='section-10'>
@@ -157,9 +166,7 @@ deploying user&rsquo;s ssh key than manage keys on deployment servers.</p>
 <code>:pty</code> is set to <code>true</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">default_run_options</span><span class="o">[</span><span class="ss">:pty</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span>
-
-  <span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">default_run_options</span><span class="o">[</span><span class="ss">:pty</span><span class="o">]</span> <span class="o">=</span> <span class="kp">true</span></pre></div>
       </td>
     </tr>
     <tr id='section-11'>
@@ -194,12 +201,11 @@ deploying user&rsquo;s ssh key than manage keys on deployment servers.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-13">&#182;</a>
         </div>
-        <p>This is a slightly complicated process, as git doesn&rsquo;t allow us to clone into an existing
-directory.  To get around this, using <code>sudo</code> we create the base deployment folder (if it
-doesn&rsquo;t already exist).</p>
+        <p>Before cloning, the directory needs to exist and be both readable and writable by the group</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="n">sudo</span> <span class="s2">&quot;mkdir -p </span><span class="si">#{</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="n">deploy_to</span> <span class="o">+</span> <span class="s2">&quot;/..&quot;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span></pre></div>
+        <div class='highlight'><pre>      <span class="n">as_app</span> <span class="s2">&quot;mkdir -p </span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;~&quot;</span>
+      <span class="n">as_app</span> <span class="s2">&quot;chmod g+rw </span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">&quot;</span></pre></div>
       </td>
     </tr>
     <tr id='section-14'>
@@ -207,56 +213,17 @@ doesn&rsquo;t already exist).</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-14">&#182;</a>
         </div>
-        <p>Next, clone our code into a temporary location.  This is necessary as our user might not have
-permission to write in the base deployment folder.</p>
+        <p>Then clone the code</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="n">run</span> <span class="s2">&quot;git clone </span><span class="si">#{</span><span class="n">repository</span><span class="si">}</span><span class="s2"> $HOME/</span><span class="si">#{</span><span class="n">application</span><span class="si">}</span><span class="s2">.tmp&quot;</span></pre></div>
+        <div class='highlight'><pre>      <span class="n">git</span> <span class="s2">&quot;clone </span><span class="si">#{</span><span class="n">repository</span><span class="si">}</span><span class="s2"> .&quot;</span>
+    <span class="k">end</span></pre></div>
       </td>
     </tr>
     <tr id='section-15'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-15">&#182;</a>
-        </div>
-        <p>Again using <code>sudo</code>, move the temporary clone to its final destination.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>      <span class="n">sudo</span> <span class="s2">&quot;mv $HOME/</span><span class="si">#{</span><span class="n">application</span><span class="si">}</span><span class="s2">.tmp </span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-16'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-16">&#182;</a>
-        </div>
-        <p>Finally ensure that members of the <code>application_group</code> can read and write all files.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>      <span class="n">top</span><span class="o">.</span><span class="n">deploy</span><span class="o">.</span><span class="n">change_ownership</span>
-    <span class="k">end</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-17'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-17">&#182;</a>
-        </div>
-        <p>Any files that have been created or updated by our user need to have thier permissions changed to
-ensure they can be read and written by and member of the <code>application_group</code> (deploying users and
-the application itself).</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>    <span class="n">task</span> <span class="ss">:change_ownership</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">}</span> <span class="k">do</span>
-      <span class="n">run</span> <span class="s2">&quot;find </span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2"> -user `whoami` ! -group </span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="s2"> -exec chown :</span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="s2"> {} </span><span class="se">\\</span><span class="s2">;&quot;</span>
-      <span class="n">run</span> <span class="s2">&quot;find </span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2"> -user `whoami` -exec chmod g+rw {} </span><span class="se">\\</span><span class="s2">;&quot;</span>
-    <span class="k">end</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-18'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-18">&#182;</a>
         </div>
         <p>The main deployment task (called with <code>cap deploy</code>) deploys the latest application code to all
 servers, tags the release and restarts the application.</p>
@@ -272,10 +239,10 @@ servers, tags the release and restarts the application.</p>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-19'>
+    <tr id='section-16'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-19">&#182;</a>
+          <a class="pilcrow" href="#section-16">&#182;</a>
         </div>
         <p>Fetch the latest changes, then update <code>HEAD</code> to the deployment branch.</p>
       </td>
@@ -283,25 +250,14 @@ servers, tags the release and restarts the application.</p>
         <div class='highlight'><pre>    <span class="n">task</span> <span class="ss">:update_code</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">}</span> <span class="k">do</span>
       <span class="n">on_rollback</span> <span class="p">{</span> <span class="n">git</span> <span class="s2">&quot;reset --hard </span><span class="si">#{</span><span class="n">latest_tag</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">latest_tag</span> <span class="p">}</span>
       <span class="n">git</span> <span class="s2">&quot;fetch&quot;</span>
-      <span class="n">git</span> <span class="s2">&quot;reset --hard origin/</span><span class="si">#{</span><span class="n">branch</span><span class="si">}</span><span class="s2">&quot;</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-20'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-20">&#182;</a>
-        </div>
-        <p>Finally ensure that the members of the <code>application_group</code> can read and write all files.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>      <span class="n">top</span><span class="o">.</span><span class="n">deploy</span><span class="o">.</span><span class="n">change_ownership</span>
+      <span class="n">git</span> <span class="s2">&quot;reset --hard origin/</span><span class="si">#{</span><span class="n">branch</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-21'>
+    <tr id='section-17'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-21">&#182;</a>
+          <a class="pilcrow" href="#section-17">&#182;</a>
         </div>
         <p>Tag <code>HEAD</code> with the release tag and message</p>
       </td>
@@ -309,14 +265,13 @@ servers, tags the release and restarts the application.</p>
         <div class='highlight'><pre>    <span class="n">task</span> <span class="ss">:tag</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">}</span> <span class="k">do</span>
       <span class="n">on_rollback</span> <span class="p">{</span> <span class="n">git</span> <span class="s2">&quot;tag -d </span><span class="si">#{</span><span class="n">release_tag</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
       <span class="n">git</span> <span class="s2">&quot;tag </span><span class="si">#{</span><span class="n">release_tag</span><span class="si">}</span><span class="s2"> -m &#39;</span><span class="si">#{</span><span class="n">release_message</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
-      <span class="n">top</span><span class="o">.</span><span class="n">deploy</span><span class="o">.</span><span class="n">change_ownership</span>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-22'>
+    <tr id='section-18'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-22">&#182;</a>
+          <a class="pilcrow" href="#section-18">&#182;</a>
         </div>
         <p>After a successful deployment, the app is restarted.  In the most basic deployments this does
 nothing, but other recipes may override it, or attach tasks it&rsquo;s before or after hooks.</p>
@@ -327,10 +282,10 @@ nothing, but other recipes may override it, or attach tasks it&rsquo;s before or
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-23'>
+    <tr id='section-19'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-23">&#182;</a>
+          <a class="pilcrow" href="#section-19">&#182;</a>
         </div>
         <p>To rollback a release, the latest tag is deleted, and <code>HEAD</code> reset to the previous release
 (if one exists).  Finally the application is restarted again.</p>
@@ -350,10 +305,10 @@ nothing, but other recipes may override it, or attach tasks it&rsquo;s before or
     <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-24'>
+    <tr id='section-20'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-24">&#182;</a>
+          <a class="pilcrow" href="#section-20">&#182;</a>
         </div>
         <p>In case of emergency or when manually testing deployment, it can be useful to remove all
 previously deployed files before starting again.</p>
