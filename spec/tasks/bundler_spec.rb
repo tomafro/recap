@@ -5,6 +5,10 @@ describe Recap::Bundler do
     Capistrano::Configuration.new
   end
 
+  let :namespace do
+    config.bundle
+  end
+
   let :deploy_to do
     'path/to/deploy/to'
   end
@@ -73,15 +77,15 @@ describe Recap::Bundler do
   describe 'Tasks' do
     describe 'bundle:install' do
       it 'run bundle_install_command as the app if the Gemfile.lock exists' do
-        config.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(true)
-        config.expects(:as_app).with(config.bundle_install_command)
+        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(true)
+        namespace.expects(:as_app).with(config.bundle_install_command)
 
         config.find_and_execute_task('bundle:install')
       end
 
       it 'skips bundle_install if the Gemfile missing' do
-        config.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(false)
-        config.expects(:as_app).never
+        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(false)
+        namespace.expects(:as_app).never
 
         config.find_and_execute_task('bundle:install')
       end
@@ -89,17 +93,17 @@ describe Recap::Bundler do
 
     describe 'bundle:install:if_changed' do
       it 'calls bundle_install if the Gemfile.lock has changed' do
-        config.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(true)
-        config.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(true)
-        config.expects(:as_app).with(config.bundle_install_command)
+        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(true)
+        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(true)
+        namespace.expects(:as_app).with(config.bundle_install_command)
 
         config.find_and_execute_task('bundle:install:if_changed')
       end
 
       it 'skips bundle_install if the Gemfile missing' do
-        config.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(false)
-        config.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(false)
-        config.expects(:as_app).never
+        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(false)
+        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(false)
+        namespace.expects(:as_app).never
 
         config.find_and_execute_task('bundle:install')
       end
