@@ -75,13 +75,33 @@ describe Recap::Deploy do
     end
 
     describe '#latest_tag' do
-      it 'lazily calls latest_tag_from_repository' do
-        pending 'Test not written'
+      it 'memoizes call to latest_tag_from_repository' do
+        namespace.stubs(:latest_tag_from_repository).returns('abc123').then.returns('something-else')
+        config.latest_tag.should eql('abc123')
+        config.latest_tag.should eql('abc123')
       end
     end
   end
 
   describe 'Tasks' do
+    let :application do
+      'romulus'
+    end
+
+    let :repository do
+      'git@github.com/example/romulus.git'
+    end
+
+    let :deploy_to do
+      '/path/to/deploy/romulus/into'
+    end
+
+    before do
+      config.set :application, application
+      config.set :repository, repository
+      config.set :deploy_to, deploy_to
+    end
+
     describe 'deploy:setup' do
       it 'runs deploy:clone_code task' do
         namespace.expects(:clone_code)
@@ -96,7 +116,12 @@ describe Recap::Deploy do
     end
 
     describe 'deploy:clone_code' do
-      pending 'Tests not written'
+      it 'creates deploy_to dir, ensures it\'s group writable, then clones the repository into it' do
+        namespace.expects(:as_app).with('mkdir -p ' + deploy_to, '~').in_sequence
+        namespace.expects(:as_app).with('chmod g+rw ' + deploy_to).in_sequence
+        namespace.expects(:git).with('clone ' + repository + ' .').in_sequence
+        config.find_and_execute_task('deploy:clone_code')
+      end
     end
 
     describe 'deploy' do
@@ -131,7 +156,15 @@ describe Recap::Deploy do
     end
 
     describe 'deploy:tag' do
-      pending 'Tests not written'
+      before do
+        config.set :release_tag, 'abcd1234'
+        config.set :release_message, 'Released into the wild'
+      end
+
+      it 'tags code with the release tag and release message' do
+        namespace.expects(:git).with('tag abcd1234 -m \'Released into the wild\'')
+        namespace.find_and_execute_task('deploy:tag')
+      end
     end
 
     describe 'deploy:rollback' do
