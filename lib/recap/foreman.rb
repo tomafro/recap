@@ -2,7 +2,7 @@ module Recap::Foreman
   extend Recap::Namespace
 
   namespace :foreman do
-    set(:procfile) {"#{deploy_to}/Procfile"}
+    set(:procfile) { "#{deploy_to}/Procfile" }
     set(:foreman_export_format, "upstart")
     set(:foreman_export_location, "/etc/init")
 
