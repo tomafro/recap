@@ -105,8 +105,10 @@ module Recap::Deploy
           if previous_tag = latest_tag_from_repository
             git "reset --hard #{previous_tag}"
           end
+          restart
+        else
+          abort "This app is not currently deployed"
         end
-        restart
       end
     end
 

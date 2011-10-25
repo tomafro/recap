@@ -152,7 +152,12 @@ describe Recap::Deploy do
     end
 
     describe 'deploy:update_code' do
-      pending 'Tests not written'
+      it 'fetches latest changes, then resets to repository branch' do
+        config.set :branch, 'release-branch'
+        namespace.expects(:git).with('fetch').in_sequence
+        namespace.expects(:git).with('reset --hard origin/release-branch').in_sequence
+        namespace.find_and_execute_task('deploy:update_code')
+      end
     end
 
     describe 'deploy:tag' do
@@ -168,7 +173,21 @@ describe Recap::Deploy do
     end
 
     describe 'deploy:rollback' do
-      pending 'Tests not written'
+      it 'deletes latest tag, resets to previous tag and restarts' do
+        config.stubs(:latest_tag).returns('release-2')
+        config.stubs(:latest_tag_from_repository).returns('release-1')
+        namespace.expects(:git).with('tag -d release-2').in_sequence
+        namespace.expects(:git).with('reset --hard release-1').in_sequence
+        namespace.expects(:restart).in_sequence
+        namespace.find_and_execute_task('deploy:rollback')
+      end
+
+      it 'aborts if no tag has been deployed' do
+        config.stubs(:latest_tag).returns(nil)
+        lambda do
+          namespace.find_and_execute_task('deploy:rollback')
+        end.should raise_error(SystemExit, 'This app is not currently deployed')
+      end
     end
 
     describe 'deploy:restart' do
