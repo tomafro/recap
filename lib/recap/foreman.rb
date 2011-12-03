@@ -2,39 +2,56 @@ module Recap::Foreman
   extend Recap::Namespace
 
   namespace :foreman do
+    # Processes are delcared in a `Procfile`, by default in the root of the application directory
     set(:procfile) { "#{deploy_to}/Procfile" }
+
+    # Foreman startup scripts are exported in `upstart` format by default
     set(:foreman_export_format, "upstart")
+
+    # Scripts are exported (as the the application user) to a temporary location first
+    set(:foreman_tmp_location) { "#{deploy_to}/tmp/foreman" }
+
+    # After exports, the scripts are moved to their final location, usually `/etc/init`
     set(:foreman_export_location, "/etc/init")
 
+    # The standard foreman export
+    set(:foreman_export_command) { "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log" }
+
     namespace :export do
+      # After each deployment, the startup scripts are exported if the `Procfile` has changed
       task :if_changed do
         if deployed_file_changed?(procfile)
           top.foreman.export.default
         end
       end
 
+      # To export the scripts, they are first generated in a temporary location, then copied to their final
+      # destination.  This is done because the foreman export command needs to be run as the application user,
+      # while sudo is required to write to `/etc/init`.
       task :default, :roles => :app do
         if deployed_file_exists?(procfile)
-          tmp = "#{deploy_to}/tmp/foreman"
-          as_app "./bin/foreman export #{foreman_export_format} #{tmp} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log"
+          as_app foreman_export_command
           sudo "rm -f #{foreman_export_location}/#{application}*"
-          sudo "cp #{tmp}/* #{foreman_export_location}"
+          sudo "cp #{foreman_tmp_location}/* #{foreman_export_location}"
         end
       end
     end
 
+    # Starts all processes that form the application
     task :start, :roles => :app do
       if deployed_file_exists?(procfile)
         sudo "start #{application}"
       end
     end
 
+    # Restarts all processes that form the application
     task :restart, :roles => :app do
       if deployed_file_exists?(procfile)
         sudo "restart #{application} || sudo start #{application}"
       end
     end
 
+    # Stops all processes that form the application
     task :stop, :roles => :app do
       if deployed_file_exists?(procfile)
         sudo "stop #{application}"
