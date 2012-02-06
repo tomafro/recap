@@ -93,19 +93,62 @@ describe Recap::Foreman do
     end
 
     describe 'foreman:export' do
-      pending 'Tests not written'
+      it 'runs the foreman export command, then moves the exported files to the export location' do
+        namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(true)
+        namespace.expects(:as_app).with(config.foreman_export_command).in_sequence
+        namespace.expects(:sudo).with("rm -f #{config.foreman_export_location}/#{config.application}*").in_sequence
+        namespace.expects(:sudo).with("cp #{config.foreman_tmp_location}/* #{config.foreman_export_location}").in_sequence
+        config.find_and_execute_task('foreman:export')
+      end
+
+      it 'does nothing if no Procfile exists' do
+        namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(false)
+        namespace.expects(:as_app).never
+        namespace.expects(:sudo).never
+        config.find_and_execute_task('foreman:export')
+      end
     end
 
     describe 'foreman:start' do
-      pending 'Tests not written'
+      it 'starts the application' do
+        namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(true)
+        namespace.expects(:sudo).with('start example-app')
+        config.find_and_execute_task('foreman:start')
+      end
+
+      it 'does nothing if no Procfile exists' do
+        namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(false)
+        namespace.expects(:sudo).never
+        config.find_and_execute_task('foreman:start')
+      end
     end
 
     describe 'foreman:stop' do
-      pending 'Tests not written'
+      it 'starts the application' do
+        namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(true)
+        namespace.expects(:sudo).with('stop example-app')
+        config.find_and_execute_task('foreman:stop')
+      end
+
+      it 'does nothing if no Procfile exists' do
+        namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(false)
+        namespace.expects(:sudo).never
+        config.find_and_execute_task('foreman:stop')
+      end
     end
 
     describe 'foreman:restart' do
-      pending 'Tests not written'
+      it 'restart or starts the application' do
+        namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(true)
+        namespace.expects(:sudo).with('restart example-app || sudo start example-app')
+        config.find_and_execute_task('foreman:restart')
+      end
+
+      it 'does nothing if no Procfile exists' do
+        namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(false)
+        namespace.expects(:sudo).never
+        config.find_and_execute_task('foreman:restart')
+      end
     end
   end
 end
