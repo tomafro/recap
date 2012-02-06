@@ -92,20 +92,16 @@ describe Recap::Bundler do
     end
 
     describe 'bundle:install:if_changed' do
-      it 'calls bundle_install if the Gemfile.lock has changed' do
+      it 'calls bundle:install:default if the Gemfile.lock has changed' do
         namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(true)
-        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(true)
-        namespace.expects(:as_app).with(config.bundle_install_command)
-
+        namespace.install.expects(:default)
         config.find_and_execute_task('bundle:install:if_changed')
       end
 
       it 'skips bundle_install if the Gemfile missing' do
         namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(false)
-        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(false)
-        namespace.expects(:as_app).never
-
-        config.find_and_execute_task('bundle:install')
+        namespace.install.expects(:default).never
+        config.find_and_execute_task('bundle:install:if_changed')
       end
     end
   end
