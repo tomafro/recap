@@ -6,6 +6,7 @@ module Recap
   autoload :Compatibility, 'recap/compatibility'
   autoload :Deploy, 'recap/deploy'
   autoload :Env, 'recap/env'
+  autoload :Environment, 'recap/environment'
   autoload :Foreman, 'recap/foreman'
   autoload :Rails, 'recap/rails'
 end

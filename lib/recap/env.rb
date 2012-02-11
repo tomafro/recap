@@ -10,47 +10,42 @@ module Recap::Env
   namespace :env do
     set(:environment_file) { "/home/#{application_user}/.env" }
 
-    def extract_environment(declarations)
-      declarations.inject({}) do |env, line|
-        if line =~ /\A([A-Za-z_]+)=(.*)\z/
-          env[$1] = $2.strip
-        end
-        env
-      end
-    end
-
     def current_environment
       @current_environment ||= begin
         if deployed_file_exists?(environment_file)
-          extract_environment(capture("cat #{environment_file}").split("\n"))
+          Recap::Environment.from_string(capture("cat #{environment_file}"))
         else
-          {}
+          Recap::Environment.new
         end
       end
     end
 
-    def write_environment(env)
-      env.keys.sort.collect do |v|
-        "#{v}=#{env[v]}" unless env[v].nil? || env[v].empty?
-      end.compact.join("\n")
-    end
-
     task :default do
-      puts write_environment(current_environment)
+      if current_environment.empty?
+        puts "There are no config variables set"
+      else
+        puts "The config variables are:"
+        puts
+        puts current_environment
+      end
     end
 
     task :set do
-      additions = extract_environment(ARGV[1..-1])
-      env = write_environment(current_environment.merge(additions))
+      env = ARGV[1..-1].inject(current_environment) do |env, string|
+        env.merge(Recap::Environment.from_string(string))
+        env
+      end
       if env.empty?
         as_app "rm -f #{environment_file}"
       else
-        put_as_app env, environment_file
+        put_as_app env.to_s, environment_file
       end
+      default
     end
 
     task :edit do
       edit_file environment_file
+      default
     end
   end
 end
