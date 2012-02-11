@@ -90,7 +90,7 @@ module Recap::Deploy
     end
 
     # After a successful deployment, the app is restarted.  In the most basic deployments this does
-    # nothing, but other recipes may override it, or attach tasks it's before or after hooks.
+    # nothing, but other recipes may override it, or attach tasks to its before or after hooks.
     desc "Restart the application following a deploy"
     task :restart do
     end
