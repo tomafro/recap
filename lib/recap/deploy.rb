@@ -58,7 +58,7 @@ module Recap::Deploy
 
     # Clone the repository into the deployment directory.
     task :clone_code, :except => {:no_release => true} do
-      # Before cloning, the directory needs to exist and be both readable and writable by the group
+      # Before cloning, the directory needs to exist and be both readable and writable by the application group
       as_app "mkdir -p #{deploy_to}", "~"
       as_app "chmod g+rw #{deploy_to}"
       # Then clone the code
