@@ -19,7 +19,7 @@ module Recap
 
     # Put a string into a file as the application user
     def put_as_app(string, path)
-      as_app "touch #{path} && chmod g+rw #{path}"
+      as_app "touch #{path} && chmod g+rw #{path}", "/"
       put string, path
     end
 

@@ -5,6 +5,11 @@ module Recap::Bootstrap
     set(:remote_username) { capture('whoami').strip }
     set(:application_home) { "/home/#{application_user}"}
 
+    task :default do
+      application
+      user
+    end
+
     task :application do
       if exit_code("id #{application_user}").strip != "0"
         sudo "useradd #{application_user} -d #{application_home}"
@@ -17,6 +22,8 @@ module Recap::Bootstrap
       if exit_code(%{grep 'if \\[ -s "\\$HOME\\/\\.env" ]; then export \\$(cat \\$HOME\\/\\.env); fi' $HOME/.profile}) != "0"
         as_app %{echo >> .profile && echo "if [ -s \\"\\$HOME/.env\\" ]; then export \\$(cat \\$HOME/.env); fi" >> .profile}, "~"
       end
+
+      as_app "mkdir -p #{deploy_to}", "~"
     end
 
     task :user do

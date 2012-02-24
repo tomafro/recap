@@ -1,13 +1,13 @@
-# N.B. To get the environment loaded on every shell invocation add the following to .profile:
-#
-#     if [ -s "$HOME/.env" ]; then export $(cat $HOME/.env); fi
-#
-# This will eventually be done automatically
+# Environment variables are a useful way to set application configuration, such as database passwords
+# or S3 keys and secrets.  [recap](http://github.com/freerange/recap) stores these extra variables in
+# a special file, usually stored at `$HOME/.env`.  This file is loaded each time the shell starts by
+# adding the following to the user's `.profile`
 
 module Recap::Env
   extend Recap::Namespace
 
   namespace :env do
+    # Environment
     set(:environment_file) { "/home/#{application_user}/.env" }
 
     def current_environment
@@ -32,11 +32,11 @@ module Recap::Env
 
     task :set do
       env = ARGV[1..-1].inject(current_environment) do |env, string|
-        env.merge(Recap::Environment.from_string(string))
+        env.set_string(string)
         env
       end
       if env.empty?
-        as_app "rm -f #{environment_file}"
+        as_app "rm -f #{environment_file}", "~"
       else
         put_as_app env.to_s, environment_file
       end

@@ -1,4 +1,6 @@
 *.gem
 .bundle
+.vagrant
 Gemfile.lock
 pkg/*
+/test-vm/share/*

@@ -15,6 +15,12 @@ class Recap::Environment
     end
   end
 
+  def set_string(string)
+    if string =~ /\A([A-Za-z0-9_]+)=(.*)\z/
+      set $1, $2
+    end
+  end
+
   def empty?
     @variables.empty?
   end
@@ -40,7 +46,7 @@ class Recap::Environment
   class << self
     def from_string(string)
       string.split("\n").inject(new) do |env, line|
-        env.set($1, $2) if line =~ /\A([A-Za-z0-9_]+)=(.*)\z/
+        env.set_string(line)
         env
       end
     end
