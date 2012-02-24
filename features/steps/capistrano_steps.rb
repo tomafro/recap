@@ -1,9 +1,9 @@
 Before do
-  `bundle exec vagrant sandbox on`
+  `bundle exec vagrant sandbox on` unless ENV['SKIP_ROLLBACK']
 end
 
 After do
-  `bundle exec vagrant sandbox rollback`
+  `bundle exec vagrant sandbox rollback` unless ENV['SKIP_ROLLBACK']
 end
 
 Given /^a new project and a bootstrapped server$/ do

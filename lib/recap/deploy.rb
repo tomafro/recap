@@ -29,7 +29,7 @@ module Recap::Deploy
     # Each release is marked by a unique tag, generated with the current timestamp.  While this can be
     # changed, it's not recommended, as the sort order of the tag names is important; later tags must
     # be listed after earlier tags.
-    set(:release_tag) { "#{Time.now.utc.strftime("%Y%m%d%H%M%S")}"}
+    set(:release_tag) { Time.now.utc.strftime("%Y%m%d%H%M%S") }
 
     # On tagging a release, a message is also recorded alongside the tag.  This message can contain
     # anything useful - its contents are not important for the recipe.

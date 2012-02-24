@@ -1,10 +1,42 @@
 require 'fileutils'
 require 'faker'
-require 'timecop'
 
 module ProjectSupport
   def project
     @project ||= Project.new(server)
+  end
+
+  class Capfile
+    def initialize(project, options = {})
+      @project = project
+      @require = options[:require] || 'recap/deploy'
+    end
+
+    def to_s
+      %{
+  require '#{@require}'
+
+  # To connect to the vagrant VM we need to set up a few non-standard parameters, including the
+  # vagrant SSH port and private key
+
+  set :user, 'vagrant'
+
+  ssh_options[:port] = 2222
+  ssh_options[:keys] = ['#{@project.private_key_path}']
+
+  server '127.0.0.1', :web
+
+  # Each project has its own location shared between the host machine and the VM
+
+  set :application, '#{@project.name}'
+  set :repository, '/recap/share/#{@project.name}'
+
+  # Finally, to ensure tests don't fail if deployments are made within a second of each other
+  # which they can do when automated like this, we use a finer-grained release tag
+
+  set(:release_tag) { Time.now.utc.strftime("%Y%m%d%H%M%S%L") }
+}
+    end
   end
 
   class Project
@@ -12,15 +44,16 @@ module ProjectSupport
       @server = server
       FileUtils.rm_rf repository_path
       git 'init'
-      write_capfile
+      commit_file 'Capfile', Capfile.new(self)
     end
 
     def name
       @name ||= Faker::Name.first_name.downcase
     end
 
-    def repository_path
-      'test-vm/share/' + name
+
+    def private_key_path
+      @server.private_key_path
     end
 
     def latest_version
@@ -43,28 +76,12 @@ module ProjectSupport
       git "commit -m 'Added #{path}'"
     end
 
-    def write_capfile(content = '')
-      commit_file 'Capfile', %{
-  require 'recap/deploy'
-
-  set :user, 'vagrant'
-
-  server '127.0.0.1', :web
-
-  ssh_options[:port] = 2222
-  ssh_options[:keys] = ['#{@server.private_key_path}']
-
-  set :application, '#{name}'
-  set :repository, '/recap/share/#{name}'
-      }
-    end
-
-    def capfile_location
-      repository_path + '/Capfile'
+    def repository_path(path = "")
+      File.join('test-vm/share/', name, path)
     end
 
     def deployment_path(path = "")
-      "/home/#{name}/apps/#{name}/#{path}"
+      File.join("/home/#{name}/apps/#{name}", path)
     end
 
     def deployed_version
@@ -72,8 +89,7 @@ module ProjectSupport
     end
 
     def run_cap(command)
-      Timecop.travel 60 # Make sure tags are unique
-      `cap -l STDOUT -f #{capfile_location} #{command}`
+      `cap -l capistrano.log -f #{repository_path('Capfile')} #{command}`
       raise "Exit code returned running 'cap #{command}'" if $?.exitstatus != 0
     end
 
@@ -82,10 +98,6 @@ module ProjectSupport
       FileUtils.chdir repository_path do
         `git #{command}`
       end
-    end
-
-    def read_deployed_file(path)
-      @server.run "cat #{deployment_path(path)}"
     end
   end
 end

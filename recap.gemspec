@@ -26,5 +26,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency('sahara', '~>0.0.10')
   s.add_development_dependency('cucumber', '~>1.1.4')
   s.add_development_dependency('faker', '~>1.0.1')
-  s.add_development_dependency('timecop', '~>0.3.5')
 end
