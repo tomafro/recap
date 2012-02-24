@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'recap/bootstrap'
 
 describe Recap::Bootstrap do
   let :config do
@@ -10,7 +11,7 @@ describe Recap::Bootstrap do
   end
 
   before do
-    Recap::Env.load_into(config)
+    Recap::Bootstrap.load_into(config)
   end
 
   describe 'Tasks' do
