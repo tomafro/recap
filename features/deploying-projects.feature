@@ -1,4 +1,4 @@
-Feature: Deploying a static site
+Feature: Deploying and rolling back deployments
 
   Scenario: Deploying for the first time
 

@@ -9,7 +9,7 @@ module ProjectSupport
   class Capfile
     def initialize(project, options = {})
       @project = project
-      @require = options[:require] || 'recap/deploy'
+      @require = options[:require] || 'recap/static'
     end
 
     def to_s
@@ -50,7 +50,6 @@ module ProjectSupport
     def name
       @name ||= Faker::Name.first_name.downcase
     end
-
 
     def private_key_path
       @server.private_key_path

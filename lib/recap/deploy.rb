@@ -1,9 +1,9 @@
 require 'recap'
 require 'recap/capistrano_extensions'
 
+require 'recap/preflight'
 require 'recap/bootstrap'
 require 'recap/env'
-require 'recap/preflight'
 
 module Recap::Deploy
   extend Recap::Namespace
