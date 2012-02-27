@@ -79,7 +79,7 @@ module ProjectSupport
     end
 
     def repository_path(path = "")
-      File.join('test-vm/share/', name, path)
+      File.join('test-vm/share/projects/', name, path)
     end
 
     def deployment_path(path = "")

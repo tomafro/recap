@@ -13,7 +13,7 @@ server '127.0.0.1', :web
 # Each project has its own location shared between the host machine and the VM
 
 set :application, '<%= project.name %>'
-set :repository, '/recap/share/<%= project.name %>'
+set :repository, '/recap/share/projects/<%= project.name %>'
 
 # Finally, to ensure tests don't fail if deployments are made within a second of each other
 # which they can do when automated like this, we use a finer-grained release tag
