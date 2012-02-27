@@ -23,10 +23,10 @@ module Recap::Bundler
     set(:bundle_install_command) { "bundle install --gemfile #{bundle_gemfile} --path #{bundle_path} --deployment --quiet --binstubs --without #{bundle_without}" }
 
     namespace :install do
-      # After cloning or updating the code, we only install the bundle if the `Gemfile` has changed.
-      desc "Install the latest gem bundle only if Gemfile.lock has changed"
+      # After cloning or updating the code, we only install the bundle if the `Gemfile` or `Gemfile.lock` have changed.
+      desc "Install the latest gem bundle only if Gemfile or Gemfile.lock have changed"
       task :if_changed do
-        if deployed_file_changed?(bundle_gemfile_lock)
+        if deployed_file_changed?(bundle_gemfile) || deployed_file_changed?(bundle_gemfile_lock)
           top.bundle.install.default
         end
       end
@@ -35,8 +35,12 @@ module Recap::Bundler
       # a previous deployment)
       desc "Install the latest gem bundle"
       task :default do
-        if deployed_file_exists?(bundle_gemfile_lock)
-          as_app bundle_install_command
+        if deployed_file_exists?(bundle_gemfile)
+          if deployed_file_exists?(bundle_gemfile_lock)
+            as_app bundle_install_command
+          else
+            abort 'Gemfile found without Gemfile.lock.  The Gemfile.lock should be committed to the project repository'
+          end
         else
           puts "Skipping bundle:install as no Gemfile found"
         end

@@ -76,7 +76,8 @@ describe Recap::Bundler do
 
   describe 'Tasks' do
     describe 'bundle:install' do
-      it 'run bundle_install_command as the app if the Gemfile.lock exists' do
+      it 'run bundle_install_command as the app if the Gemfile and Gemfile.lock exist' do
+        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile).returns(true)
         namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(true)
         namespace.expects(:as_app).with(config.bundle_install_command)
 
@@ -84,21 +85,38 @@ describe Recap::Bundler do
       end
 
       it 'skips bundle_install if the Gemfile missing' do
-        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(false)
+        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile).returns(false)
         namespace.expects(:as_app).never
 
         config.find_and_execute_task('bundle:install')
+      end
+
+      it 'aborts with warning if Gemfile exists but Gemfile.lock doesn\'t' do
+        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile).returns(true)
+        namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(false)
+        lambda do
+          namespace.find_and_execute_task('bundle:install')
+        end.should raise_error(SystemExit, 'Gemfile found without Gemfile.lock.  The Gemfile.lock should be committed to the project repository')
       end
     end
 
     describe 'bundle:install:if_changed' do
       it 'calls bundle:install:default if the Gemfile.lock has changed' do
+        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile).returns(false)
         namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(true)
         namespace.install.expects(:default)
         config.find_and_execute_task('bundle:install:if_changed')
       end
 
-      it 'skips bundle_install if the Gemfile missing' do
+      it 'calls bundle:install:default if the Gemfile has changed' do
+        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile).returns(true)
+        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(false)
+        namespace.install.expects(:default)
+        config.find_and_execute_task('bundle:install:if_changed')
+      end
+
+      it 'skips bundle_install if neither Gemfile nor Gemfile.lock have changed' do
+        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile).returns(false)
         namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(false)
         namespace.install.expects(:default).never
         config.find_and_execute_task('bundle:install:if_changed')
