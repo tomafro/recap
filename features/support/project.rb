@@ -4,7 +4,11 @@ require 'erb'
 
 module ProjectSupport
   def project
-    @project ||= Project.new(server)
+    @project
+  end
+
+  def start_project(options = {})
+    @project = Project.new(options)
   end
 
   class Template
@@ -38,16 +42,67 @@ module ProjectSupport
     def initialize(project, options = {})
       super('project/Capfile.erb')
       @project = project
-      @recap_require = options[:require] || 'recap/static'
+      @recap_require = options[:recap_require] || 'recap/static'
+    end
+  end
+
+  class Gemfile < Template
+    attr_accessor :gems
+
+    def initialize(gems = {})
+      super('project/Gemfile.erb')
+      @gems = gems
+    end
+  end
+
+  class BundledGem
+    def initialize(gem, version)
+      @gem = gem
+      @version = version
+      @output_path = File.expand_path("../../../test-vm/share/gems/#{gem}", __FILE__)
+    end
+
+    def generate
+      FileUtils.mkdir_p @output_path
+      FileUtils.chdir @output_path do
+        GemBinary.new(@gem, @version).write_to "bin/#{@gem}"
+        Gemspec.new(@gem, @version).write_to "#{@name}.gemspec"
+
+        `git init`
+        `git add --all`
+        `git commit -m 'Committed version #{@version}'`
+        `git tag #{@version}`
+      end
+    end
+
+    class Gemspec < Template
+      attr_reader :gem, :version
+
+      def initialize(gem, version)
+        super 'gem/gemspec.erb'
+        @gem = gem
+        @version = version
+      end
+    end
+
+    class GemBinary < Template
+      attr_reader :gem, :version
+
+      def initialize(name, version)
+        super 'gem/binary.erb'
+        @gem = name
+        @version = version
+      end
     end
   end
 
   class Project
-    def initialize(server = Server.instance)
-      @server = server
+    def initialize(options = {})
+      @server = options[:server]
+      @gems = {}
       FileUtils.rm_rf repository_path
       git 'init'
-      commit_file 'Capfile', Capfile.new(self)
+      write_and_commit_file 'Capfile', Capfile.new(self, options[:capfile] || {})
     end
 
     def name
@@ -70,12 +125,16 @@ module ProjectSupport
       `cd #{repository_path} && git log --pretty=format:"%H"`.split("\n")
     end
 
-    def commit_file(path, content = "")
+    def write_and_commit_file(path, content = "")
       full_path = File.join(repository_path, path)
       FileUtils.mkdir_p File.dirname(full_path)
       File.write(full_path, content)
-      git "add #{path}"
-      git "commit -m 'Added #{path}'"
+      commit_files(path)
+    end
+
+    def commit_files(*paths)
+      git "add #{paths.join(' ')}"
+      git "commit -m 'Added #{paths.join(' ')}'"
     end
 
     def repository_path(path = "")
@@ -95,6 +154,10 @@ module ProjectSupport
       raise "Exit code returned running 'cap #{command}'" if $?.exitstatus != 0
     end
 
+    def run_on_server(cmd)
+      @server.run("cd #{deployment_path} && #{cmd}")
+    end
+
     def git(command)
       FileUtils.mkdir_p repository_path
       FileUtils.chdir repository_path do
@@ -102,8 +165,21 @@ module ProjectSupport
       end
     end
 
+    def gemfile
+      @gemfile ||= Gemfile.new
+    end
+
+    def add_gem_to_bundle(gem, version)
+      gemfile.gems[gem] = version
+      write_and_commit_file 'Gemfile', gemfile
+      BundledGem.new(gem, version).generate
+      # Nasty hack to generate a Gemfile.lock
+      @server.run "cd /recap/share/projects/#{name} && bundle install"
+      commit_files 'Gemfile.lock'
+    end
+
     def commit_changes
-      commit_file 'project-file', Faker::Lorem.sentence
+      write_and_commit_file 'project-file', Faker::Lorem.sentence
     end
   end
 end
