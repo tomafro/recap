@@ -1,41 +1,44 @@
 require 'fileutils'
 require 'faker'
+require 'erb'
 
 module ProjectSupport
   def project
     @project ||= Project.new(server)
   end
 
-  class Capfile
-    def initialize(project, options = {})
-      @project = project
-      @require = options[:require] || 'recap/static'
+  class Template
+    def initialize(template_name)
+      @template_name = template_name
+    end
+
+    def template_root
+      File.expand_path("../../templates/", __FILE__)
     end
 
     def to_s
-      %{
-  require '#{@require}'
+      ERB.new(read_template).result(binding)
+    end
 
-  # To connect to the vagrant VM we need to set up a few non-standard parameters, including the
-  # vagrant SSH port and private key
+    def write_to(path)
+      full_path = File.expand_path(path)
+      FileUtils.mkdir_p File.dirname(full_path)
+      File.write(full_path, to_s)
+    end
 
-  set :user, 'vagrant'
+    def read_template
+      template_path = File.join(template_root, @template_name)
+      File.read(template_path)
+    end
+  end
 
-  ssh_options[:port] = 2222
-  ssh_options[:keys] = ['#{@project.private_key_path}']
+  class Capfile < Template
+    attr_reader :project, :recap_require
 
-  server '127.0.0.1', :web
-
-  # Each project has its own location shared between the host machine and the VM
-
-  set :application, '#{@project.name}'
-  set :repository, '/recap/share/#{@project.name}'
-
-  # Finally, to ensure tests don't fail if deployments are made within a second of each other
-  # which they can do when automated like this, we use a finer-grained release tag
-
-  set(:release_tag) { Time.now.utc.strftime("%Y%m%d%H%M%S%L") }
-}
+    def initialize(project, options = {})
+      super('project/Capfile.erb')
+      @project = project
+      @recap_require = options[:require] || 'recap/static'
     end
   end
 
@@ -97,6 +100,10 @@ module ProjectSupport
       FileUtils.chdir repository_path do
         `git #{command}`
       end
+    end
+
+    def commit_changes
+      commit_file 'project-file', Faker::Lorem.sentence
     end
   end
 end

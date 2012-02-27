@@ -20,11 +20,11 @@ When /^I run "cap ([^"]*)"$/ do |command|
 end
 
 When /^I commit changes to the project$/ do
-  project.commit_file 'project-file', Faker::Lorem.sentence
+  project.commit_changes
 end
 
 When /^I commit and deploy changes to the project$/ do
-  project.commit_file 'project-file', Faker::Lorem.sentence
+  project.commit_changes
   project.run_cap 'deploy'
 end
 
