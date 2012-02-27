@@ -24,6 +24,10 @@ Given /^a bundle requiring version "([^"]*)" of "([^"]*)"$/ do |version, gem|
   project.add_gem_to_bundle(gem, version)
 end
 
+Given /^the variable "([^"]*)" is set to "([^"]*)"$/ do |name, value|
+  project.run_cap 'env:set #{name}=#{value}'
+end
+
 When /^I update the bundle to require version "([^"]*)" of "([^"]*)"$/ do |version, gem|
   project.add_gem_to_bundle(gem, version)
 end
@@ -55,4 +59,12 @@ end
 
 Then /^the deployed project should include version "([^"]*)" of "([^"]*)"$/ do |version, gem|
   project.run_on_server("bin/#{gem} --version").strip.should eql(version)
+end
+
+Then /^the variable "([^"]*)" should be set to "([^"]*)"$/ do |name, value|
+  project.run_on_server("sudo su - #{project.name} -c 'env | grep #{name}'").strip.should eql("#{name}=#{value}")
+end
+
+Then /^the variable "([^"]*)" should have no value$/ do |name|
+  project.run_on_server("sudo su - #{project.name} -c 'env'").include?("SECRET=").should be_false
 end
