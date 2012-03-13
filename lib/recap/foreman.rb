@@ -28,7 +28,7 @@ module Recap::Foreman
       # To export the scripts, they are first generated in a temporary location, then copied to their final
       # destination.  This is done because the foreman export command needs to be run as the application user,
       # while sudo is required to write to `/etc/init`.
-      task :default, :roles => :app do
+      task :default do
         if deployed_file_exists?(procfile)
           as_app foreman_export_command
           sudo "rm -f #{foreman_export_location}/#{application}*"
@@ -38,21 +38,21 @@ module Recap::Foreman
     end
 
     # Starts all processes that form the application
-    task :start, :roles => :app do
+    task :start do
       if deployed_file_exists?(procfile)
         sudo "start #{application}"
       end
     end
 
     # Restarts all processes that form the application
-    task :restart, :roles => :app do
+    task :restart do
       if deployed_file_exists?(procfile)
         sudo "restart #{application} || sudo start #{application}"
       end
     end
 
     # Stops all processes that form the application
-    task :stop, :roles => :app do
+    task :stop do
       if deployed_file_exists?(procfile)
         sudo "stop #{application}"
       end

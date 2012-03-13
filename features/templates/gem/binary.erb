@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'webrick'
 
-VERSION = "<%= version %>"
+GEM_VERSION = "<%= version %>"
 
 class Server
   class Action < WEBrick::HTTPServlet::AbstractServlet
@@ -14,7 +14,7 @@ class Server
 
   class Version < Action
     def body
-      VERSION
+      GEM_VERSION
     end
   end
 
@@ -33,9 +33,10 @@ class Server
 end
 
 trap("SIGINT") { exit! }
+trap("TERM") { exit! }
 
 case ARGV[0]
-when "--version" then puts VERSION
+when "--version" then puts GEM_VERSION
 when "--env" then ENV.keys.sort.each {|k| puts "#{k}=#{ENV[k]}"}
 when "--server" then Server.start
 else puts "Unknown option"

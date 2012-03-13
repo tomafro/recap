@@ -47,11 +47,22 @@ module ProjectSupport
   end
 
   class Gemfile < Template
+    attr_accessor :foreman
     attr_accessor :gems
 
     def initialize(gems = {})
       super('project/Gemfile.erb')
       @gems = gems
+    end
+  end
+
+  class Procfile < Template
+    attr_reader :name, :command
+
+    def initialize(name, command)
+      super('project/Procfile.erb')
+      @name = name
+      @command = command
     end
   end
 
@@ -171,11 +182,24 @@ module ProjectSupport
 
     def add_gem_to_bundle(gem, version)
       gemfile.gems[gem] = version
-      write_and_commit_file 'Gemfile', gemfile
       BundledGem.new(gem, version).generate
+      regenerate_bundle
+    end
+
+    def add_foreman_to_bundle
+      gemfile.foreman = true
+      regenerate_bundle
+    end
+
+    def regenerate_bundle
+      write_and_commit_file 'Gemfile', gemfile
       # Nasty hack to generate a Gemfile.lock
       @server.run "cd /recap/share/projects/#{name} && bundle install"
       commit_files 'Gemfile.lock'
+    end
+
+    def add_command_to_procfile(name, command)
+      write_and_commit_file 'Procfile', Procfile.new(name, command)
     end
 
     def commit_changes

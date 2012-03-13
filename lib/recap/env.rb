@@ -33,8 +33,11 @@ module Recap::Env
     task :set do
       env = ARGV[1..-1].inject(current_environment) do |env, string|
         env.set_string(string)
+        logger.debug "Setting #{string}"
+        logger.debug "Env is now: #{env}"
         env
       end
+
       if env.empty?
         as_app "rm -f #{environment_file}", "~"
       else

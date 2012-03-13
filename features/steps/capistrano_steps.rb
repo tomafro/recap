@@ -6,6 +6,10 @@ end
 
 After do
   `bundle exec vagrant sandbox rollback` unless ENV['SKIP_ROLLBACK']
+  if project
+    project.run_on_server "sudo stop #{project.name} || true"
+    project.run_on_server "sudo rm -rf /etc/init/#{project.name}* || true"
+  end
 end
 
 Given /^a new (ruby )?project and a bootstrapped server$/ do |project_type|
@@ -25,7 +29,14 @@ Given /^a bundle requiring version "([^"]*)" of "([^"]*)"$/ do |version, gem|
 end
 
 Given /^the variable "([^"]*)" is set to "([^"]*)"$/ do |name, value|
-  project.run_cap 'env:set #{name}=#{value}'
+  project.run_cap "env:set #{name}=#{value}"
+end
+
+Given /^the project has an application process defined in a Procfile$/ do
+  @application_process = 'an-application-process'
+  project.add_foreman_to_bundle
+  project.add_gem_to_bundle @application_process, '1.0.0'
+  project.add_command_to_procfile 'process', "bin/#{@application_process} --server"
 end
 
 When /^I update the bundle to require version "([^"]*)" of "([^"]*)"$/ do |version, gem|
@@ -43,6 +54,10 @@ end
 When /^I commit and deploy changes to the project$/ do
   project.commit_changes
   project.run_cap 'deploy'
+end
+
+When /^I wait for the server to start$/ do
+  sleep(5)
 end
 
 Then /^the project should be deployed$/ do
@@ -66,5 +81,13 @@ Then /^the variable "([^"]*)" should be set to "([^"]*)"$/ do |name, value|
 end
 
 Then /^the variable "([^"]*)" should have no value$/ do |name|
-  project.run_on_server("sudo su - #{project.name} -c 'env'").include?("SECRET=").should be_false
+  project.run_on_server("sudo su - #{project.name} -c 'env'").include?("#{name}=").should be_false
+end
+
+Then /^the project should own the running application process$/ do
+  project.run_on_server("ps -U #{project.name} u").include?(@application_process).should be_true
+end
+
+Then /^the running application process should know that "([^"]*)" is set to "([^"]*)"$/ do |name, value|
+  project.run_on_server("/usr/bin/curl localhost:3500/env | grep #{name}").strip.should eql("#{name}=#{value}")
 end
