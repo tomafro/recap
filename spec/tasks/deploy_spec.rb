@@ -125,7 +125,10 @@ describe Recap::Deploy do
     end
 
     describe 'deploy' do
-      it 'runs deploy:update_code, deploy:tag and then deploy:restart tasks' do
+      it 'runs env:set, deploy:update_code, deploy:tag and then deploy:restart tasks' do
+        env = stub('env')
+        config.stubs(:env).returns(env)
+        env.expects('set')
         namespace.expects(:update_code).in_sequence
         namespace.expects(:tag).in_sequence
         namespace.expects(:restart).in_sequence

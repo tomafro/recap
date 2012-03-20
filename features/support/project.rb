@@ -44,6 +44,10 @@ module ProjectSupport
       @project = project
       @recap_require = options[:recap_require] || 'recap/static'
     end
+
+    def default_environment_values
+      @default_environment_values ||= {}
+    end
   end
 
   class Gemfile < Template
@@ -137,10 +141,19 @@ module ProjectSupport
     end
 
     def write_and_commit_file(path, content = "")
+      write_file(path, content)
+      commit_files(path)
+    end
+
+    def read_file(path)
+      full_path = File.join(repository_path, path)
+      File.read(full_path)
+    end
+
+    def write_file(path, content = "")
       full_path = File.join(repository_path, path)
       FileUtils.mkdir_p File.dirname(full_path)
       File.write(full_path, content)
-      commit_files(path)
     end
 
     def commit_files(*paths)
@@ -200,6 +213,12 @@ module ProjectSupport
 
     def add_command_to_procfile(name, command)
       write_and_commit_file 'Procfile', Procfile.new(name, command)
+    end
+
+    def add_default_env_value_to_capfile(name, value)
+      content = read_file('Capfile')
+      content << "\nset_default_env '#{name}', '#{value}'"
+      write_and_commit_file('Capfile', content)
     end
 
     def commit_changes

@@ -69,6 +69,7 @@ module Recap::Deploy
     desc "Deploy the latest application code"
     task :default do
       transaction do
+        top.env.set
         update_code
         tag
       end

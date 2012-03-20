@@ -60,6 +60,10 @@ When /^I wait for the server to start$/ do
   sleep(5)
 end
 
+When /^I add a default environment variable "([^"]*)" with the value "([^"]*)" to the project$/ do |name, value|
+  project.add_default_env_value_to_capfile(name, value)
+end
+
 Then /^the project should be deployed$/ do
   project.deployed_version.should eql(project.latest_version)
 end
@@ -76,7 +80,7 @@ Then /^the deployed project should include version "([^"]*)" of "([^"]*)"$/ do |
   project.run_on_server("bin/#{gem} --version").strip.should eql(version)
 end
 
-Then /^the variable "([^"]*)" should be set to "([^"]*)"$/ do |name, value|
+Then /^the variable "([^"]*)" should be set (?:back )?to "([^"]*)"$/ do |name, value|
   project.run_on_server("sudo su - #{project.name} -c 'env | grep #{name}'").strip.should eql("#{name}=#{value}")
 end
 

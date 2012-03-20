@@ -10,6 +10,14 @@
 module Recap::Env
   extend Recap::Namespace
 
+  def set_default_env(name, value)
+    default_env[name] = value
+  end
+
+  def default_env
+    @default_env ||= {}
+  end
+
   namespace :env do
     # Environment
     set(:environment_file) { "/home/#{application_user}/.env" }
@@ -40,6 +48,10 @@ module Recap::Env
         logger.debug "Setting #{string}"
         logger.debug "Env is now: #{env}"
         env
+      end
+
+      default_env.each do |name, value|
+        env.set(name, value) unless env.get(name)
       end
 
       if env.empty?
