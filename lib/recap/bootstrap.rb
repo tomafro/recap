@@ -17,10 +17,22 @@ module Recap::Bootstrap
       sudo "mkdir -p #{application_home}"
       sudo "chown #{application_user}:#{application_group} #{application_home}"
       sudo "chmod 755 #{application_home}"
+
+      put_as_app %{
+if [ -s "$HOME/.env" ]; then
+  rm -rf $HOME/.recap-env-export
+  touch $HOME/.recap-env-export
+  while read line
+  do echo "export $line" >> $HOME/.recap-env-export;
+  done < $HOME/.env
+  . $HOME/.recap-env-export
+fi
+      }, "#{application_home}/.recap"
+
       as_app "touch .profile", "~"
 
-      if exit_code(%{grep 'if \\[ -s "\\$HOME\\/\\.env" ]; then export \\$(cat \\$HOME\\/\\.env); fi' $HOME/.profile}) != "0"
-        as_app %{echo >> .profile && echo "if [ -s \\"\\$HOME/.env\\" ]; then export \\$(cat \\$HOME/.env); fi" >> .profile}, "~"
+      if exit_code(%{grep '\\. \\$HOME\\/.recap' .profile}) != "0"
+        as_app %{echo >> .profile && echo ". \\$HOME/.recap" >> .profile}, "~"
       end
 
       as_app "mkdir -p #{deploy_to}", "~"

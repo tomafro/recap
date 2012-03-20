@@ -1,7 +1,11 @@
 # Environment variables are a useful way to set application configuration, such as database passwords
 # or S3 keys and secrets.  [recap](http://github.com/freerange/recap) stores these extra variables in
 # a special file, usually stored at `$HOME/.env`.  This file is loaded each time the shell starts by
-# adding the following to the user's `.profile`
+# adding the following to the user's `.profile`:
+#
+#     . $HOME/.recap
+#
+# The `.recap` script is automatically generated in the bootstrap process.
 
 module Recap::Env
   extend Recap::Namespace

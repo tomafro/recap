@@ -80,6 +80,11 @@ Then /^the variable "([^"]*)" should be set to "([^"]*)"$/ do |name, value|
   project.run_on_server("sudo su - #{project.name} -c 'env | grep #{name}'").strip.should eql("#{name}=#{value}")
 end
 
+Then /^the variable "([^"]*)" should be set to the application's PATH$/ do |name|
+  path = project.run_on_server("echo $PATH").strip
+  project.run_on_server("sudo su - #{project.name} -c 'env | grep #{name}'").strip.should eql("#{name}=#{path}")
+end
+
 Then /^the variable "([^"]*)" should have no value$/ do |name|
   project.run_on_server("sudo su - #{project.name} -c 'env'").include?("#{name}=").should be_false
 end

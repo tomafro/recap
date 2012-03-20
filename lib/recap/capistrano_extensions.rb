@@ -19,8 +19,8 @@ module Recap
 
     # Put a string into a file as the application user
     def put_as_app(string, path)
-      as_app "touch #{path} && chmod g+rw #{path}", "/"
-      put string, path
+      put string, "/tmp/recap-put-as-app"
+      as_app "cp /tmp/recap-put-as-app #{path} && chmod g+rw #{path}", "/"
     end
 
     # Edit a file on the remote server, using a local editor
