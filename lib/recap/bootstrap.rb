@@ -31,8 +31,8 @@ fi
 
       as_app "touch .profile", "~"
 
-      if exit_code(%{grep '\\. \\$HOME\\/.recap' .profile}) != "0"
-        as_app %{echo >> .profile && echo ". \\$HOME/.recap" >> .profile}, "~"
+      if exit_code("grep '\\. $HOME/\\.recap' #{application_home}/.profile") != "0"
+        as_app %{echo ". \\$HOME/.recap" >> .profile}, "~"
       end
 
       as_app "mkdir -p #{deploy_to}", "~"
