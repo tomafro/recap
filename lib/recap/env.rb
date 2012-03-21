@@ -62,6 +62,11 @@ module Recap::Env
       default
     end
 
+    task :reset do
+      as_app "rm -f #{environment_file}", "~"
+      set
+    end
+
     task :edit do
       edit_file environment_file
       default

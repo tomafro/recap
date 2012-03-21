@@ -25,6 +25,19 @@ Feature: Setting and unsetting environment config variables
     When I run "cap env:set PASSWORD="
     Then the variable "PASSWORD" should be set back to "sup3r-s3cr3t"
 
+  Scenario: Resetting back to default values
+
+    Given a new project and a bootstrapped server
+    And I add a default environment variable "PASSWORD" with the value "sup3r-s3cr3t" to the project
+
+    When I run "cap env:set SECRET=something PASSWORD=anoth3r-passw0rd"
+    Then the variable "SECRET" should be set to "something"
+    And the variable "PASSWORD" should be set to "anoth3r-passw0rd"
+
+    When I run "cap env:reset"
+    Then the variable "PASSWORD" should be set back to "sup3r-s3cr3t"
+    And the variable "SECRET" should have no value
+
   Scenario: Unsetting a variable
 
     Given a new project and a bootstrapped server
