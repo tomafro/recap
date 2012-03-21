@@ -20,11 +20,7 @@ module Recap::Bootstrap
 
       put_as_app %{
 if [ -s "$HOME/.env" ]; then
-  rm -rf $HOME/.recap-env-export
-  touch $HOME/.recap-env-export
-  while read line
-  do echo "export $line" >> $HOME/.recap-env-export;
-  done < $HOME/.env
+  sed -e 's/\\r//g' -e 's/^/export /g' .env > .recap-env-export
   . $HOME/.recap-env-export
 fi
       }, "#{application_home}/.recap"
