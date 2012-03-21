@@ -21,6 +21,8 @@ module Recap
     def put_as_app(string, path)
       put string, "/tmp/recap-put-as-app"
       as_app "cp /tmp/recap-put-as-app #{path} && chmod g+rw #{path}", "/"
+    ensure
+      run "rm /tmp/recap-put-as-app"
     end
 
     # Edit a file on the remote server, using a local editor
