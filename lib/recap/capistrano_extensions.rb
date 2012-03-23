@@ -32,7 +32,7 @@ module Recap
         local_path = Tempfile.new('deploy-edit').path
         get(path, local_path)
         `#{editor} #{local_path}`
-        upload(local_path, path)
+        File.read(local_path)
       else
         abort "To edit a remote file, either the EDITOR or DEPLOY_EDITOR environment variables must be set"
       end

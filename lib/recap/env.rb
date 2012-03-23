@@ -68,7 +68,18 @@ module Recap::Env
     end
 
     task :edit do
-      edit_file environment_file
+      content = edit_file environment_file
+      env = Recap::Environment.from_string(content)
+
+      default_env.each do |name, value|
+        env.set(name, value) unless env.get(name)
+      end
+
+      if env.empty?
+        as_app "rm -f #{environment_file}", "~"
+      else
+        put_as_app env.to_s, environment_file
+      end
       default
     end
   end

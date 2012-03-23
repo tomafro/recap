@@ -45,7 +45,7 @@ class Recap::Environment
 
   class << self
     def from_string(string)
-      string.split("\n").inject(new) do |env, line|
+      string.split(/[\n\r]/).inject(new) do |env, line|
         env.set_string(line)
         env
       end
