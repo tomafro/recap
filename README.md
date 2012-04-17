@@ -1,13 +1,9 @@
-[recap](http://github.com/freerange/recap) is an opinionated set of capistrano deployment recipes, designed to use git's strengths to deploy applications and websites in a fast and simple manner.
+[recap](http://github.com/freerange/recap) is an opinionated set of capistrano deployment recipes, designed to use git's strengths to deploy applications and websites in a fast and simple manner.  It has the following main features and aims:
 
-Recap's core features are:
-
-  * Release versions are managed with git.  There's no need for `releases` or `current` folders, and no symlinking.
-  * Intelligently decides whether tasks need to execute.  e.g. The `bundle:install` task will only run if a `Gemfile.lock` exists, and if it has changed since the last deployment.
-  * A dedicated user account and group owns all an application's associated files and processes.
-  * Deployments are run using personal logins.  The right to deploy is granted by adding a user to the application group.
-  * Environment variables are used for application specific configuration.  These can easily be read and set using the `env` and `env:set` tasks.
-  * Out of the box support for `bundler` and `foreman`
+  * Releases are managed using git.  All code is deployed to a single directory, and git tags are used to manage different released versions.  No `releases`, `current` or `shared` directories are created, avoiding unecessary symlinking.
+  * Deployments do the minimum work possible, using git to determine whether tasks need to run.  e.g. the `bundle:install` task only runs if the app contains a `Gemfile.lock` file and it has changed since the last deployment.
+  * Applications have their own user account and group, owning all of that application's associated files and processes.  This gives them a dedicated environment, allowing environment variables to be used for application specific configuration.  Tasks such as `env`, `env:set` and `env:edit` make setting and changing these variables easy.
+  * Personal accounts are used to deploy to the server, distinct from the application user.  The right to deploy an application is granted simply by adding a user to the application group.
 
 For more information, the main documentation can be found at [http://code.gofreerange.com/recap](http://code.gofreerange.com/recap), while the code is available [on github](https://github.com/freerange/recap).
 
