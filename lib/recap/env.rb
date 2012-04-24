@@ -19,7 +19,6 @@ module Recap::Env
   end
 
   namespace :env do
-    # Environment
     set(:environment_file) { "/home/#{application_user}/.env" }
 
     def current_environment

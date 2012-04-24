@@ -21,10 +21,13 @@
           <a class="source" href="compatibility.html">compatibility.rb</a>
           <a class="source" href="deploy.html">deploy.rb</a>
           <a class="source" href="env.html">env.rb</a>
+          <a class="source" href="environment.html">environment.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
           <a class="source" href="namespace.html">namespace.rb</a>
           <a class="source" href="preflight.html">preflight.rb</a>
           <a class="source" href="rails.html">rails.rb</a>
+          <a class="source" href="ruby.html">ruby.rb</a>
+          <a class="source" href="static.html">static.rb</a>
           <a class="source" href="version.html">version.rb</a>
       </div>
     </div>
@@ -48,10 +51,9 @@
         <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap&#39;</span>
 <span class="nb">require</span> <span class="s1">&#39;recap/capistrano_extensions&#39;</span>
 
-<span class="nb">require</span> <span class="s1">&#39;recap/bootstrap&#39;</span>
-<span class="nb">require</span> <span class="s1">&#39;recap/bundler&#39;</span>
-<span class="nb">require</span> <span class="s1">&#39;recap/env&#39;</span>
 <span class="nb">require</span> <span class="s1">&#39;recap/preflight&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;recap/bootstrap&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;recap/env&#39;</span>
 
 <span class="k">module</span> <span class="nn">Recap::Deploy</span>
   <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">Namespace</span>
@@ -118,7 +120,7 @@ changed, it&rsquo;s not recommended, as the sort order of the tag names is impor
 be listed after earlier tags.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:release_tag</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m%d%H%M%S&quot;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:release_tag</span><span class="p">)</span> <span class="p">{</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m%d%H%M%S&quot;</span><span class="p">)</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-7'>
@@ -201,7 +203,7 @@ deploying user&rsquo;s ssh key than manage keys on deployment servers.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-13">&#182;</a>
         </div>
-        <p>Before cloning, the directory needs to exist and be both readable and writable by the group</p>
+        <p>Before cloning, the directory needs to exist and be both readable and writable by the application group</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>      <span class="n">as_app</span> <span class="s2">&quot;mkdir -p </span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;~&quot;</span>
@@ -232,6 +234,7 @@ servers, tags the release and restarts the application.</p>
         <div class='highlight'><pre>    <span class="n">desc</span> <span class="s2">&quot;Deploy the latest application code&quot;</span>
     <span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
       <span class="n">transaction</span> <span class="k">do</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set</span>
         <span class="n">update_code</span>
         <span class="n">tag</span>
       <span class="k">end</span>
@@ -274,7 +277,7 @@ servers, tags the release and restarts the application.</p>
           <a class="pilcrow" href="#section-18">&#182;</a>
         </div>
         <p>After a successful deployment, the app is restarted.  In the most basic deployments this does
-nothing, but other recipes may override it, or attach tasks it&rsquo;s before or after hooks.</p>
+nothing, but other recipes may override it, or attach tasks to its before or after hooks.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>    <span class="n">desc</span> <span class="s2">&quot;Restart the application following a deploy&quot;</span>
@@ -299,8 +302,10 @@ nothing, but other recipes may override it, or attach tasks it&rsquo;s before or
           <span class="k">if</span> <span class="n">previous_tag</span> <span class="o">=</span> <span class="n">latest_tag_from_repository</span>
             <span class="n">git</span> <span class="s2">&quot;reset --hard </span><span class="si">#{</span><span class="n">previous_tag</span><span class="si">}</span><span class="s2">&quot;</span>
           <span class="k">end</span>
+          <span class="n">restart</span>
+        <span class="k">else</span>
+          <span class="nb">abort</span> <span class="s2">&quot;This app is not currently deployed&quot;</span>
         <span class="k">end</span>
-        <span class="n">restart</span>
       <span class="k">end</span>
     <span class="k">end</span></pre></div>
       </td>

@@ -16,12 +16,12 @@
 # Deployments do the minimum work possible, using git to determine whether tasks need to run.  e.g.
 # the `bundle:install` task only runs if the app contains a `Gemfile.lock` file and it has changed
 # since the last deployment.  You can see how this works in the
-# (recap/bundler.rb)[lib/recap/bundler.html] recipe.
+# [recap/bundler.rb](lib/recap/bundler.html) recipe.
 
 # Applications have their own user account and group, owning all of that application's associated
 # files and processes.  This gives them a dedicated environment, allowing environment variables to
 # be used for application specific configuration.  Tasks such as `env`, `env:set` and `env:edit` make
-# setting and changing these variables easy. (recap/env.rb)[lib/recap/env.html] has more
+# setting and changing these variables easy. [recap/env.rb](lib/recap/env.html) has more
 # information about using these environment variables.
 
 # Personal accounts are used to deploy to the server, distinct from the application user.  The right
@@ -46,7 +46,7 @@ gem 'recap', '~>0.3.0'
 # Recap currently supports three types of deployment.  These are for static sites (as described
 # in [recap/static.rb](lib/recap/static.html)), ruby apps ([recap/ruby.rb](lib/recap/ruby.html)),
 # and rails apps ([recap/rails.rb](lib/recap/rails.html)).  Using all three is similar. Add this
-# `Capfile` to your project, changing the first line to reflect the project you have.
+# `Capfile` to your project, changing the first line to reflect the type of deployment you want.
 
 require 'recap/ruby'
 

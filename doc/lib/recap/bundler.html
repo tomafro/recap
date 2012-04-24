@@ -21,10 +21,13 @@
           <a class="source" href="compatibility.html">compatibility.rb</a>
           <a class="source" href="deploy.html">deploy.rb</a>
           <a class="source" href="env.html">env.rb</a>
+          <a class="source" href="environment.html">environment.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
           <a class="source" href="namespace.html">namespace.rb</a>
           <a class="source" href="preflight.html">preflight.rb</a>
           <a class="source" href="rails.html">rails.rb</a>
+          <a class="source" href="ruby.html">ruby.rb</a>
+          <a class="source" href="static.html">static.rb</a>
           <a class="source" href="version.html">version.rb</a>
       </div>
     </div>
@@ -116,12 +119,12 @@ placed under <code>vendor/gems</code>.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-7">&#182;</a>
         </div>
-        <p>After cloning or updating the code, we only install the bundle if the <code>Gemfile</code> has changed.</p>
+        <p>After cloning or updating the code, we only install the bundle if the <code>Gemfile</code> or <code>Gemfile.lock</code> have changed.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="n">desc</span> <span class="s2">&quot;Install the latest gem bundle only if Gemfile.lock has changed&quot;</span>
+        <div class='highlight'><pre>      <span class="n">desc</span> <span class="s2">&quot;Install the latest gem bundle only if Gemfile or Gemfile.lock have changed&quot;</span>
       <span class="n">task</span> <span class="ss">:if_changed</span> <span class="k">do</span>
-        <span class="k">if</span> <span class="n">deployed_file_changed?</span><span class="p">(</span><span class="n">bundle_gemfile_lock</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">deployed_file_changed?</span><span class="p">(</span><span class="n">bundle_gemfile</span><span class="p">)</span> <span class="o">||</span> <span class="n">deployed_file_changed?</span><span class="p">(</span><span class="n">bundle_gemfile_lock</span><span class="p">)</span>
           <span class="n">top</span><span class="o">.</span><span class="n">bundle</span><span class="o">.</span><span class="n">install</span><span class="o">.</span><span class="n">default</span>
         <span class="k">end</span>
       <span class="k">end</span></pre></div>
@@ -138,8 +141,12 @@ a previous deployment)</p>
       <td class=code>
         <div class='highlight'><pre>      <span class="n">desc</span> <span class="s2">&quot;Install the latest gem bundle&quot;</span>
       <span class="n">task</span> <span class="ss">:default</span> <span class="k">do</span>
-        <span class="k">if</span> <span class="n">deployed_file_exists?</span><span class="p">(</span><span class="n">bundle_gemfile_lock</span><span class="p">)</span>
-          <span class="n">as_app</span> <span class="n">bundle_install_command</span>
+        <span class="k">if</span> <span class="n">deployed_file_exists?</span><span class="p">(</span><span class="n">bundle_gemfile</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">deployed_file_exists?</span><span class="p">(</span><span class="n">bundle_gemfile_lock</span><span class="p">)</span>
+            <span class="n">as_app</span> <span class="n">bundle_install_command</span>
+          <span class="k">else</span>
+            <span class="nb">abort</span> <span class="s1">&#39;Gemfile found without Gemfile.lock.  The Gemfile.lock should be committed to the project repository&#39;</span>
+          <span class="k">end</span>
         <span class="k">else</span>
           <span class="nb">puts</span> <span class="s2">&quot;Skipping bundle:install as no Gemfile found&quot;</span>
         <span class="k">end</span>
