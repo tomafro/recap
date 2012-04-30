@@ -1,5 +1,5 @@
-module Recap::Foreman
-  extend Recap::Namespace
+module Recap::Tasks::Foreman
+  extend Recap::Support::Namespace
 
   namespace :foreman do
     # Processes are delcared in a `Procfile`, by default in the root of the application directory

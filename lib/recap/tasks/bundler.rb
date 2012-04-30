@@ -1,7 +1,7 @@
 # The bundler recipe ensures that the application bundle is installed whenever the code is updated.
 
-module Recap::Bundler
-  extend Recap::Namespace
+module Recap::Tasks::Bundler
+  extend Recap::Support::Namespace
 
   namespace :bundle do
     # Each bundle is declared in a `Gemfile`, by default in the root of the application directory

@@ -1,7 +1,7 @@
-require 'recap/deploy'
+require 'recap/tasks/deploy'
 
 module Recap::Rails
-  extend Recap::Namespace
+  extend Recap::Support::Namespace
 
   namespace :rails do
     namespace :db do

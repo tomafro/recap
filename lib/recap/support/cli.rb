@@ -1,13 +1,13 @@
 require 'thor'
 
-module Recap
+module Recap::Support
   class CLI < Thor
     include Thor::Actions
 
     attr_accessor :name, :repository
 
     def self.source_root
-      File.expand_path("../deploy/templates", __FILE__)
+      File.expand_path("../templates", __FILE__)
     end
 
     desc 'setup', 'Setup basic capistrano recipes, e.g: recap setup'

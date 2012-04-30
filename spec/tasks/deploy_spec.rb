@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Recap::Deploy do
+describe Recap::Tasks::Deploy do
   let :config do
     Capistrano::Configuration.new
   end
@@ -10,7 +10,7 @@ describe Recap::Deploy do
   end
 
   before do
-    Recap::Deploy.load_into(config)
+    Recap::Tasks::Deploy.load_into(config)
   end
 
   it 'configures capistrano to use ssh key forwarding' do

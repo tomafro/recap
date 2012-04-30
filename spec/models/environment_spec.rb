@@ -1,29 +1,29 @@
 require 'spec_helper'
 
-describe Recap::Environment do
+describe Recap::Support::Environment do
   describe '#empty?' do
     it 'returns true if no variables set' do
-      Recap::Environment.new.empty?.should be_true
+      Recap::Support::Environment.new.empty?.should be_true
     end
 
     it 'returns false if no variables set' do
-      Recap::Environment.new('FIRST' => 'One').empty?.should be_false
+      Recap::Support::Environment.new('FIRST' => 'One').empty?.should be_false
     end
   end
 
   describe '#include?(key)' do
     it 'returns true if variables set' do
-      Recap::Environment.new('FIRST' => 'One').include?('FIRST').should be_true
+      Recap::Support::Environment.new('FIRST' => 'One').include?('FIRST').should be_true
     end
 
     it 'returns false if variable has not been set' do
-      Recap::Environment.new('DIFFERENT' => 'One').include?('FIRST').should be_false
+      Recap::Support::Environment.new('DIFFERENT' => 'One').include?('FIRST').should be_false
     end
   end
 
   describe '#get(name)' do
     subject do
-      Recap::Environment.new('FIRST' => 'One')
+      Recap::Support::Environment.new('FIRST' => 'One')
     end
 
     it 'returns value if variable set' do
@@ -37,7 +37,7 @@ describe Recap::Environment do
 
   describe '#set(name, value)' do
     subject do
-      Recap::Environment.new('FIRST' => 'One')
+      Recap::Support::Environment.new('FIRST' => 'One')
     end
 
     it 'sets variable value' do
@@ -60,7 +60,7 @@ describe Recap::Environment do
 
   describe '#each' do
     subject do
-      Recap::Environment.new('FIRST' => 'One', 'SECOND' => 'Two', 'THIRD' => 'Three', 'FOURTH' => 'Four')
+      Recap::Support::Environment.new('FIRST' => 'One', 'SECOND' => 'Two', 'THIRD' => 'Three', 'FOURTH' => 'Four')
     end
 
     it 'yields each variable and value in turn (ordered alphabetically)' do
@@ -74,7 +74,7 @@ describe Recap::Environment do
 
   describe '#merge(variables)' do
     subject do
-      Recap::Environment.new('FIRST' => 'One')
+      Recap::Support::Environment.new('FIRST' => 'One')
     end
 
     it 'sets each variable value' do
@@ -96,7 +96,7 @@ describe Recap::Environment do
 
   describe '#to_s' do
     subject do
-      Recap::Environment.new('FIRST' => 'One', 'SECOND' => 'Two', 'THIRD' => nil, 'FOURTH' => 'Four').to_s
+      Recap::Support::Environment.new('FIRST' => 'One', 'SECOND' => 'Two', 'THIRD' => nil, 'FOURTH' => 'Four').to_s
     end
 
     it 'declares each variable on its own line' do
@@ -117,26 +117,26 @@ describe Recap::Environment do
 
   describe '.from_string(declarations)' do
     it 'builds instance using string representation' do
-      instance = Recap::Environment.from_string("FIRST=One\nSECOND=Two\n")
+      instance = Recap::Support::Environment.from_string("FIRST=One\nSECOND=Two\n")
       instance.get('FIRST').should eql('One')
       instance.get('SECOND').should eql('Two')
     end
 
     it 'handles variables with numbers and underscores in their names' do
-      instance = Recap::Environment.from_string("THIS_1=One\nThose_2=Two\n")
+      instance = Recap::Support::Environment.from_string("THIS_1=One\nThose_2=Two\n")
       instance.get('THIS_1').should eql('One')
       instance.get('Those_2').should eql('Two')
     end
 
     it 'gracefully ignores missing newline at end of string' do
-      instance = Recap::Environment.from_string("FIRST=One\nSECOND=Two")
+      instance = Recap::Support::Environment.from_string("FIRST=One\nSECOND=Two")
       instance.get('FIRST').should eql('One')
       instance.get('SECOND').should eql('Two')
     end
 
     it 'acts as the inverse of #to_s' do
       string = "FIRST=One\nSECOND=Two\nTHIRD=three\n"
-      excercised = Recap::Environment.from_string(Recap::Environment.from_string(string).to_s).to_s
+      excercised = Recap::Support::Environment.from_string(Recap::Support::Environment.from_string(string).to_s).to_s
       excercised.should eql(string)
     end
   end

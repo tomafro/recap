@@ -12,23 +12,23 @@
     Jump To &hellip;
     <div id="jump_wrapper">
       <div id="jump_page">
-          <a class="source" href="../../index.html">index.rb</a>
-          <a class="source" href="../recap.html">recap.rb</a>
-          <a class="source" href="bootstrap.html">bootstrap.rb</a>
-          <a class="source" href="bundler.html">bundler.rb</a>
+          <a class="source" href="../../../index.html">index.rb</a>
+          <a class="source" href="../../recap.html">recap.rb</a>
+          <a class="source" href="../rails.html">rails.rb</a>
+          <a class="source" href="../ruby.html">ruby.rb</a>
+          <a class="source" href="../static.html">static.rb</a>
           <a class="source" href="capistrano_extensions.html">capistrano_extensions.rb</a>
           <a class="source" href="cli.html">cli.rb</a>
           <a class="source" href="compatibility.html">compatibility.rb</a>
-          <a class="source" href="deploy.html">deploy.rb</a>
-          <a class="source" href="env.html">env.rb</a>
           <a class="source" href="environment.html">environment.rb</a>
-          <a class="source" href="foreman.html">foreman.rb</a>
           <a class="source" href="namespace.html">namespace.rb</a>
-          <a class="source" href="preflight.html">preflight.rb</a>
-          <a class="source" href="rails.html">rails.rb</a>
-          <a class="source" href="ruby.html">ruby.rb</a>
-          <a class="source" href="static.html">static.rb</a>
-          <a class="source" href="version.html">version.rb</a>
+          <a class="source" href="../tasks/bootstrap.html">bootstrap.rb</a>
+          <a class="source" href="../tasks/bundler.html">bundler.rb</a>
+          <a class="source" href="../tasks/deploy.html">deploy.rb</a>
+          <a class="source" href="../tasks/env.html">env.rb</a>
+          <a class="source" href="../tasks/foreman.html">foreman.rb</a>
+          <a class="source" href="../tasks/preflight.html">preflight.rb</a>
+          <a class="source" href="../version.html">version.rb</a>
       </div>
     </div>
   </div>
@@ -53,8 +53,8 @@ though there are tasks that would work, but for some missing (and redundant) set
 will work.  Many are based on assumptions about the deployment layout that no longer hold true.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Recap::Compatibility</span>
-  <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">Namespace</span></pre></div>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Recap::Support::Compatibility</span>
+  <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">Support</span><span class="o">::</span><span class="no">Namespace</span></pre></div>
       </td>
     </tr>
     <tr id='section-2'>

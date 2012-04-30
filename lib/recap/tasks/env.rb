@@ -7,8 +7,8 @@
 #
 # The `.recap` script is automatically generated in the bootstrap process.
 
-module Recap::Env
-  extend Recap::Namespace
+module Recap::Tasks::Env
+  extend Recap::Support::Namespace
 
   def set_default_env(name, value)
     default_env[name] = value

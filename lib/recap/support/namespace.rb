@@ -1,7 +1,7 @@
 require 'capistrano'
-require 'recap/capistrano_extensions'
+require 'recap/support/capistrano_extensions'
 
-module Recap::Namespace
+module Recap::Support::Namespace
   def self.default_config
     @default_config
   end
@@ -25,7 +25,7 @@ module Recap::Namespace
       end
     end
 
-    load_into(Recap::Namespace.default_config) if Recap::Namespace.default_config
+    load_into(Recap::Support::Namespace.default_config) if Recap::Support::Namespace.default_config
   end
 
   def load_into(configuration)

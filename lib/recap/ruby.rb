@@ -1,3 +1,3 @@
-require 'recap/deploy'
-require 'recap/bundler'
-require 'recap/foreman'
+require 'recap/tasks/deploy'
+require 'recap/tasks/bundler'
+require 'recap/tasks/foreman'

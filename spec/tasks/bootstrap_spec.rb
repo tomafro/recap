@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'recap/bootstrap'
+require 'recap/tasks/bootstrap'
 
-describe Recap::Bootstrap do
+describe Recap::Tasks::Bootstrap do
   let :config do
     Capistrano::Configuration.new
   end
@@ -11,7 +11,7 @@ describe Recap::Bootstrap do
   end
 
   before do
-    Recap::Bootstrap.load_into(config)
+    Recap::Tasks::Bootstrap.load_into(config)
   end
 
   describe 'Tasks' do

@@ -1,12 +1,17 @@
 module Recap
-  autoload :Namespace, 'recap/namespace'
+  module Support
+    autoload :Namespace, 'recap/support/namespace'
+    autoload :Compatibility, 'recap/support/compatibility'
+    autoload :Environment, 'recap/support/environment'
+  end
 
-  autoload :Bootstrap, 'recap/bootstrap'
-  autoload :Bundler, 'recap/bundler'
-  autoload :Compatibility, 'recap/compatibility'
-  autoload :Deploy, 'recap/deploy'
-  autoload :Env, 'recap/env'
-  autoload :Environment, 'recap/environment'
-  autoload :Foreman, 'recap/foreman'
+  module Tasks
+    autoload :Bootstrap, 'recap/tasks/bootstrap'
+    autoload :Bundler, 'recap/tasks/bundler'
+    autoload :Deploy, 'recap/tasks/deploy'
+    autoload :Env, 'recap/tasks/env'
+    autoload :Foreman, 'recap/tasks/foreman'
+  end
+
   autoload :Rails, 'recap/rails'
 end

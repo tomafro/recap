@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Recap::Env do
+describe Recap::Tasks::Env do
   let :config do
     Capistrano::Configuration.new
   end
@@ -10,7 +10,7 @@ describe Recap::Env do
   end
 
   before do
-    Recap::Env.load_into(config)
+    Recap::Tasks::Env.load_into(config)
   end
 
   describe 'Settings' do

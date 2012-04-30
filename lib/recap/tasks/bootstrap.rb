@@ -1,5 +1,5 @@
-module Recap::Bootstrap
-  extend Recap::Namespace
+module Recap::Tasks::Bootstrap
+  extend Recap::Support::Namespace
 
   namespace :bootstrap do
     set(:remote_username) { capture('whoami').strip }

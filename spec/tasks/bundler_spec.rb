@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Recap::Bundler do
+describe Recap::Tasks::Bundler do
   let :config do
     Capistrano::Configuration.new
   end
@@ -15,7 +15,7 @@ describe Recap::Bundler do
 
   before do
     config.set :deploy_to, deploy_to
-    Recap::Bundler.load_into(config)
+    Recap::Tasks::Bundler.load_into(config)
   end
 
   describe 'Settings' do

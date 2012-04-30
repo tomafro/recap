@@ -17,8 +17,8 @@
 # This preflight recipe checks each of these things in turn, and attempts to give helpful advice
 # should a check fail.
 
-module Recap::Preflight
-  extend Recap::Namespace
+module Recap::Tasks::Preflight
+  extend Recap::Support::Namespace
 
   namespace :preflight do
     # The preflight check is pretty quick, so run it before every `deploy:setup` and `deploy`

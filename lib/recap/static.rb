@@ -1,1 +1,1 @@
-require 'recap/deploy'
+require 'recap/tasks/deploy'

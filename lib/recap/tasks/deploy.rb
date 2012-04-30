@@ -1,12 +1,12 @@
 require 'recap'
-require 'recap/capistrano_extensions'
+require 'recap/support/capistrano_extensions'
 
-require 'recap/preflight'
-require 'recap/bootstrap'
-require 'recap/env'
+require 'recap/tasks/preflight'
+require 'recap/tasks/bootstrap'
+require 'recap/tasks/env'
 
-module Recap::Deploy
-  extend Recap::Namespace
+module Recap::Tasks::Deploy
+  extend Recap::Support::Namespace
 
   namespace :deploy do
     # To use this recipe, both the application's name and its git repository are required.

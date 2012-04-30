@@ -1,6 +1,6 @@
 require 'recap'
 
-Recap::Namespace.default_config = nil
+Recap::Support::Namespace.default_config = nil
 
 RSpec.configure do |config|
   config.mock_with :mocha

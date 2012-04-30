@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Recap::Foreman do
+describe Recap::Tasks::Foreman do
   let :config do
     Capistrano::Configuration.new
   end
@@ -17,7 +17,7 @@ describe Recap::Foreman do
     config.set :application, 'example-app'
     config.set :application_user, 'example-app-user'
     config.set :deploy_to, deploy_to
-    Recap::Foreman.load_into(config)
+    Recap::Tasks::Foreman.load_into(config)
   end
 
   describe 'Settings' do

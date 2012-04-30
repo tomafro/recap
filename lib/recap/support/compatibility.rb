@@ -5,8 +5,8 @@
 # Including this recipe adds these legacy settings, but provides no guarantee that original tasks
 # will work.  Many are based on assumptions about the deployment layout that no longer hold true.
 
-module Recap::Compatibility
-  extend Recap::Namespace
+module Recap::Support::Compatibility
+  extend Recap::Support::Namespace
 
   # As `git` to manages releases, all deployments are placed directly in the `deploy_to` folder.  The
   # `current_path` is always this directory (no symlinking required).
