@@ -14,20 +14,20 @@
       <div id="jump_page">
           <a class="source" href="index.html">index.rb</a>
           <a class="source" href="lib/recap.html">recap.rb</a>
-          <a class="source" href="lib/recap/bootstrap.html">bootstrap.rb</a>
-          <a class="source" href="lib/recap/bundler.html">bundler.rb</a>
-          <a class="source" href="lib/recap/capistrano_extensions.html">capistrano_extensions.rb</a>
-          <a class="source" href="lib/recap/cli.html">cli.rb</a>
-          <a class="source" href="lib/recap/compatibility.html">compatibility.rb</a>
-          <a class="source" href="lib/recap/deploy.html">deploy.rb</a>
-          <a class="source" href="lib/recap/env.html">env.rb</a>
-          <a class="source" href="lib/recap/environment.html">environment.rb</a>
-          <a class="source" href="lib/recap/foreman.html">foreman.rb</a>
-          <a class="source" href="lib/recap/namespace.html">namespace.rb</a>
-          <a class="source" href="lib/recap/preflight.html">preflight.rb</a>
           <a class="source" href="lib/recap/rails.html">rails.rb</a>
           <a class="source" href="lib/recap/ruby.html">ruby.rb</a>
           <a class="source" href="lib/recap/static.html">static.rb</a>
+          <a class="source" href="lib/recap/support/capistrano_extensions.html">capistrano_extensions.rb</a>
+          <a class="source" href="lib/recap/support/cli.html">cli.rb</a>
+          <a class="source" href="lib/recap/support/compatibility.html">compatibility.rb</a>
+          <a class="source" href="lib/recap/support/environment.html">environment.rb</a>
+          <a class="source" href="lib/recap/support/namespace.html">namespace.rb</a>
+          <a class="source" href="lib/recap/tasks/bootstrap.html">bootstrap.rb</a>
+          <a class="source" href="lib/recap/tasks/bundler.html">bundler.rb</a>
+          <a class="source" href="lib/recap/tasks/deploy.html">deploy.rb</a>
+          <a class="source" href="lib/recap/tasks/env.html">env.rb</a>
+          <a class="source" href="lib/recap/tasks/foreman.html">foreman.rb</a>
+          <a class="source" href="lib/recap/tasks/preflight.html">preflight.rb</a>
           <a class="source" href="lib/recap/version.html">version.rb</a>
       </div>
     </div>
@@ -132,11 +132,11 @@ running them, these lines can be added to <code>/etc/sudoers.d/application</code
 (change <code>application</code> to the name of your app).</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /sbin/s</span><span class="n">tart</span> <span class="n">application</span><span class="o">*</span>
-<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /sbin/s</span><span class="n">top</span> <span class="n">application</span><span class="o">*</span>
-<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /sbin/</span><span class="n">restart</span> <span class="n">application</span><span class="o">*</span>
-<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /bin/su</span> <span class="o">-</span> <span class="n">application</span><span class="o">*</span>
-<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span><span class="sr"> /bin/su</span> <span class="n">application</span><span class="o">*</span></pre></div>
+        <div class='highlight'><pre><span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span> <span class="sr">/sbin/s</span><span class="n">tart</span> <span class="n">application</span><span class="o">*</span>
+<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span> <span class="sr">/sbin/s</span><span class="n">top</span> <span class="n">application</span><span class="o">*</span>
+<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span> <span class="sr">/sbin/</span><span class="n">restart</span> <span class="n">application</span><span class="o">*</span>
+<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span> <span class="sr">/bin/su</span> <span class="o">-</span> <span class="n">application</span><span class="o">*</span>
+<span class="o">%</span><span class="n">application</span> <span class="no">ALL</span><span class="o">=</span><span class="no">NOPASSWD</span><span class="p">:</span> <span class="sr">/bin/su</span> <span class="n">application</span><span class="o">*</span></pre></div>
       </td>
     </tr>
     <tr id='section-Getting_started'>
@@ -170,7 +170,7 @@ running them, these lines can be added to <code>/etc/sudoers.d/application</code
         <p>Recap currently supports three types of deployment.  These are for static sites (as described
 in <a href="lib/recap/static.html">recap/static.rb</a>), ruby apps (<a href="lib/recap/ruby.html">recap/ruby.rb</a>),
 and rails apps (<a href="lib/recap/rails.html">recap/rails.rb</a>).  Using all three is similar. Add this
-<code>Capfile</code> to your project, changing the first line to reflect the project you have.</p>
+<code>Capfile</code> to your project, changing the first line to reflect the type of deployment you want.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap/ruby&#39;</span>
