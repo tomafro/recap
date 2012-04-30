@@ -22,13 +22,5 @@ describe Recap::Bootstrap do
         config.find_and_execute_task('bootstrap')
       end
     end
-
-    describe 'bootstrap:user' do
-      pending 'Tests not written'
-    end
-
-    describe 'bootstrap:application' do
-      pending 'Tests not written'
-    end
   end
 end

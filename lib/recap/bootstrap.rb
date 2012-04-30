@@ -10,6 +10,7 @@ module Recap::Bootstrap
       user
     end
 
+    desc 'Sets up the server account used by the application, including home directory and environment support'
     task :application do
       if exit_code("id #{application_user}").strip != "0"
         sudo "useradd #{application_user} -d #{application_home}"
@@ -34,6 +35,7 @@ fi
       as_app "mkdir -p #{deploy_to}", "~"
     end
 
+    desc 'Sets up the server account used by a deploying user'
     task :user do
       run "git config --global user.name '#{`git config user.name`.strip}'"
       run "git config --global user.email '#{`git config user.email`.strip}'"
