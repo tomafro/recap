@@ -2,8 +2,10 @@ require 'bundler/gem_tasks'
 require 'rocco/tasks'
 require 'rspec/core/rake_task'
 
+Rocco.make('doc', ['index.rb', 'lib/**/*.rb'])
+
 desc 'build docs'
-Rocco::Task.new :rocco, 'doc/', ['index.rb', 'lib/**/*.rb']
+task :doc => :rocco
 
 desc 'publish docs'
 task :publish do
