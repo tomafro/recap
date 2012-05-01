@@ -70,7 +70,7 @@ module Recap::Tasks::Env
 
     task :edit do
       content = edit_file environment_file
-      env = Recap::Environment.from_string(content)
+      env = Recap::Support::Environment.from_string(content)
 
       default_env.each do |name, value|
         env.set(name, value) unless env.get(name)
