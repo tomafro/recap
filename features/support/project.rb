@@ -178,8 +178,8 @@ module ProjectSupport
       raise "Exit code returned running 'cap #{command}'" if $?.exitstatus != 0
     end
 
-    def run_on_server(cmd)
-      @server.run("cd #{deployment_path} && #{cmd}")
+    def run_on_server(cmd, path = deployment_path)
+      @server.run("cd #{path} && #{cmd}")
     end
 
     def git(command)

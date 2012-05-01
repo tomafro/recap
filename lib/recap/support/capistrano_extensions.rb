@@ -70,8 +70,8 @@ module Recap::Support::CapistranoExtensions
   end
 
   # Does the given file exist within the deployment directory?
-  def deployed_file_exists?(path)
-    exit_code("cd #{deploy_to} && [ -f #{path} ]") == "0"
+  def deployed_file_exists?(path, root_path = deploy_to)
+    exit_code("cd #{root_path} && [ -f #{path} ]") == "0"
   end
 
   # Has the given path been created or changed since the previous deployment?  During the first

@@ -6,49 +6,22 @@
 # git's strengths to deploy applications in a faster, simpler manner than the standard capistrano
 # deployment.
 #
-# ### Getting started ###
+# ### Aims and features
 #
-# To use recap you'll need to install the gem, most likely by adding an entry like the following to
-# the `Gemfile`, then running `bundle install`.
-#
-# <pre>gem 'recap', '~>1.0.0'</pre>
-#
-# Once the gem is installed, generate a `Capfile` by running `recap setup` within your project
-# folder.  You can see the supported options with `recap help setup`.  The generated `Capfile`
-# will look something like this:
-#
-# <pre>require 'recap/recipes/rails'
-#
-# set :application, 'example-app'
-# set :repository, 'git@example.com:example/example-app.git'
-#
-# server 'server.example.com', :app</pre>
-#
-# Edit the `Capfile` to point at your deployment server and you should be ready to go.  `cap -T`
-# will show all the available tasks.  Before you can deploy an app the server needs to be setup, and
-# there are tasks to do this.  Running `cap bootstrap` will add the application user and directory.
-# Next `cap deploy:setup` clones your code and gets everything ready for the first deployment.
-#
-# Finally `cap deploy` will deploy your app.
-#
-# ### Using git to manage deployments ###
-#
-# Releases are managed using git.  All code is deployed to a single directory, and git tags are used
-# to manage different released versions.  No `releases`, `current` or `shared` directories are
-# created, avoiding unecessary symlinking.  For more information on how releases work, see
-# [recap/tasks/deploy.rb](recap/tasks/deploy.html)
+# Releases are managed using git.  All code is deployed to a single directory, and git tags are
+# used to manage different released versions.  No `releases`, `current` or `shared` directories are
+# created, avoiding unnecessary sym-linking.  For more information on how releases work, see
+# [recap/tasks/deploy.rb](recap/tasks/deploy.html).
 #
 # Deployments do the minimum work possible, using git to determine whether tasks need to run.  e.g.
 # the `bundle:install` task only runs if the app contains a `Gemfile.lock` file and it has changed
-# since the last deployment.  You can see how this works in the
-# [recap/tasks/bundler.rb](recap/tasks/bundler.html) recipe.
+# since the last deployment.  You can see how this works in
+# [recap/tasks/bundler.rb](recap/tasks/bundler.html).
 #
-# ### Deployment user accounts ###
-#
-# Applications have their own user account and group, owning all of that application's associated
+# Applications have their own user and group, owning all of that application's associated
 # files and processes.  This gives them a dedicated environment, allowing environment variables to
 # be used for application specific configuration.  Tasks such as `env`, `env:set` and `env:edit` make
-# setting and changing these variables easy. [recap/tasks/env.rb](recap/tasks/env.html) has more
+# setting and changing these variables easy.  [recap/tasks/env.rb](recap/tasks/env.html) has more
 # information about using these environment variables.
 #
 # Personal accounts are used to deploy to the server, distinct from the application user.  The right
@@ -63,44 +36,80 @@
 # %application ALL=NOPASSWD: /bin/su - application*
 # %application ALL=NOPASSWD: /bin/su application*</pre>
 #
-# ### Deployment target ###
+# ### Limitations and Constraints
 #
-# These recipes have been developed and tested using Ubuntu 11.04, though they may work well with
-# other flavours of unix.
+# Recap has been developed and tested using Ubuntu 11.04. It may work well with
+# other flavours of unix, but proceed with caution.
 #
-# The application should be run as the application user; if using Apache and Passenger, you should
-# set the `PassengerDefaultUser` directive to be the same as the `application_user`.
-
-# ### Code layout
+# Recap also uses a different file layout than other capistrano-based deployments, so other
+# recipes may not work well with it.  You can improve compatibility with other recipes using
+# [recap/support/compatibility.rb](recap/support/compatibility.html).
+#
+# ### Getting started
+#
+# To use recap you'll need a project stored in `git`.  You'll also need a server with `git` installed
+# and if deploying a rails or ruby app, `bundler` and `ruby` too.  Finally you need an account on the
+# server which you can SSH into and which is a sudoer.
+#
+# #### Preparing your project
+#
+# To get a project ready to deploy with recap, you'll need to install the gem, most likely by adding
+# an entry like the following to the `Gemfile`, then running `bundle install`.
+#
+# <pre>gem 'recap', '~>1.0.0'</pre>
+#
+# Once the gem is installed, generate a `Capfile` by running `recap setup` within your project
+# folder.  You can see the supported options with `recap help setup`.  The generated `Capfile`
+# will look something like this:
+#
+# <pre>require 'recap/recipes/rails'
+#
+# set :application, 'example-app'
+# set :repository, 'git@example.com:example/example-app.git'
+#
+# server 'server.example.com', :app</pre>
+#
+# Edit the `Capfile` to point at your deployment server and your project should be ready.  `cap -T`
+# will show all the tasks now available.
+#
+# #### Preparing the server
+#
+# The next step is setting up the server.  Running `cap bootstrap` will check your personal account
+# on the server is configured correctly, and add an account for your application.
+#
+# This application account is dedicated to your app, so you can edit its `.profile` as much as you
+# need (to add a particular version of `ruby` to the path, for example).
+# [recap/tasks/env.rb](recap/tasks/env.html) information on how to use the `env:set` and `env:edit`
+# tasks to set configuration variables.
+#
+# #### Preparing the app
+#
+# Running `cap deploy:setup` clones your code and sets up everything ready for the first deployment.
+# Once this has been run, you might want to set up a virtual host entry for nginx or Apache to
+# point at your app.
+#
+# #### Deploying
+#
+# Finally running `cap deploy` will deploy your app for the first time.  Each time you make a change
+# you want deployed, commit and push your changes to your `git` repository, and run `cap deploy` to
+# push those changes to the server.
+#
+# ### Further information
+#
+# Recap has recipes to deploy static, ruby-based and rails apps which you can find out about in
+# [recap/recipes](recap/recipes.html).
+#
+# For more information about all the capistrano tasks recap provides, see
+# [recap/tasks](recap/tasks.html).
+#
+# ### Versioning and License ###
+#
+# recap uses [semantic versioning](http://semver.org/).
+# The code is available [on github](http://github.com/freerange/recap) and released under the
+# [MIT License](https://github.com/freerange/recap/blob/master/LICENSE)
 
 module Recap
-
-  # The main deployment tasks are defined in [recap/tasks/deploy.rb](recap/tasks/deploy.html).  Automatic
-  # checks to ensure servers and users are correctly setup are in
-  # [recap/tasks/preflight.rb](recap/tasks/preflight.html), while tasks to bootstrap the machine and users
-  # are in [recap/tasks/bootstrap.rb](recap/tasks/bootstrap.html).  Tasks to alter environment variables are
-  # in [recap/tasks/env.rb](recap/tasks/env.html)
-  #
-  # In addition, there are extensions for [bundler](recap/tasks/bundler.html) and
-  # [foreman](recap/tasks/foreman.html)
-
-  module Tasks
-    autoload :Bootstrap, 'recap/tasks/bootstrap'
-    autoload :Bundler, 'recap/tasks/bundler'
-    autoload :Deploy, 'recap/tasks/deploy'
-    autoload :Env, 'recap/tasks/env'
-    autoload :Foreman, 'recap/tasks/foreman'
-    autoload :Preflight, 'recap/tasks/preflight'
-
-    # Deploying [Rails](recap/recipes/rails.html) requires a bit of extra work to ensure that migrations and run and
-    # assets are generated. These can be included by simply requiring `recap/recipes/rails` instead of `recap/recipes/static`
-    # or `recap/recipes/ruby` in your `Capfile`.
-    autoload :Rails, 'recap/tasks/rails'
-  end
-
   module Support
-    # For limited compatibility with other existing Capistrano recipes, that were not built for recap,
-    # see [compatibility](recap/support/compatibility.html).
     autoload :Compatibility, 'recap/support/compatibility'
     autoload :Namespace, 'recap/support/namespace'
     autoload :Environment, 'recap/support/environment'
@@ -108,12 +117,5 @@ module Recap
     autoload :CLI, 'recap/support/cli'
   end
 
-  # ### Versioning ###
-  #
-  # recap uses [semantic versioning](http://semver.org/), so things may change before the `1.0.0`
-  # release.
   autoload :Version, 'recap/version'
-
-  # The code is available [on github](http://github.com/freerange/recap) and released under the
-  # [MIT License](https://github.com/freerange/recap/blob/master/LICENSE)
 end

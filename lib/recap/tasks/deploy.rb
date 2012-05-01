@@ -1,11 +1,16 @@
-require 'recap'
+# These tasks provide the basic mechanism getting new code onto servers using git.
+
+require 'recap/tasks'
 require 'recap/support/capistrano_extensions'
 
+# These deployment tasks are designed to work alongside the tasks for
+# [altering environment variables](tasks/env.html), as well as the
+# [preflight checks](tasks/preflight.html) and
+# [bootstrap tasks](tasks/bootstrap.html).
+
+require 'recap/tasks/env'
 require 'recap/tasks/preflight'
 require 'recap/tasks/bootstrap'
-require 'recap/tasks/env'
-
-# These tasks provide the basic mechanism getting new code onto servers using git.
 
 module Recap::Tasks::Deploy
   extend Recap::Support::Namespace
@@ -49,7 +54,8 @@ module Recap::Tasks::Deploy
     # `:pty` is set to `true`.
     default_run_options[:pty] = true
 
-    # The `deploy:setup` task prepares all the servers for the deployment.
+    # The `deploy:setup` task prepares all the servers for the deployment.  It ensures the `env`
+    # has been set, and clones the code.
     desc "Prepare servers for deployment"
     task :setup, :except => {:no_release => true} do
       transaction do
@@ -58,7 +64,9 @@ module Recap::Tasks::Deploy
       end
     end
 
-    # Clone the repository into the deployment directory.
+    # The `deploy:clone_code` task clones the project repository into the `deploy_to` location
+    # and ensures it has the correct file permissions.  It shouldn't be necessary to call this
+    # task manually as it is run as part of `deploy:setup`.
     task :clone_code, :except => {:no_release => true} do
       on_rollback { as_app "rm -fr #{deploy_to}" }
       # Before cloning, the directory needs to exist and be both readable and writable by the application group
@@ -68,8 +76,8 @@ module Recap::Tasks::Deploy
       git "clone #{repository} ."
     end
 
-    # The main deployment task (called with `cap deploy`) deploys the latest application code to all
-    # servers, tags the release and restarts the application.
+    # The `deploy` task ensures the environment is set, updates the application code,
+    # tags the release and restarts the application.
     desc "Deploy the latest application code"
     task :default do
       transaction do
@@ -116,8 +124,8 @@ module Recap::Tasks::Deploy
       end
     end
 
-    # In case of emergency or when manually testing deployment, it can be useful to remove all
-    # previously deployed files before starting again.
+    # The `destroy` task can be used in an emergency or when manually testing deployment.  It removes
+    # all previously deployed files, leaving a blank slate to run `deploy:setup` on.
     desc "Remove all deployed files"
     task :destroy do
       sudo "rm -rf #{deploy_to}"

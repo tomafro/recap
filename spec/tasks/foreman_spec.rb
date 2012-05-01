@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'recap/tasks/foreman'
 
 describe Recap::Tasks::Foreman do
   let :config do

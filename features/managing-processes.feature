@@ -6,6 +6,7 @@ Feature: Managing processes with foreman
     When I run "cap deploy:setup deploy"
     Then the project should own the running application process
 
+  @wip
   Scenario: Running processes can read environment variables
     Given a new ruby project and a bootstrapped server
     And the project has an application process defined in a Procfile

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'recap/tasks/deploy'
 
 describe Recap::Tasks::Deploy do
   let :config do

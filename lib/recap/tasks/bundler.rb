@@ -1,10 +1,12 @@
 # The bundler recipe ensures that the application bundle is installed whenever the code is updated.
 
+require 'recap/tasks'
+
 module Recap::Tasks::Bundler
   extend Recap::Support::Namespace
 
   namespace :bundle do
-    # Each bundle is declared in a `Gemfile`, by default in the root of the application directory
+    # Each bundle is declared in a `Gemfile`, by default in the root of the application directory.
     set(:bundle_gemfile) { "#{deploy_to}/Gemfile" }
 
     # As well as a `Gemfile`, application repositories should also contain a `Gemfile.lock`.
@@ -32,7 +34,7 @@ module Recap::Tasks::Bundler
       end
 
       # Occassionally it's useful to force an install (such as if something has gone wrong in
-      # a previous deployment)
+      # a previous deployment).
       desc "Install the latest gem bundle"
       task :default do
         if deployed_file_exists?(bundle_gemfile)
@@ -48,7 +50,7 @@ module Recap::Tasks::Bundler
     end
 
     task :check_installed do
-      if exit_code_as_app('bundle --version') != "0"
+      if exit_code_as_app('bundle --version', '.') != "0"
         abort "The application user '#{application_user}' cannot execute `bundle`.  Please check you have bundler installed."
       end
     end

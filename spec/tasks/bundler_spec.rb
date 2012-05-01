@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'recap/tasks/bundler'
 
 describe Recap::Tasks::Bundler do
   let :config do
