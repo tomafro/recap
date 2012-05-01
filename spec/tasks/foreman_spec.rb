@@ -13,6 +13,10 @@ describe Recap::Tasks::Foreman do
     'path/to/deploy/to'
   end
 
+  let :commands do
+    sequence('commands')
+  end
+
   before do
     config.set :application, 'example-app'
     config.set :application_user, 'example-app-user'
@@ -95,9 +99,9 @@ describe Recap::Tasks::Foreman do
     describe 'foreman:export' do
       it 'runs the foreman export command, then moves the exported files to the export location' do
         namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(true)
-        namespace.expects(:as_app).with(config.foreman_export_command).in_sequence
-        namespace.expects(:sudo).with("rm -f #{config.foreman_export_location}/#{config.application}*").in_sequence
-        namespace.expects(:sudo).with("cp #{config.foreman_tmp_location}/* #{config.foreman_export_location}").in_sequence
+        namespace.expects(:as_app).with(config.foreman_export_command).in_sequence(commands)
+        namespace.expects(:sudo).with("rm -f #{config.foreman_export_location}/#{config.application}*").in_sequence(commands)
+        namespace.expects(:sudo).with("cp #{config.foreman_tmp_location}/* #{config.foreman_export_location}").in_sequence(commands)
         config.find_and_execute_task('foreman:export')
       end
 

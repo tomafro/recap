@@ -10,6 +10,10 @@ describe Recap::Tasks::Bootstrap do
     config.bootstrap
   end
 
+  let :commands do
+    sequence('commands')
+  end
+
   before do
     Recap::Tasks::Bootstrap.load_into(config)
   end
@@ -17,8 +21,8 @@ describe Recap::Tasks::Bootstrap do
   describe 'Tasks' do
     describe 'bootstrap' do
       it 'runs bootsrap:application and bootstrap:user tasks' do
-        namespace.expects(:application).in_sequence
-        namespace.expects(:user).in_sequence
+        namespace.expects(:application).in_sequence(commands)
+        namespace.expects(:user).in_sequence(commands)
         config.find_and_execute_task('bootstrap')
       end
     end
