@@ -1,4 +1,3 @@
-
 Feature: Managing processes with foreman
 
   Scenario: Running an application process
