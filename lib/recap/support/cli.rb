@@ -1,4 +1,5 @@
 require 'thor'
+require 'recap/support/shell_command'
 
 module Recap::Support
 
