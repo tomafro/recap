@@ -1,4 +1,5 @@
 require 'thor'
+require 'recap/support/shell_command'
 
 module Recap::Support
 
@@ -35,7 +36,10 @@ module Recap::Support
     end
 
     def guess_repository
-      `git remote -v`.split[1]
+      ShellCommand.execute('git remote -v').split[1]
+    rescue
+      warn "Unable to determine git repository.  Setting to <unknown>."
+      "<unknown>"
     end
 
     def guess_recipe

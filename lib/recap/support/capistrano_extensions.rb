@@ -37,7 +37,7 @@ module Recap::Support::CapistranoExtensions
       as_app "touch #{path} && chmod g+rw #{path}"
       local_path = Tempfile.new('deploy-edit').path
       get(path, local_path)
-      system("#{editor} #{local_path}")
+      Recap::Support::ShellCommand.execute_interactive("#{editor} #{local_path}")
       File.read(local_path)
     else
       abort "To edit a remote file, either the EDITOR or DEPLOY_EDITOR environment variables must be set"
