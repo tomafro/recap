@@ -28,7 +28,45 @@ describe Recap::Tasks::Env do
     end
 
     describe 'env:set' do
-      pending 'Tests not written'
+      before do
+        config.set :environment_file, 'path/to/.env'
+        namespace.stubs(:deployed_file_exists?).with(config.environment_file).returns(true)
+        namespace.stubs(:capture).with("cat #{config.environment_file}").returns('')
+      end
+
+      it 'merges the edited environment with the default one' do
+        config.set_default_env 'A', 'b'
+        namespace.expects(:put_as_app).with(Recap::Support::Environment.from_string("A=b\nX=Y").to_s, config.environment_file)
+        namespace.stubs(:env_argv).returns(['X=Y'])
+        config.find_and_execute_task('env:set')
+      end
+
+      it 'allows overriding of the default environment' do
+        config.set_default_env 'A', 'b'
+        namespace.expects(:put_as_app).with(Recap::Support::Environment.from_string('A=c').to_s, config.environment_file)
+        namespace.stubs(:env_argv).returns(['A=c'])
+        config.find_and_execute_task('env:set')
+      end
+
+      it 'can unset a variable by assigning an empty value to it' do
+        namespace.stubs(:capture).with("cat #{config.environment_file}").returns("X=Y\nA=b")
+        namespace.expects(:put_as_app).with(Recap::Support::Environment.from_string('X=Y').to_s, config.environment_file)
+        namespace.stubs(:env_argv).returns(['A='])
+        config.find_and_execute_task('env:set')
+      end
+
+      it 'uploads the new environment' do
+        namespace.expects(:put_as_app).with(Recap::Support::Environment.from_string('X=Y').to_s, config.environment_file)
+        namespace.stubs(:env_argv).returns(['X=Y'])
+        config.find_and_execute_task('env:set')
+      end
+
+      it 'removes the environment if it is empty' do
+        namespace.stubs(:capture).with("cat #{config.environment_file}").returns("X=Y")
+        namespace.expects(:as_app).with("rm -f #{config.environment_file}", '~')
+        namespace.stubs(:env_argv).returns(['X='])
+        config.find_and_execute_task('env:set')
+      end
     end
 
     describe 'env:reset' do
