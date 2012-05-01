@@ -23,17 +23,17 @@ describe Recap::Tasks::Env do
   end
 
   describe 'Tasks' do
+    before do
+      config.set :environment_file, 'path/to/.env'
+      namespace.stubs(:deployed_file_exists?).with(config.environment_file).returns(true)
+      namespace.stubs(:capture).with("cat #{config.environment_file}").returns('')
+    end
+
     describe 'env' do
       pending 'Tests not written'
     end
 
     describe 'env:set' do
-      before do
-        config.set :environment_file, 'path/to/.env'
-        namespace.stubs(:deployed_file_exists?).with(config.environment_file).returns(true)
-        namespace.stubs(:capture).with("cat #{config.environment_file}").returns('')
-      end
-
       it 'merges the edited environment with the default one' do
         config.set_default_env 'A', 'b'
         namespace.expects(:put_as_app).with(Recap::Support::Environment.from_string("A=b\nX=Y").to_s, config.environment_file)
@@ -70,12 +70,6 @@ describe Recap::Tasks::Env do
     end
 
     describe 'env:reset' do
-      before do
-        config.set :environment_file, 'path/to/.env'
-        namespace.stubs(:deployed_file_exists?).with(config.environment_file).returns(true)
-        namespace.stubs(:capture).with("cat #{config.environment_file}").returns('')
-      end
-
       it 'removes the environment file from the server' do
         namespace.stubs(:env_argv).returns([])
         namespace.expects(:as_app).with("rm -f #{config.environment_file}", '~').at_least_once
@@ -84,12 +78,6 @@ describe Recap::Tasks::Env do
     end
 
     describe 'env:edit' do
-      before do
-        config.set :environment_file, 'path/to/.env'
-        namespace.stubs(:deployed_file_exists?).with(config.environment_file).returns(true)
-        namespace.stubs(:capture).with("cat #{config.environment_file}").returns('')
-      end
-
       it 'merges the edited environment with the default one' do
         config.set_default_env 'A', 'b'
         namespace.stubs(:edit_file).returns('X=Y')
