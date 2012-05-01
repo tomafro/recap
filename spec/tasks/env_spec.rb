@@ -59,6 +59,13 @@ describe Recap::Tasks::Env do
         config.find_and_execute_task('env:edit')
       end
 
+      it 'allows overriding of the default environment' do
+        config.set_default_env 'A', 'b'
+        namespace.stubs(:edit_file).returns('A=c')
+        namespace.expects(:put_as_app).with(Recap::Support::Environment.from_string('A=c').to_s, config.environment_file)
+        config.find_and_execute_task('env:edit')
+      end
+
       it 'uploads the new environment' do
         namespace.stubs(:edit_file).returns('X=Y')
         namespace.expects(:put_as_app).with(Recap::Support::Environment.from_string('X=Y').to_s, config.environment_file)
