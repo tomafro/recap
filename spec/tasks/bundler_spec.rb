@@ -94,9 +94,9 @@ describe Recap::Tasks::Bundler do
       it 'aborts with warning if Gemfile exists but Gemfile.lock doesn\'t' do
         namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile).returns(true)
         namespace.stubs(:deployed_file_exists?).with(config.bundle_gemfile_lock).returns(false)
-        lambda do
-          namespace.find_and_execute_task('bundle:install')
-        end.should raise_error(SystemExit, 'Gemfile found without Gemfile.lock.  The Gemfile.lock should be committed to the project repository')
+        expected_message = 'Gemfile found without Gemfile.lock.  The Gemfile.lock should be committed to the project repository'
+        namespace.install.expects(:abort).with(expected_message)
+        namespace.find_and_execute_task('bundle:install')
       end
     end
 

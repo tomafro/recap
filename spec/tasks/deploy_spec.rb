@@ -24,17 +24,15 @@ describe Recap::Tasks::Deploy do
   describe 'Settings' do
     describe '#application' do
       it 'exits if accessed before being set' do
-        lambda do
-          config.application
-        end.should raise_error(SystemExit)
+        namespace.expects(:abort).with(regexp_matches(/You must set the name of your application in your Capfile/))
+        config.application
       end
     end
 
     describe '#repository' do
       it 'exits if accessed before being set' do
-        lambda do
-          config.repository
-        end.should raise_error(SystemExit)
+        namespace.expects(:abort).with(regexp_matches(/You must set the git respository location in your Capfile/))
+        config.repository
       end
     end
 
@@ -187,9 +185,8 @@ describe Recap::Tasks::Deploy do
 
       it 'aborts if no tag has been deployed' do
         config.stubs(:latest_tag).returns(nil)
-        lambda do
-          namespace.find_and_execute_task('deploy:rollback')
-        end.should raise_error(SystemExit, 'This app is not currently deployed')
+        namespace.rollback.expects(:abort).with('This app is not currently deployed')
+        namespace.find_and_execute_task('deploy:rollback')
       end
     end
 
