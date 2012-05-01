@@ -20,6 +20,10 @@ module Recap::Tasks::Env
     @default_env ||= {}
   end
 
+  def env_argv
+    ARGV[1..-1]
+  end
+
   namespace :env do
     set(:environment_file) { "/home/#{application_user}/.env" }
 
@@ -44,7 +48,7 @@ module Recap::Tasks::Env
     end
 
     task :set do
-      env = ARGV[1..-1].inject(current_environment) do |env, string|
+      env = env_argv.inject(current_environment) do |env, string|
         env.set_string(string)
         logger.debug "Setting #{string}"
         logger.debug "Env is now: #{env}"

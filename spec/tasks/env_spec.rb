@@ -31,6 +31,20 @@ describe Recap::Tasks::Env do
       pending 'Tests not written'
     end
 
+    describe 'env:reset' do
+      before do
+        config.set :environment_file, 'path/to/.env'
+        namespace.stubs(:deployed_file_exists?).with(config.environment_file).returns(true)
+        namespace.stubs(:capture).with("cat #{config.environment_file}").returns('')
+      end
+
+      it 'removes the environment file from the server' do
+        namespace.stubs(:env_argv).returns([])
+        namespace.expects(:as_app).with("rm -f #{config.environment_file}", '~').at_least_once
+        config.find_and_execute_task('env:reset')
+      end
+    end
+
     describe 'env:edit' do
       before do
         config.set :environment_file, 'path/to/.env'
