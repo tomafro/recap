@@ -114,6 +114,10 @@ as part of a deployments</p>
     <span class="n">as_app</span> <span class="s2">&quot;cp /tmp/recap-put-as-app </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2"> &amp;&amp; chmod g+rw </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span>
   <span class="k">ensure</span>
     <span class="n">run</span> <span class="s2">&quot;rm /tmp/recap-put-as-app&quot;</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">editor</span>
+    <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;DEPLOY_EDITOR&#39;</span><span class="o">]</span> <span class="o">||</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;EDITOR&#39;</span><span class="o">]</span>
   <span class="k">end</span></pre></div>
       </td>
     </tr>
@@ -126,11 +130,11 @@ as part of a deployments</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>  <span class="k">def</span> <span class="nf">edit_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">editor</span> <span class="o">=</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;DEPLOY_EDITOR&#39;</span><span class="o">]</span> <span class="o">||</span> <span class="no">ENV</span><span class="o">[</span><span class="s1">&#39;EDITOR&#39;</span><span class="o">]</span>
+    <span class="k">if</span> <span class="n">editor</span>
       <span class="n">as_app</span> <span class="s2">&quot;touch </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2"> &amp;&amp; chmod g+rw </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
       <span class="n">local_path</span> <span class="o">=</span> <span class="no">Tempfile</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;deploy-edit&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">path</span>
       <span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">local_path</span><span class="p">)</span>
-      <span class="sb">`</span><span class="si">#{</span><span class="n">editor</span><span class="si">}</span><span class="sb"> </span><span class="si">#{</span><span class="n">local_path</span><span class="si">}</span><span class="sb">`</span>
+      <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">editor</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">local_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
       <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span>
     <span class="k">else</span>
       <span class="nb">abort</span> <span class="s2">&quot;To edit a remote file, either the EDITOR or DEPLOY_EDITOR environment variables must be set&quot;</span>
