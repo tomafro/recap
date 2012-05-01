@@ -27,13 +27,17 @@ module Recap::Support::CapistranoExtensions
     run "rm /tmp/recap-put-as-app"
   end
 
+  def editor
+    ENV['DEPLOY_EDITOR'] || ENV['EDITOR']
+  end
+
   # Edit a file on the remote server, using a local editor
   def edit_file(path)
-    if editor = ENV['DEPLOY_EDITOR'] || ENV['EDITOR']
+    if editor
       as_app "touch #{path} && chmod g+rw #{path}"
       local_path = Tempfile.new('deploy-edit').path
       get(path, local_path)
-      `#{editor} #{local_path}`
+      system("#{editor} #{local_path}")
       File.read(local_path)
     else
       abort "To edit a remote file, either the EDITOR or DEPLOY_EDITOR environment variables must be set"
