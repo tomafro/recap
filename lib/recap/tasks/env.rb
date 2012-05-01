@@ -1,3 +1,5 @@
+require 'recap'
+
 # Environment variables are a useful way to set application configuration, such as database passwords
 # or S3 keys and secrets.  [recap](http://github.com/freerange/recap) stores these extra variables in
 # a special file, usually stored at `$HOME/.env`.  This file is loaded each time the shell starts by
@@ -24,9 +26,9 @@ module Recap::Tasks::Env
     def current_environment
       @current_environment ||= begin
         if deployed_file_exists?(environment_file)
-          Recap::Environment.from_string(capture("cat #{environment_file}"))
+          Recap::Support::Environment.from_string(capture("cat #{environment_file}"))
         else
-          Recap::Environment.new
+          Recap::Support::Environment.new
         end
       end
     end
