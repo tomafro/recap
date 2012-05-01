@@ -37,6 +37,18 @@ module Recap::Tasks::Env
       end
     end
 
+    def update_remote_environment(env)
+      default_env.each do |name, value|
+        env.set(name, value) unless env.get(name)
+      end
+
+      if env.empty?
+        as_app "rm -f #{environment_file}", "~"
+      else
+        put_as_app env.to_s, environment_file
+      end
+    end
+
     task :default do
       if current_environment.empty?
         puts "There are no config variables set"
@@ -54,16 +66,7 @@ module Recap::Tasks::Env
         logger.debug "Env is now: #{env}"
         env
       end
-
-      default_env.each do |name, value|
-        env.set(name, value) unless env.get(name)
-      end
-
-      if env.empty?
-        as_app "rm -f #{environment_file}", "~"
-      else
-        put_as_app env.to_s, environment_file
-      end
+      update_remote_environment(env)
       default
     end
 
@@ -75,16 +78,7 @@ module Recap::Tasks::Env
     task :edit do
       content = edit_file environment_file
       env = Recap::Support::Environment.from_string(content)
-
-      default_env.each do |name, value|
-        env.set(name, value) unless env.get(name)
-      end
-
-      if env.empty?
-        as_app "rm -f #{environment_file}", "~"
-      else
-        put_as_app env.to_s, environment_file
-      end
+      update_remote_environment(env)
       default
     end
   end
