@@ -54,27 +54,28 @@ deployment.</p>
 
 <h3>Getting started</h3>
 
-<p>To use recap you&rsquo;ll need to install the gem, most likely by adding an entry like this to the
-<code>Gemfile</code></p>
+<p>To use recap you&rsquo;ll need to install the gem, most likely by adding an entry like the following to
+the <code>Gemfile</code>, then running <code>bundle install</code>.</p>
 
-<pre>gem &lsquo;recap&rsquo;, &lsquo;~>0.3.0&rsquo;</pre>
+<pre>gem &lsquo;recap&rsquo;, &lsquo;~>1.0.0&rsquo;</pre>
 
-<p>Recap currently supports three types of deployment.  These are for static sites (as described
-in <a href="recap/static.html">recap/static.rb</a>), ruby apps (<a href="recap/ruby.html">recap/ruby.rb</a>),
-and rails apps (<a href="recap/rails.html">recap/rails.rb</a>).  Using all three is similar. Add this
-<code>Capfile</code> to your project, changing the first line to reflect the type of deployment you want.</p>
+<p>Once the gem is installed, generate a <code>Capfile</code> by running <code>recap setup</code> within your project
+folder.  You can see the supported options with <code>recap help setup</code>.  The generated <code>Capfile</code>
+will look something like this:</p>
 
-<pre>require &lsquo;recap/ruby&rsquo;
+<pre>require &lsquo;recap/rails&rsquo;
 
 set :application, &lsquo;example-app&rsquo;
 set :repository, &lsquo;git@example.com:example/example-app.git&rsquo;
 
-server &lsquo;example-app.example.com&rsquo;, :app</pre>
+server &lsquo;server.example.com&rsquo;, :app</pre>
 
-<p>Then run <code>cap -T</code> to show all available tasks.  To get most apps running, you&rsquo;ll need to run the
-following tasks.  First <code>cap bootstrap</code> will add the application user and directory to your
-server.  Next <code>cap deploy:setup</code> gets everything ready for deployment.  Finally <code>cap deploy</code>
-will deploy your app.</p>
+<p>Edit the <code>Capfile</code> to point at your deployment server and you should be ready to go.  <code>cap -T</code>
+shows all the available tasks.  Before you can deploy an app the server needs to be setup, and
+there are tasks to do this.  Running <code>cap bootstrap</code> will add the application user and directory.
+Next <code>cap deploy:setup</code> clones your code and gets everything ready for the first deployment.</p>
+
+<p>Finally <code>cap deploy</code> will deploy your app.</p>
 
 <h3>Using git to manage deployments</h3>
 
@@ -117,7 +118,7 @@ other flavours of unix.</p>
 set the <code>PassengerDefaultUser</code> directive to be the same as the <code>application_user</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Recap</span></pre></div>
+        <div class='highlight'><pre></pre></div>
       </td>
     </tr>
     <tr id='section-Code_layout'>
@@ -126,8 +127,17 @@ set the <code>PassengerDefaultUser</code> directive to be the same as the <code>
           <a class="pilcrow" href="#section-Code_layout">&#182;</a>
         </div>
         <h3>Code layout</h3>
-
-<p>The main deployment tasks are defined in <a href="recap/tasks/deploy.html">recap/tasks/deploy.rb</a>.  Automatic
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Recap</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>The main deployment tasks are defined in <a href="recap/tasks/deploy.html">recap/tasks/deploy.rb</a>.  Automatic
 checks to ensure servers and users are correctly setup are in
 <a href="recap/tasks/preflight.html">recap/tasks/preflight.rb</a>, while tasks to bootstrap the machine and users
 are in <a href="recap/tasks/bootstrap.rb">recap/tasks/bootstrap.rb</a>.  Tasks to alter environment variables are
@@ -148,10 +158,10 @@ in <a href="recap/tasks/env.html">recap/tasks/env.rb</a></p>
   <span class="k">module</span> <span class="nn">Support</span></pre></div>
       </td>
     </tr>
-    <tr id='section-3'>
+    <tr id='section-4'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-3">&#182;</a>
+          <a class="pilcrow" href="#section-4">&#182;</a>
         </div>
         <p>For limited compatibility with other existing Capistrano recipes, that were not built for recap,
 see <a href="recap/support/compatibility.html">compatibility</a>.</p>
@@ -163,10 +173,10 @@ see <a href="recap/support/compatibility.html">compatibility</a>.</p>
   <span class="k">end</span></pre></div>
       </td>
     </tr>
-    <tr id='section-4'>
+    <tr id='section-5'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-4">&#182;</a>
+          <a class="pilcrow" href="#section-5">&#182;</a>
         </div>
         <p>Deploying <a href="recap/rails.html">Rails</a> requires a bit of extra work to ensure that migrations and run and
 assets are generated. These can be included by simply requiring <code>recap/rails</code> instead of <code>recap/static</code>
@@ -190,10 +200,10 @@ release.</p>
         <div class='highlight'><pre>  <span class="nb">autoload</span> <span class="ss">:Version</span><span class="p">,</span> <span class="s1">&#39;recap/version&#39;</span></pre></div>
       </td>
     </tr>
-    <tr id='section-6'>
+    <tr id='section-7'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-6">&#182;</a>
+          <a class="pilcrow" href="#section-7">&#182;</a>
         </div>
         <p>The code is available <a href="http://github.com/freerange/recap">on github</a> and released under the
 <a href="https://github.com/freerange/recap/blob/master/LICENSE">MIT License</a></p>
