@@ -35,7 +35,7 @@ module Recap::Support
     end
 
     def guess_repository
-      `git remote -v`.split[1]
+      ShellCommand.execute('git remote -v').split[1]
     end
 
     def guess_recipe

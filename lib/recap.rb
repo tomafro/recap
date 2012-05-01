@@ -98,6 +98,7 @@ module Recap
     autoload :Compatibility, 'recap/support/compatibility'
     autoload :Namespace, 'recap/support/namespace'
     autoload :Environment, 'recap/support/environment'
+    autoload :ShellCommand, 'recap/support/shell_command'
   end
 
   # Deploying [Rails](recap/recipes/rails.html) requires a bit of extra work to ensure that migrations and run and
