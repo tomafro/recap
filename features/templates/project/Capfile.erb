@@ -8,7 +8,7 @@ set :user, 'vagrant'
 ssh_options[:port] = 2222
 ssh_options[:keys] = ['<%= project.private_key_path %>']
 
-server '127.0.0.1', :web
+server '127.0.0.1', :app
 
 # Each project has its own location shared between the host machine and the VM
 

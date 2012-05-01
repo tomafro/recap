@@ -1,5 +1,6 @@
-require "recap/ruby"
+require 'recap/<%= type %>'
 
-set :application, "<%= name %>"
+set :application, '<%= name %>'
+set :repository, '<%= repository %>'
 
-set :repository,  "<%= repository %>"
+server '<%= server %>', :app
