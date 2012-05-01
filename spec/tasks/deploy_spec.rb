@@ -61,10 +61,10 @@ describe Recap::Tasks::Deploy do
     end
 
     describe '#deploy_to' do
-      it 'defaults to a folder within the application user home directory' do
+      it 'defaults to an `app` folder within the application user home directory' do
         config.set :application, 'hare'
         config.set :application_user, 'rabbitfoot'
-        config.deploy_to.should eql('/home/rabbitfoot/apps/hare')
+        config.deploy_to.should eql('/home/rabbitfoot/app')
       end
     end
 

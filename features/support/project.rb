@@ -166,7 +166,7 @@ module ProjectSupport
     end
 
     def deployment_path(path = "")
-      File.join("/home/#{name}/apps/#{name}", path)
+      File.join("/home/#{name}/app", path)
     end
 
     def deployed_version
