@@ -9,7 +9,7 @@ describe Recap::Support::CapistranoExtensions do
     before do
       Tempfile.any_instance.stubs(:path).returns('path/to/tempfile')
       config.stubs(:as_app)
-      config.stubs(:system).returns(true)
+      Recap::Support::ShellCommand.stubs(:execute_interactive)
       config.stubs(:get)
       config.stubs(:editor).returns("some-editor")
     end
@@ -20,20 +20,11 @@ describe Recap::Support::CapistranoExtensions do
       config.edit_file('remote/path/to/file')
     end
 
-    it 'opens the editor using `system` so that Vi works' do
+    it 'opens the editor using `execute_interactive` so that Vi works' do
       config.stubs(:editor).returns('vi')
       File.stubs(:read).with('path/to/tempfile')
-      config.expects(:system).with('vi path/to/tempfile').returns(true)
+      Recap::Support::ShellCommand.expects(:execute_interactive).with('vi path/to/tempfile')
       config.edit_file('remote/path/to/file')
-    end
-
-    it 'raises an error if the editor command fails' do
-      config.stubs(:editor).returns('editor')
-      File.stubs(:read).with('path/to/tempfile')
-      config.stubs(:system).with('editor path/to/tempfile').returns(false)
-      lambda {
-        config.edit_file('remote/path/to/file')
-      }.should raise_error
     end
 
     it 'returns the locally edited file contents' do

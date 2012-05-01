@@ -20,5 +20,16 @@ module Recap::Support
       end
       output
     end
+
+    def self.execute_interactive(command)
+      unless system(command)
+        message = [
+          "Executing shell command failed.",
+          "  Command: #{command}",
+          "  Status:  #{$?.exitstatus}"
+        ].join("\n")
+        raise message
+      end
+    end
   end
 end
