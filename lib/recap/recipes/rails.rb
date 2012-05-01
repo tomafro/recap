@@ -21,7 +21,13 @@ module Recap::Rails
       end
     end
 
+    namespace :assets do
+      task :precompile do
+        as_app "./bin/rake RAILS_GROUPS=assets assets:precompile"
+      end
+    end
+
     after "deploy:clone_code", "rails:db:load_schema"
-    after "deploy:update_code", "rails:db:migrate"
+    after "deploy:update_code", "rails:db:migrate", "rails:assets:precompile"
   end
 end

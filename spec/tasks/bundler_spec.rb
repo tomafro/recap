@@ -39,8 +39,8 @@ describe Recap::Tasks::Bundler do
     end
 
     describe '#bundle_without' do
-      it 'defaults to development, test and assets groups' do
-        config.bundle_without.should eql("development test assets")
+      it 'defaults to development and test groups' do
+        config.bundle_without.should eql("development test")
       end
     end
 

@@ -16,7 +16,7 @@ module Recap::Tasks::Bundler
 
     # Not all gems are needed for production environments, so by default the `development`, `test` and
     # `assets` groups are skipped.
-    set(:bundle_without) { "development test assets" }
+    set(:bundle_without) { "development test" }
 
     # The main bundle install command uses all the settings above, together with the `--deployment`,
     # `--binstubs` and `--quiet` flags
