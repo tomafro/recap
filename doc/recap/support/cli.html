@@ -44,7 +44,7 @@
         <div class="pilwrap">
           <a class="pilcrow" href="#section-1">&#182;</a>
         </div>
-
+        
       </td>
       <td class=code>
         <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;thor&#39;</span>
@@ -65,18 +65,23 @@ project.</p>
         <div class='highlight'><pre>  <span class="k">class</span> <span class="nc">CLI</span> <span class="o">&lt;</span> <span class="no">Thor</span>
     <span class="kp">include</span> <span class="no">Thor</span><span class="o">::</span><span class="no">Actions</span>
 
-    <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:repository</span>
+    <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:repository</span><span class="p">,</span> <span class="ss">:type</span><span class="p">,</span> <span class="ss">:server</span>
 
     <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">source_root</span>
       <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;../templates&quot;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span>
     <span class="k">end</span>
 
     <span class="n">desc</span> <span class="s1">&#39;setup&#39;</span><span class="p">,</span> <span class="s1">&#39;Setup basic capistrano recipes, e.g: recap setup&#39;</span>
-    <span class="n">method_option</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:aliases</span> <span class="o">=&gt;</span> <span class="s2">&quot;-n&quot;</span>
-    <span class="n">method_option</span> <span class="ss">:repository</span><span class="p">,</span> <span class="ss">:aliases</span> <span class="o">=&gt;</span> <span class="s2">&quot;-r&quot;</span>
+    <span class="n">method_option</span> <span class="ss">:name</span>
+    <span class="n">method_option</span> <span class="ss">:repository</span>
+    <span class="n">method_option</span> <span class="ss">:server</span>
+    <span class="n">method_option</span> <span class="ss">:type</span><span class="p">,</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="ss">:banner</span> <span class="o">=&gt;</span> <span class="s1">&#39;static|ruby|rails&#39;</span>
+
     <span class="k">def</span> <span class="nf">setup</span>
       <span class="nb">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;name&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="n">guess_name</span>
       <span class="nb">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;repo&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="n">guess_repository</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;type&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="n">guess_type</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;server&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="s1">&#39;your-server-address&#39;</span>
       <span class="n">template</span> <span class="s1">&#39;Capfile.erb&#39;</span><span class="p">,</span> <span class="s1">&#39;Capfile&#39;</span>
     <span class="k">end</span>
 
@@ -88,6 +93,18 @@ project.</p>
 
     <span class="k">def</span> <span class="nf">guess_repository</span>
       <span class="sb">`git remote -v`</span><span class="o">.</span><span class="n">split</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">guess_type</span>
+      <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="s1">&#39;Gemfile.lock&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;Gemfile.lock&#39;</span><span class="p">)</span> <span class="o">=~</span> <span class="sr">/ rails /</span>
+          <span class="s1">&#39;rails&#39;</span>
+        <span class="k">else</span>
+          <span class="s1">&#39;ruby&#39;</span>
+        <span class="k">end</span>
+      <span class="k">else</span>
+        <span class="s1">&#39;static&#39;</span>
+      <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span></pre></div>

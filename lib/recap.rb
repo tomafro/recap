@@ -8,27 +8,28 @@
 #
 # ### Getting started ###
 #
-# To use recap you'll need to install the gem, most likely by adding an entry like this to the
-# `Gemfile`
-# 
-# <pre>gem 'recap', '~>0.3.0'</pre>
+# To use recap you'll need to install the gem, most likely by adding an entry like the following to
+# the `Gemfile`, then running `bundle install`.
 #
-# Recap currently supports three types of deployment.  These are for static sites (as described
-# in [recap/static.rb](recap/static.html)), ruby apps ([recap/ruby.rb](recap/ruby.html)),
-# and rails apps ([recap/rails.rb](recap/rails.html)).  Using all three is similar. Add this
-# `Capfile` to your project, changing the first line to reflect the type of deployment you want.
+# <pre>gem 'recap', '~>1.0.0'</pre>
 #
-# <pre>require 'recap/ruby'
+# Once the gem is installed, generate a `Capfile` by running `recap setup` within your project
+# folder.  You can see the supported options with `recap help setup`.  The generated `Capfile`
+# will look something like this:
+#
+# <pre>require 'recap/rails'
 #
 # set :application, 'example-app'
 # set :repository, 'git@example.com:example/example-app.git'
 #
-# server 'example-app.example.com', :app</pre>
+# server 'server.example.com', :app</pre>
 #
-# Then run `cap -T` to show all available tasks.  To get most apps running, you'll need to run the
-# following tasks.  First `cap bootstrap` will add the application user and directory to your
-# server.  Next `cap deploy:setup` gets everything ready for deployment.  Finally `cap deploy`
-# will deploy your app.
+# Edit the `Capfile` to point at your deployment server and you should be ready to go.  `cap -T`
+# shows all the available tasks.  Before you can deploy an app the server needs to be setup, and
+# there are tasks to do this.  Running `cap bootstrap` will add the application user and directory.
+# Next `cap deploy:setup` clones your code and gets everything ready for the first deployment.
+#
+# Finally `cap deploy` will deploy your app.
 #
 # ### Using git to manage deployments ###
 #
@@ -69,18 +70,20 @@
 #
 # The application should be run as the application user; if using Apache and Passenger, you should
 # set the `PassengerDefaultUser` directive to be the same as the `application_user`.
+
+# ### Code layout
+
 module Recap
 
-  # ### Code layout ###
-  #
   # The main deployment tasks are defined in [recap/tasks/deploy.rb](recap/tasks/deploy.html).  Automatic
   # checks to ensure servers and users are correctly setup are in
   # [recap/tasks/preflight.rb](recap/tasks/preflight.html), while tasks to bootstrap the machine and users
   # are in [recap/tasks/bootstrap.rb](recap/tasks/bootstrap.rb).  Tasks to alter environment variables are
   # in [recap/tasks/env.rb](recap/tasks/env.html)
-  # 
+  #
   # In addition, there are extensions for [bundler](recap/tasks/bundler.html) and
   # [foreman](recap/tasks/foreman.html)
+
   module Tasks
     autoload :Bootstrap, 'recap/tasks/bootstrap'
     autoload :Bundler, 'recap/tasks/bundler'
