@@ -8,7 +8,7 @@ module Recap::Support
   class CLI < Thor
     include Thor::Actions
 
-    attr_accessor :name, :repository, :type, :server
+    attr_accessor :name, :repository, :recipe, :server
 
     def self.source_root
       File.expand_path("../templates", __FILE__)
@@ -18,12 +18,12 @@ module Recap::Support
     method_option :name
     method_option :repository
     method_option :server
-    method_option :type, :type => 'string', :banner => 'static|ruby|rails'
+    method_option :recipe, :type => 'string', :banner => 'static|ruby|rails'
 
     def setup
       self.name = options["name"] || guess_name
       self.repository = options["repo"] || guess_repository
-      self.type = options["type"] || guess_type
+      self.recipe = options["recipe"] || guess_recipe
       self.server = options["server"] || 'your-server-address'
       template 'Capfile.erb', 'Capfile'
     end
@@ -38,7 +38,7 @@ module Recap::Support
       `git remote -v`.split[1]
     end
 
-    def guess_type
+    def guess_recipe
       if File.exist?('Gemfile.lock')
         if File.read('Gemfile.lock') =~ / rails /
           'rails'

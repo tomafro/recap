@@ -1,4 +1,4 @@
-# Require `recap/ruby` in your `Capfile` to use the default recap recipies for deploying a
+# Require `recap/recipes/ruby` in your `Capfile` to use the default recap recipies for deploying a
 # Ruby application.
 require 'recap/tasks/deploy'
 

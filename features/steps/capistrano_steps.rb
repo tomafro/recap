@@ -14,7 +14,7 @@ end
 
 Given /^a new (ruby )?project and a bootstrapped server$/ do |project_type|
   type = (project_type || 'static').strip
-  start_project server: server, capfile: { recap_require: "recap/#{type}" }
+  start_project server: server, capfile: { recap_require: "recap/recipes/#{type}" }
   project.run_cap 'bootstrap'
 end
 

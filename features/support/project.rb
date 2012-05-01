@@ -42,7 +42,7 @@ module ProjectSupport
     def initialize(project, options = {})
       super('project/Capfile.erb')
       @project = project
-      @recap_require = options[:recap_require] || 'recap/static'
+      @recap_require = options[:recap_require] || 'recap/recipes/static'
     end
 
     def default_environment_values

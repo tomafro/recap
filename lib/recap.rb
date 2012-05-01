@@ -17,7 +17,7 @@
 # folder.  You can see the supported options with `recap help setup`.  The generated `Capfile`
 # will look something like this:
 #
-# <pre>require 'recap/rails'
+# <pre>require 'recap/recipes/rails'
 #
 # set :application, 'example-app'
 # set :repository, 'git@example.com:example/example-app.git'
@@ -25,7 +25,7 @@
 # server 'server.example.com', :app</pre>
 #
 # Edit the `Capfile` to point at your deployment server and you should be ready to go.  `cap -T`
-# shows all the available tasks.  Before you can deploy an app the server needs to be setup, and
+# will show all the available tasks.  Before you can deploy an app the server needs to be setup, and
 # there are tasks to do this.  Running `cap bootstrap` will add the application user and directory.
 # Next `cap deploy:setup` clones your code and gets everything ready for the first deployment.
 #
@@ -100,17 +100,16 @@ module Recap
     autoload :Environment, 'recap/support/environment'
   end
 
-  # Deploying [Rails](recap/rails.html) requires a bit of extra work to ensure that migrations and run and
-  # assets are generated. These can be included by simply requiring `recap/rails` instead of `recap/static`
-  # or `recap/ruby` in your `Capfile`.
-  autoload :Rails, 'recap/rails'
+  # Deploying [Rails](recap/recipes/rails.html) requires a bit of extra work to ensure that migrations and run and
+  # assets are generated. These can be included by simply requiring `recap/recipes/rails` instead of `recap/recipes/static`
+  # or `recap/recipes/ruby` in your `Capfile`.
+  autoload :Rails, 'recap/recipes/rails'
 
   # ### Versioning ###
   #
   # recap uses [semantic versioning](http://semver.org/), so things may change before the `1.0.0`
   # release.
   autoload :Version, 'recap/version'
-
 
   # The code is available [on github](http://github.com/freerange/recap) and released under the
   # [MIT License](https://github.com/freerange/recap/blob/master/LICENSE)

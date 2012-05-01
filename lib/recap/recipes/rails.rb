@@ -1,6 +1,6 @@
-# Require `recap/rails` in your `Capfile` to use the default recap recipies for deploying a
+# Require `recap/recipes/rails` in your `Capfile` to use the default recap recipies for deploying a
 # Rails application.
-require 'recap/tasks/deploy'
+require 'recap/recipes/ruby'
 
 module Recap::Rails
   extend Recap::Support::Namespace
