@@ -11,6 +11,7 @@ describe Recap::Support::CapistranoExtensions do
       config.stubs(:as_app)
       config.stubs(:system)
       config.stubs(:get)
+      config.stubs(:editor).returns("some-editor")
     end
 
     it 'downloads the file to a temporary file for editing' do
