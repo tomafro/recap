@@ -19,23 +19,23 @@ The source code is available [on Github](https://github.com/freerange/recap).
 
 ## Running Tests
 
-- Install [VirtualBox](https://www.virtualbox.org/).
 - Run the following commands from the checked out project directory.
-- Install dependencies (assumes the bundler gem is installed)
+- Install dependencies (assumes the bundler gem is installed).
 
     `$ bundle install`
 
-- Install and provision a test VM based on the [Vagrantfile](https://github.com/freerange/recap/blob/master/Vagrantfile) (assumes VirtualBox is installed)
-
-    `$ vagrant up`
-
 - Run specs
 
-    `$ rake`
+    `$ bundle exec rake`
+
+- Install [VirtualBox](https://www.virtualbox.org/) - only necessary if you want to run [Cucumber](https://github.com/cucumber/cucumber) features.
+- Install and provision a test VM based on the [Vagrantfile](https://github.com/freerange/recap/blob/master/Vagrantfile) (assumes VirtualBox is installed)
+
+    `$ bundle exec vagrant up`
 
 - Run features
 
-    `$ cucumber`
+    `$ bundle exec cucumber`
 
 ## Credits
 
