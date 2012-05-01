@@ -27,12 +27,12 @@ describe Recap::Tasks::Env do
       config.set :environment_file, 'path/to/.env'
       namespace.stubs(:deployed_file_exists?).with(config.environment_file).returns(true)
       namespace.stubs(:capture).with("cat #{config.environment_file}").returns('')
+      STDOUT.stubs(:puts)
     end
 
     describe 'env' do
       it 'outputs the current environment if one exists' do
         namespace.stubs(:capture).with("cat #{config.environment_file}").returns("A=b\nX=Y")
-        STDOUT.stubs(:puts).with(nil)
         STDOUT.expects(:puts).with('The config variables are:')
         STDOUT.expects(:puts).with(responds_with(:to_s, Recap::Support::Environment.from_string("A=b\nX=Y").to_s))
         config.find_and_execute_task('env')
