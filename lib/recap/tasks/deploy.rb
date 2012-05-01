@@ -5,6 +5,8 @@ require 'recap/tasks/preflight'
 require 'recap/tasks/bootstrap'
 require 'recap/tasks/env'
 
+# These tasks provide the basic mechanism getting new code onto servers using git.
+
 module Recap::Tasks::Deploy
   extend Recap::Support::Namespace
 

@@ -1,6 +1,10 @@
 require 'thor'
 
 module Recap::Support
+
+  # Recap provides a simple command-line tool (`recap`) to generate a `Capfile` in your
+  # project.
+
   class CLI < Thor
     include Thor::Actions
 

@@ -1,5 +1,8 @@
 require 'tempfile'
 
+# These methods are used by recap tasks to run commands and detect when files have changed
+# as part of a deployments
+
 module Recap::Support::CapistranoExtensions
   # Run a command as the given user
   def as_user(user, command, pwd = deploy_to)

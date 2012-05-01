@@ -39,6 +39,43 @@
     </tr>
   </thead>
   <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        <p>Require <code>recap/ruby</code> in your <code>Capfile</code> to use the default recap recipies for deploying a
+Ruby application.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap/tasks/deploy&#39;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>If your application uses Bundler, <code>bundle install</code> will be run automatically when deploying
+any changes to your <code>Gemfile</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap/tasks/bundler&#39;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>If your application uses Foreman, recap will use that to stop, start and restart your
+application processes.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap/tasks/foreman&#39;</span></pre></div>
+      </td>
+    </tr>
   </table>
 </div>
 </body>

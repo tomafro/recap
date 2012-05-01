@@ -1,3 +1,6 @@
+# These tasks are used to perform the initial configuration of your servers
+# for deployment with recap.
+
 module Recap::Tasks::Bootstrap
   extend Recap::Support::Namespace
 

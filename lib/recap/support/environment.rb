@@ -1,4 +1,9 @@
 module Recap::Support
+
+  # This class is used to manipulate environment variables on the remote server.
+  # You should not need to use it directly; you are probably looking for the
+  # [env](../tasks/env.html) tasks instead.
+
   class Environment
     def initialize(variables = {})
       @variables = variables

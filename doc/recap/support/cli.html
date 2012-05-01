@@ -39,6 +39,60 @@
     </tr>
   </thead>
   <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;thor&#39;</span>
+
+<span class="k">module</span> <span class="nn">Recap::Support</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>Recap provides a simple command-line tool (<code>recap</code>) to generate a <code>Capfile</code> in your
+project.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">class</span> <span class="nc">CLI</span> <span class="o">&lt;</span> <span class="no">Thor</span>
+    <span class="kp">include</span> <span class="no">Thor</span><span class="o">::</span><span class="no">Actions</span>
+
+    <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:repository</span>
+
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">source_root</span>
+      <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;../templates&quot;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="n">desc</span> <span class="s1">&#39;setup&#39;</span><span class="p">,</span> <span class="s1">&#39;Setup basic capistrano recipes, e.g: recap setup&#39;</span>
+    <span class="n">method_option</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:aliases</span> <span class="o">=&gt;</span> <span class="s2">&quot;-n&quot;</span>
+    <span class="n">method_option</span> <span class="ss">:repository</span><span class="p">,</span> <span class="ss">:aliases</span> <span class="o">=&gt;</span> <span class="s2">&quot;-r&quot;</span>
+    <span class="k">def</span> <span class="nf">setup</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;name&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="n">guess_name</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;repo&quot;</span><span class="o">]</span> <span class="o">||</span> <span class="n">guess_repository</span>
+      <span class="n">template</span> <span class="s1">&#39;Capfile.erb&#39;</span><span class="p">,</span> <span class="s1">&#39;Capfile&#39;</span>
+    <span class="k">end</span>
+
+    <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">guess_name</span>
+      <span class="no">Dir</span><span class="o">.</span><span class="n">pwd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="no">File</span><span class="o">::</span><span class="no">SEPARATOR</span><span class="p">)</span><span class="o">.</span><span class="n">last</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">guess_repository</span>
+      <span class="sb">`git remote -v`</span><span class="o">.</span><span class="n">split</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
   </table>
 </div>
 </body>
