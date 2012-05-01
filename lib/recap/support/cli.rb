@@ -37,6 +37,9 @@ module Recap::Support
 
     def guess_repository
       ShellCommand.execute('git remote -v').split[1]
+    rescue
+      warn "Unable to determine git repository.  Setting to <unknown>."
+      "<unknown>"
     end
 
     def guess_recipe
