@@ -12,22 +12,22 @@
     Jump To &hellip;
     <div id="jump_wrapper">
       <div id="jump_page">
-          <a class="source" href="../recap.html">recap.rb</a>
+          <a class="source" href="../../recap.html">recap.rb</a>
           <a class="source" href="rails.html">rails.rb</a>
           <a class="source" href="ruby.html">ruby.rb</a>
           <a class="source" href="static.html">static.rb</a>
-          <a class="source" href="support/capistrano_extensions.html">capistrano_extensions.rb</a>
-          <a class="source" href="support/cli.html">cli.rb</a>
-          <a class="source" href="support/compatibility.html">compatibility.rb</a>
-          <a class="source" href="support/environment.html">environment.rb</a>
-          <a class="source" href="support/namespace.html">namespace.rb</a>
-          <a class="source" href="tasks/bootstrap.html">bootstrap.rb</a>
-          <a class="source" href="tasks/bundler.html">bundler.rb</a>
-          <a class="source" href="tasks/deploy.html">deploy.rb</a>
-          <a class="source" href="tasks/env.html">env.rb</a>
-          <a class="source" href="tasks/foreman.html">foreman.rb</a>
-          <a class="source" href="tasks/preflight.html">preflight.rb</a>
-          <a class="source" href="version.html">version.rb</a>
+          <a class="source" href="../support/capistrano_extensions.html">capistrano_extensions.rb</a>
+          <a class="source" href="../support/cli.html">cli.rb</a>
+          <a class="source" href="../support/compatibility.html">compatibility.rb</a>
+          <a class="source" href="../support/environment.html">environment.rb</a>
+          <a class="source" href="../support/namespace.html">namespace.rb</a>
+          <a class="source" href="../tasks/bootstrap.html">bootstrap.rb</a>
+          <a class="source" href="../tasks/bundler.html">bundler.rb</a>
+          <a class="source" href="../tasks/deploy.html">deploy.rb</a>
+          <a class="source" href="../tasks/env.html">env.rb</a>
+          <a class="source" href="../tasks/foreman.html">foreman.rb</a>
+          <a class="source" href="../tasks/preflight.html">preflight.rb</a>
+          <a class="source" href="../version.html">version.rb</a>
       </div>
     </div>
   </div>
@@ -44,14 +44,11 @@
         <div class="pilwrap">
           <a class="pilcrow" href="#section-1">&#182;</a>
         </div>
-        <p>Require <code>recap/rails</code> in your <code>Capfile</code> to use the default recap recipies for deploying a
-Rails application.</p>
+        <p>The <code>recap/recipes/rails</code> builds on the <a href="recap/recipes/ruby.html">ruby</a>
+recipe, which provides support for both <code>bundler</code> and <code>foreman</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap/tasks/deploy&#39;</span>
-
-<span class="k">module</span> <span class="nn">Recap::Rails</span>
-  <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">Support</span><span class="o">::</span><span class="no">Namespace</span></pre></div>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;recap/recipes/ruby&#39;</span></pre></div>
       </td>
     </tr>
     <tr id='section-2'>
@@ -59,12 +56,14 @@ Rails application.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-2">&#182;</a>
         </div>
-        <p>Requiring this file will create tasks with the appropriate hooks to run migrations
-if any changes are detected in <code>db/schema.rb</code>.</p>
+        <p>It adds to this with a number of rails specific tasks.</p>
 
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">namespace</span> <span class="ss">:rails</span> <span class="k">do</span>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">Recap::Rails</span>
+  <span class="kp">extend</span> <span class="no">Recap</span><span class="o">::</span><span class="no">Support</span><span class="o">::</span><span class="no">Namespace</span>
+
+  <span class="n">namespace</span> <span class="ss">:rails</span> <span class="k">do</span>
     <span class="n">namespace</span> <span class="ss">:db</span> <span class="k">do</span>
       <span class="n">task</span> <span class="ss">:load_schema</span> <span class="k">do</span>
         <span class="k">if</span> <span class="n">deployed_file_exists?</span><span class="p">(</span><span class="s2">&quot;db/schema.rb&quot;</span><span class="p">)</span>

@@ -13,9 +13,9 @@
     <div id="jump_wrapper">
       <div id="jump_page">
           <a class="source" href="recap.html">recap.rb</a>
-          <a class="source" href="recap/rails.html">rails.rb</a>
-          <a class="source" href="recap/ruby.html">ruby.rb</a>
-          <a class="source" href="recap/static.html">static.rb</a>
+          <a class="source" href="recap/recipes/rails.html">rails.rb</a>
+          <a class="source" href="recap/recipes/ruby.html">ruby.rb</a>
+          <a class="source" href="recap/recipes/static.html">static.rb</a>
           <a class="source" href="recap/support/capistrano_extensions.html">capistrano_extensions.rb</a>
           <a class="source" href="recap/support/cli.html">cli.rb</a>
           <a class="source" href="recap/support/compatibility.html">compatibility.rb</a>
@@ -63,7 +63,7 @@ the <code>Gemfile</code>, then running <code>bundle install</code>.</p>
 folder.  You can see the supported options with <code>recap help setup</code>.  The generated <code>Capfile</code>
 will look something like this:</p>
 
-<pre>require &lsquo;recap/rails&rsquo;
+<pre>require &lsquo;recap/recipes/rails&rsquo;
 
 set :application, &lsquo;example-app&rsquo;
 set :repository, &lsquo;git@example.com:example/example-app.git&rsquo;
@@ -71,7 +71,7 @@ set :repository, &lsquo;git@example.com:example/example-app.git&rsquo;
 server &lsquo;server.example.com&rsquo;, :app</pre>
 
 <p>Edit the <code>Capfile</code> to point at your deployment server and you should be ready to go.  <code>cap -T</code>
-shows all the available tasks.  Before you can deploy an app the server needs to be setup, and
+will show all the available tasks.  Before you can deploy an app the server needs to be setup, and
 there are tasks to do this.  Running <code>cap bootstrap</code> will add the application user and directory.
 Next <code>cap deploy:setup</code> clones your code and gets everything ready for the first deployment.</p>
 
@@ -178,12 +178,12 @@ see <a href="recap/support/compatibility.html">compatibility</a>.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-5">&#182;</a>
         </div>
-        <p>Deploying <a href="recap/rails.html">Rails</a> requires a bit of extra work to ensure that migrations and run and
-assets are generated. These can be included by simply requiring <code>recap/rails</code> instead of <code>recap/static</code>
-or <code>recap/ruby</code> in your <code>Capfile</code>.</p>
+        <p>Deploying <a href="recap/recipes/rails.html">Rails</a> requires a bit of extra work to ensure that migrations and run and
+assets are generated. These can be included by simply requiring <code>recap/recipes/rails</code> instead of <code>recap/recipes/static</code>
+or <code>recap/recipes/ruby</code> in your <code>Capfile</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="nb">autoload</span> <span class="ss">:Rails</span><span class="p">,</span> <span class="s1">&#39;recap/rails&#39;</span></pre></div>
+        <div class='highlight'><pre>  <span class="nb">autoload</span> <span class="ss">:Rails</span><span class="p">,</span> <span class="s1">&#39;recap/recipes/rails&#39;</span></pre></div>
       </td>
     </tr>
     <tr id='section-Versioning'>

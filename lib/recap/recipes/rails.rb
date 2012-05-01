@@ -1,12 +1,11 @@
-# Require `recap/recipes/rails` in your `Capfile` to use the default recap recipies for deploying a
-# Rails application.
+# The `recap/recipes/rails` builds on the [ruby](recap/recipes/ruby.html)
+# recipe, which provides support for both `bundler` and `foreman`.
 require 'recap/recipes/ruby'
 
+# It adds to this with a number of rails specific tasks.
 module Recap::Rails
   extend Recap::Support::Namespace
 
-  # Requiring this file will create tasks with the appropriate hooks to run migrations
-  # if any changes are detected in `db/schema.rb`.
   namespace :rails do
     namespace :db do
       task :load_schema do
