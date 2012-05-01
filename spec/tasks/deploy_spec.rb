@@ -9,6 +9,10 @@ describe Recap::Tasks::Deploy do
     config.deploy
   end
 
+  let :commands do
+    sequence('commands')
+  end
+
   before do
     Recap::Tasks::Deploy.load_into(config)
   end
@@ -115,9 +119,9 @@ describe Recap::Tasks::Deploy do
 
     describe 'deploy:clone_code' do
       it 'creates deploy_to dir, ensures it\'s group writable, then clones the repository into it' do
-        namespace.expects(:as_app).with('mkdir -p ' + deploy_to, '~').in_sequence
-        namespace.expects(:as_app).with('chmod g+rw ' + deploy_to).in_sequence
-        namespace.expects(:git).with('clone ' + repository + ' .').in_sequence
+        namespace.expects(:as_app).with('mkdir -p ' + deploy_to, '~').in_sequence(commands)
+        namespace.expects(:as_app).with('chmod g+rw ' + deploy_to).in_sequence(commands)
+        namespace.expects(:git).with('clone ' + repository + ' .').in_sequence(commands)
         config.find_and_execute_task('deploy:clone_code')
       end
     end
@@ -127,9 +131,9 @@ describe Recap::Tasks::Deploy do
         env = stub('env')
         config.stubs(:env).returns(env)
         env.expects('set')
-        namespace.expects(:update_code).in_sequence
-        namespace.expects(:tag).in_sequence
-        namespace.expects(:restart).in_sequence
+        namespace.expects(:update_code).in_sequence(commands)
+        namespace.expects(:tag).in_sequence(commands)
+        namespace.expects(:restart).in_sequence(commands)
         config.find_and_execute_task('deploy')
       end
 
@@ -155,8 +159,8 @@ describe Recap::Tasks::Deploy do
     describe 'deploy:update_code' do
       it 'fetches latest changes, then resets to repository branch' do
         config.set :branch, 'release-branch'
-        namespace.expects(:git).with('fetch').in_sequence
-        namespace.expects(:git).with('reset --hard origin/release-branch').in_sequence
+        namespace.expects(:git).with('fetch').in_sequence(commands)
+        namespace.expects(:git).with('reset --hard origin/release-branch').in_sequence(commands)
         namespace.find_and_execute_task('deploy:update_code')
       end
     end
@@ -177,9 +181,9 @@ describe Recap::Tasks::Deploy do
       it 'deletes latest tag, resets to previous tag and restarts' do
         config.stubs(:latest_tag).returns('release-2')
         config.stubs(:latest_tag_from_repository).returns('release-1')
-        namespace.expects(:git).with('tag -d release-2').in_sequence
-        namespace.expects(:git).with('reset --hard release-1').in_sequence
-        namespace.expects(:restart).in_sequence
+        namespace.expects(:git).with('tag -d release-2').in_sequence(commands)
+        namespace.expects(:git).with('reset --hard release-1').in_sequence(commands)
+        namespace.expects(:restart).in_sequence(commands)
         namespace.find_and_execute_task('deploy:rollback')
       end
 
