@@ -47,6 +47,13 @@ module Recap::Tasks::Bundler
       end
     end
 
+    task :check_installed do
+      if exit_code_as_app('bundle --version') != "0"
+        abort "The application user '#{application_user}' cannot execute `bundle`.  Please check you have bundler installed."
+      end
+    end
+    after 'preflight:check', 'bundle:check_installed'
+
     # To install the bundle automatically each time the code is updated or cloned, hooks are added to
     # the `deploy:clone_code` and `deploy:update_code` tasks.
     after 'deploy:clone_code', 'bundle:install:if_changed'
