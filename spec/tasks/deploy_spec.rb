@@ -118,6 +118,14 @@ describe Recap::Tasks::Deploy do
         namespace.expects(:clone_code).never
         config.find_and_execute_task('deploy:setup')
       end
+
+      it 'removes the deploy_to dir if a rollback is triggered' do
+        config.stubs(:env).returns(stub_everything('env'))
+        namespace.stubs(:as_app)
+        namespace.expects(:as_app).with('rm -fr ' + deploy_to)
+        namespace.stubs(:git).raises(RuntimeError)
+        config.find_and_execute_task('deploy:setup') rescue RuntimeError
+      end
     end
 
     describe 'deploy:clone_code' do

@@ -60,6 +60,7 @@ module Recap::Tasks::Deploy
 
     # Clone the repository into the deployment directory.
     task :clone_code, :except => {:no_release => true} do
+      on_rollback { as_app "rm -fr #{deploy_to}" }
       # Before cloning, the directory needs to exist and be both readable and writable by the application group
       as_app "mkdir -p #{deploy_to}", "~"
       as_app "chmod g+rw #{deploy_to}"
