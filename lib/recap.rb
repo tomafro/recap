@@ -90,6 +90,7 @@ module Recap
     autoload :Deploy, 'recap/tasks/deploy'
     autoload :Env, 'recap/tasks/env'
     autoload :Foreman, 'recap/tasks/foreman'
+    autoload :Preflight, 'recap/tasks/preflight'
 
     # Deploying [Rails](recap/recipes/rails.html) requires a bit of extra work to ensure that migrations and run and
     # assets are generated. These can be included by simply requiring `recap/recipes/rails` instead of `recap/recipes/static`
