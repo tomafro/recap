@@ -47,6 +47,13 @@ module Recap::Tasks::Bundler
       end
     end
 
+    task :check_installed do
+      if exit_code('bundle --version').strip != "0"
+        abort 'Bundler was not found on the remote machine.  Please check you have bundler installed.'
+      end
+    end
+    after 'preflight:check', 'bundle:check_installed'
+
     # To install the bundle automatically each time the code is updated or cloned, hooks are added to
     # the `deploy:clone_code` and `deploy:update_code` tasks.
     after 'deploy:clone_code', 'bundle:install:if_changed'
