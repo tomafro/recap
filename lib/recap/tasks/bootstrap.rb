@@ -40,8 +40,10 @@ fi
 
     desc 'Sets up the server account used by a deploying user'
     task :user do
-      run "git config --global user.name '#{`git config user.name`.strip}'"
-      run "git config --global user.email '#{`git config user.email`.strip}'"
+      git_user_name = Recap::Support::ShellCommand.execute("git config user.name").strip
+      git_user_email = Recap::Support::ShellCommand.execute("git config user.email").strip
+      run "git config --global user.name '#{git_user_name}'"
+      run "git config --global user.email '#{git_user_email}'"
       sudo "usermod --append -G #{application_group} #{remote_username}"
     end
   end
