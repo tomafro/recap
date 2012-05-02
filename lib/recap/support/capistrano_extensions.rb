@@ -58,6 +58,10 @@ module Recap::Support::CapistranoExtensions
     capture("#{command} > /dev/null 2>&1; echo $?").strip
   end
 
+  def exit_code_as_app(command, pwd = deploy_to)
+    capture(%|sudo -p 'sudo password: ' su - #{application_user} -c 'cd #{pwd} && #{command} > /dev/null 2>&1'; echo $?|).strip
+  end
+
   # Find the latest tag from the repository.  As `git tag` returns tags in order, and our release
   # tags are timestamps, the latest tag will always be the last in the list.
   def latest_tag_from_repository

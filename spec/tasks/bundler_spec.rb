@@ -124,14 +124,18 @@ describe Recap::Tasks::Bundler do
     end
 
     describe 'bundle:check_installed' do
+      before do
+        config.set(:application_user, 'fred')
+      end
+
       it 'checks to see whether bundler is installed' do
-        namespace.expects(:exit_code).with('bundle --version').returns("0")
+        namespace.expects(:exit_code_as_app).with('bundle --version').returns("0")
         config.find_and_execute_task('bundle:check_installed')
       end
 
       it 'aborts with explanation if bundler command fails' do
-        namespace.stubs(:exit_code).returns("1")
-        namespace.expects(:abort).with('Bundler was not found on the remote machine.  Please check you have bundler installed.')
+        namespace.stubs(:exit_code_as_app).returns("1")
+        namespace.expects(:abort).with("The application user 'fred' cannot execute `bundle`.  Please check you have bundler installed.")
         config.find_and_execute_task('bundle:check_installed')
       end
     end

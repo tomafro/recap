@@ -48,8 +48,8 @@ module Recap::Tasks::Bundler
     end
 
     task :check_installed do
-      if exit_code('bundle --version').strip != "0"
-        abort 'Bundler was not found on the remote machine.  Please check you have bundler installed.'
+      if exit_code_as_app('bundle --version') != "0"
+        abort "The application user '#{application_user}' cannot execute `bundle`.  Please check you have bundler installed."
       end
     end
     after 'preflight:check', 'bundle:check_installed'
