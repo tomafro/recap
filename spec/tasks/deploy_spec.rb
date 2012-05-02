@@ -105,7 +105,10 @@ describe Recap::Tasks::Deploy do
     end
 
     describe 'deploy:setup' do
-      it 'runs deploy:clone_code task' do
+      it 'runs env:set and deploy:clone_code tasks' do
+        env = stub('env')
+        config.stubs(:env).returns(env)
+        env.expects('set')
         namespace.expects(:clone_code)
         config.find_and_execute_task('deploy:setup')
       end

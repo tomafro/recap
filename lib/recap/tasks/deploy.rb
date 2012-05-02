@@ -53,6 +53,7 @@ module Recap::Tasks::Deploy
     desc "Prepare servers for deployment"
     task :setup, :except => {:no_release => true} do
       transaction do
+        top.env.set
         clone_code
       end
     end
