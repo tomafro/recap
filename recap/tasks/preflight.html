@@ -21,12 +21,14 @@
           <a class="source" href="../support/compatibility.html">compatibility.rb</a>
           <a class="source" href="../support/environment.html">environment.rb</a>
           <a class="source" href="../support/namespace.html">namespace.rb</a>
+          <a class="source" href="../support/shell_command.html">shell_command.rb</a>
           <a class="source" href="bootstrap.html">bootstrap.rb</a>
           <a class="source" href="bundler.html">bundler.rb</a>
           <a class="source" href="deploy.html">deploy.rb</a>
           <a class="source" href="env.html">env.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
           <a class="source" href="preflight.html">preflight.rb</a>
+          <a class="source" href="rails.html">rails.rb</a>
           <a class="source" href="../version.html">version.rb</a>
       </div>
     </div>
@@ -96,7 +98,7 @@ should a check fail.</p>
       <td class=code>
         <div class='highlight'><pre>      <span class="k">if</span> <span class="n">exit_code</span><span class="p">(</span><span class="s2">&quot;id </span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span>
         <span class="nb">abort</span> <span class="sx">%{</span>
-<span class="sx">The application user &#39;</span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="sx">&#39; doesn&#39;t exist.  You can create this user by logging into the server and running:</span>
+<span class="sx">The application user &#39;</span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="sx">&#39; doesn&#39;t exist.  Did you run the `bootstrap` task?  You can also create this user by logging into the server and running:</span>
 
 <span class="sx">    sudo useradd </span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="sx"></span>
 <span class="se">\n</span><span class="sx">}</span>
@@ -113,7 +115,7 @@ should a check fail.</p>
       <td class=code>
         <div class='highlight'><pre>      <span class="k">if</span> <span class="n">exit_code</span><span class="p">(</span><span class="s2">&quot;id -g </span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span>
         <span class="nb">abort</span> <span class="sx">%{</span>
-<span class="sx">The application group &#39;</span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="sx">&#39; doesn&#39;t exist.  You can create this group by logging into the server and running:</span>
+<span class="sx">The application group &#39;</span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="sx">&#39; doesn&#39;t exist.  Did you run the `bootstrap` task?  You can also create this group by logging into the server and running:</span>
 
 <span class="sx">    sudo groupadd </span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="sx"></span>
 <span class="sx">    sudo usermod --append -G </span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="sx"> </span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="sx"></span>
@@ -131,7 +133,7 @@ should a check fail.</p>
       <td class=code>
         <div class='highlight'><pre>      <span class="k">if</span> <span class="n">capture</span><span class="p">(</span><span class="s1">&#39;git config user.name || true&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="o">.</span><span class="n">empty?</span> <span class="o">||</span> <span class="n">capture</span><span class="p">(</span><span class="s1">&#39;git config user.email || true&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="o">.</span><span class="n">empty?</span>
         <span class="nb">abort</span> <span class="sx">%{</span>
-<span class="sx">Your remote user must have a git user.name and user.email set.  You can set these by logging into the server as </span><span class="si">#{</span><span class="n">remote_username</span><span class="si">}</span><span class="sx"> and running:</span>
+<span class="sx">Your remote user must have a git user.name and user.email set.  Did you run the `bootstrap` task?  You can also set these by logging into the server as </span><span class="si">#{</span><span class="n">remote_username</span><span class="si">}</span><span class="sx"> and running:</span>
 
 <span class="sx">    git config --global user.email &quot;you@example.com&quot;</span>
 <span class="sx">    git config --global user.name &quot;Your Name&quot;</span>
@@ -150,7 +152,7 @@ should a check fail.</p>
       <td class=code>
         <div class='highlight'><pre>      <span class="k">unless</span> <span class="n">capture</span><span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">application_group</span><span class="p">)</span>
         <span class="nb">abort</span> <span class="sx">%{</span>
-<span class="sx">Your remote user must be a member of the &#39;</span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="sx">&#39; group in order to perform deployments.  You can add yourself to this group by logging into the server and running:</span>
+<span class="sx">Your remote user must be a member of the &#39;</span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="sx">&#39; group in order to perform deployments.  Did you run the `bootstrap` task?  You can also add yourself to this group by logging into the server and running:</span>
 
 <span class="sx">    sudo usermod --append -G </span><span class="si">#{</span><span class="n">application_group</span><span class="si">}</span><span class="sx"> </span><span class="si">#{</span><span class="n">remote_username</span><span class="si">}</span><span class="sx"></span>
 <span class="se">\n</span><span class="sx">}</span>

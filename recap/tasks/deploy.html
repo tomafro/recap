@@ -21,12 +21,14 @@
           <a class="source" href="../support/compatibility.html">compatibility.rb</a>
           <a class="source" href="../support/environment.html">environment.rb</a>
           <a class="source" href="../support/namespace.html">namespace.rb</a>
+          <a class="source" href="../support/shell_command.html">shell_command.rb</a>
           <a class="source" href="bootstrap.html">bootstrap.rb</a>
           <a class="source" href="bundler.html">bundler.rb</a>
           <a class="source" href="deploy.html">deploy.rb</a>
           <a class="source" href="env.html">env.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
           <a class="source" href="preflight.html">preflight.rb</a>
+          <a class="source" href="rails.html">rails.rb</a>
           <a class="source" href="../version.html">version.rb</a>
       </div>
     </div>
@@ -86,7 +88,7 @@
         <div class="pilwrap">
           <a class="pilcrow" href="#section-4">&#182;</a>
         </div>
-        <p>The recipe assumes that the application code will be run as a dedicated user.  Any any user who
+        <p>The recipe assumes that the application code will be run as a dedicated user.  Any user who
 can deploy the application should be added as a member of the application&rsquo;s group.  By default,
 both the application user and group take the same name as the application.</p>
       </td>
@@ -190,6 +192,7 @@ deploying user&rsquo;s ssh key than manage keys on deployment servers.</p>
         <div class='highlight'><pre>    <span class="n">desc</span> <span class="s2">&quot;Prepare servers for deployment&quot;</span>
     <span class="n">task</span> <span class="ss">:setup</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">}</span> <span class="k">do</span>
       <span class="n">transaction</span> <span class="k">do</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set</span>
         <span class="n">clone_code</span>
       <span class="k">end</span>
     <span class="k">end</span></pre></div>
@@ -203,7 +206,8 @@ deploying user&rsquo;s ssh key than manage keys on deployment servers.</p>
         <p>Clone the repository into the deployment directory.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>    <span class="n">task</span> <span class="ss">:clone_code</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">}</span> <span class="k">do</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">task</span> <span class="ss">:clone_code</span><span class="p">,</span> <span class="ss">:except</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="ss">:no_release</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">}</span> <span class="k">do</span>
+      <span class="n">on_rollback</span> <span class="p">{</span> <span class="n">as_app</span> <span class="s2">&quot;rm -fr </span><span class="si">#{</span><span class="n">deploy_to</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-14'>

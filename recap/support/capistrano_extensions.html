@@ -21,12 +21,14 @@
           <a class="source" href="compatibility.html">compatibility.rb</a>
           <a class="source" href="environment.html">environment.rb</a>
           <a class="source" href="namespace.html">namespace.rb</a>
+          <a class="source" href="shell_command.html">shell_command.rb</a>
           <a class="source" href="../tasks/bootstrap.html">bootstrap.rb</a>
           <a class="source" href="../tasks/bundler.html">bundler.rb</a>
           <a class="source" href="../tasks/deploy.html">deploy.rb</a>
           <a class="source" href="../tasks/env.html">env.rb</a>
           <a class="source" href="../tasks/foreman.html">foreman.rb</a>
           <a class="source" href="../tasks/preflight.html">preflight.rb</a>
+          <a class="source" href="../tasks/rails.html">rails.rb</a>
           <a class="source" href="../version.html">version.rb</a>
       </div>
     </div>
@@ -134,7 +136,7 @@ as part of a deployments</p>
       <span class="n">as_app</span> <span class="s2">&quot;touch </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2"> &amp;&amp; chmod g+rw </span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
       <span class="n">local_path</span> <span class="o">=</span> <span class="no">Tempfile</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;deploy-edit&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">path</span>
       <span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">local_path</span><span class="p">)</span>
-      <span class="nb">system</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">editor</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">local_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="no">Recap</span><span class="o">::</span><span class="no">Support</span><span class="o">::</span><span class="no">ShellCommand</span><span class="o">.</span><span class="n">execute_interactive</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">editor</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">local_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
       <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">local_path</span><span class="p">)</span>
     <span class="k">else</span>
       <span class="nb">abort</span> <span class="s2">&quot;To edit a remote file, either the EDITOR or DEPLOY_EDITOR environment variables must be set&quot;</span>
@@ -169,6 +171,10 @@ as part of a deployments</p>
 
   <span class="k">def</span> <span class="nf">exit_code</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
     <span class="n">capture</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">command</span><span class="si">}</span><span class="s2"> &gt; /dev/null 2&gt;&amp;1; echo $?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">exit_code_as_app</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">pwd</span> <span class="o">=</span> <span class="n">deploy_to</span><span class="p">)</span>
+    <span class="n">capture</span><span class="p">(</span><span class="sx">%|sudo -p &#39;sudo password: &#39; su - </span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="sx"> -c &#39;cd </span><span class="si">#{</span><span class="n">pwd</span><span class="si">}</span><span class="sx"> &amp;&amp; </span><span class="si">#{</span><span class="n">command</span><span class="si">}</span><span class="sx"> &gt; /dev/null 2&gt;&amp;1&#39;; echo $?|</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span>
   <span class="k">end</span></pre></div>
       </td>
     </tr>
