@@ -26,7 +26,7 @@ task :publish do
   commit = `echo "Publishing docs from master branch" | git commit-tree #{sha} -p refs/heads/gh-pages`.strip
   `git update-ref refs/heads/gh-pages #{commit}`
   puts "The gh-pages branch now points to the latest version of the docs."
-  puts "All the remains is for you to push gh-pages to github."
+  puts "All that remains is for you to push gh-pages to github."
 end
 
 RSpec::Core::RakeTask.new(:spec) do |t|
