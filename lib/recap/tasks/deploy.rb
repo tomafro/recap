@@ -15,7 +15,7 @@ module Recap::Tasks::Deploy
     set(:application) { abort "You must set the name of your application in your Capfile, e.g.: set :application, 'tomafro.net'" }
     set(:repository) { abort "You must set the git respository location in your Capfile, e.g.: set :respository, 'git@github.com/tomafro/tomafro.net'" }
 
-    # The recipe assumes that the application code will be run as a dedicated user.  Any any user who
+    # The recipe assumes that the application code will be run as a dedicated user.  Any user who
     # can deploy the application should be added as a member of the application's group.  By default,
     # both the application user and group take the same name as the application.
     set(:application_user) { application }

@@ -78,7 +78,7 @@ module Recap
   # The main deployment tasks are defined in [recap/tasks/deploy.rb](recap/tasks/deploy.html).  Automatic
   # checks to ensure servers and users are correctly setup are in
   # [recap/tasks/preflight.rb](recap/tasks/preflight.html), while tasks to bootstrap the machine and users
-  # are in [recap/tasks/bootstrap.rb](recap/tasks/bootstrap.rb).  Tasks to alter environment variables are
+  # are in [recap/tasks/bootstrap.rb](recap/tasks/bootstrap.html).  Tasks to alter environment variables are
   # in [recap/tasks/env.rb](recap/tasks/env.html)
   #
   # In addition, there are extensions for [bundler](recap/tasks/bundler.html) and
