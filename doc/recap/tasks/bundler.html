@@ -21,12 +21,14 @@
           <a class="source" href="../support/compatibility.html">compatibility.rb</a>
           <a class="source" href="../support/environment.html">environment.rb</a>
           <a class="source" href="../support/namespace.html">namespace.rb</a>
+          <a class="source" href="../support/shell_command.html">shell_command.rb</a>
           <a class="source" href="bootstrap.html">bootstrap.rb</a>
           <a class="source" href="bundler.html">bundler.rb</a>
           <a class="source" href="deploy.html">deploy.rb</a>
           <a class="source" href="env.html">env.rb</a>
           <a class="source" href="foreman.html">foreman.rb</a>
           <a class="source" href="preflight.html">preflight.rb</a>
+          <a class="source" href="rails.html">rails.rb</a>
           <a class="source" href="../version.html">version.rb</a>
       </div>
     </div>
@@ -96,7 +98,7 @@ placed under <code>vendor/gems</code>.</p>
 <code>assets</code> groups are skipped.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_without</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;development test assets&quot;</span> <span class="p">}</span></pre></div>
+        <div class='highlight'><pre>    <span class="n">set</span><span class="p">(</span><span class="ss">:bundle_without</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;development test&quot;</span> <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-6'>
@@ -150,7 +152,14 @@ a previous deployment)</p>
           <span class="nb">puts</span> <span class="s2">&quot;Skipping bundle:install as no Gemfile found&quot;</span>
         <span class="k">end</span>
       <span class="k">end</span>
-    <span class="k">end</span></pre></div>
+    <span class="k">end</span>
+
+    <span class="n">task</span> <span class="ss">:check_installed</span> <span class="k">do</span>
+      <span class="k">if</span> <span class="n">exit_code_as_app</span><span class="p">(</span><span class="s1">&#39;bundle --version&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span>
+        <span class="nb">abort</span> <span class="s2">&quot;The application user &#39;</span><span class="si">#{</span><span class="n">application_user</span><span class="si">}</span><span class="s2">&#39; cannot execute `bundle`.  Please check you have bundler installed.&quot;</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="n">after</span> <span class="s1">&#39;preflight:check&#39;</span><span class="p">,</span> <span class="s1">&#39;bundle:check_installed&#39;</span></pre></div>
       </td>
     </tr>
     <tr id='section-9'>

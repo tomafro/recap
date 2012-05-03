@@ -21,12 +21,14 @@
           <a class="source" href="compatibility.html">compatibility.rb</a>
           <a class="source" href="environment.html">environment.rb</a>
           <a class="source" href="namespace.html">namespace.rb</a>
+          <a class="source" href="shell_command.html">shell_command.rb</a>
           <a class="source" href="../tasks/bootstrap.html">bootstrap.rb</a>
           <a class="source" href="../tasks/bundler.html">bundler.rb</a>
           <a class="source" href="../tasks/deploy.html">deploy.rb</a>
           <a class="source" href="../tasks/env.html">env.rb</a>
           <a class="source" href="../tasks/foreman.html">foreman.rb</a>
           <a class="source" href="../tasks/preflight.html">preflight.rb</a>
+          <a class="source" href="../tasks/rails.html">rails.rb</a>
           <a class="source" href="../version.html">version.rb</a>
       </div>
     </div>
@@ -48,6 +50,7 @@
       </td>
       <td class=code>
         <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;thor&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;recap/support/shell_command&#39;</span>
 
 <span class="k">module</span> <span class="nn">Recap::Support</span></pre></div>
       </td>
@@ -92,7 +95,10 @@ project.</p>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">guess_repository</span>
-      <span class="sb">`git remote -v`</span><span class="o">.</span><span class="n">split</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+      <span class="no">ShellCommand</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;git remote -v&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+    <span class="k">rescue</span>
+      <span class="nb">warn</span> <span class="s2">&quot;Unable to determine git repository.  Setting to &lt;unknown&gt;.&quot;</span>
+      <span class="s2">&quot;&lt;unknown&gt;&quot;</span>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">guess_recipe</span>

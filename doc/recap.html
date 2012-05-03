@@ -21,12 +21,14 @@
           <a class="source" href="recap/support/compatibility.html">compatibility.rb</a>
           <a class="source" href="recap/support/environment.html">environment.rb</a>
           <a class="source" href="recap/support/namespace.html">namespace.rb</a>
+          <a class="source" href="recap/support/shell_command.html">shell_command.rb</a>
           <a class="source" href="recap/tasks/bootstrap.html">bootstrap.rb</a>
           <a class="source" href="recap/tasks/bundler.html">bundler.rb</a>
           <a class="source" href="recap/tasks/deploy.html">deploy.rb</a>
           <a class="source" href="recap/tasks/env.html">env.rb</a>
           <a class="source" href="recap/tasks/foreman.html">foreman.rb</a>
           <a class="source" href="recap/tasks/preflight.html">preflight.rb</a>
+          <a class="source" href="recap/tasks/rails.html">rails.rb</a>
           <a class="source" href="recap/version.html">version.rb</a>
       </div>
     </div>
@@ -140,7 +142,7 @@ set the <code>PassengerDefaultUser</code> directive to be the same as the <code>
         <p>The main deployment tasks are defined in <a href="recap/tasks/deploy.html">recap/tasks/deploy.rb</a>.  Automatic
 checks to ensure servers and users are correctly setup are in
 <a href="recap/tasks/preflight.html">recap/tasks/preflight.rb</a>, while tasks to bootstrap the machine and users
-are in <a href="recap/tasks/bootstrap.rb">recap/tasks/bootstrap.rb</a>.  Tasks to alter environment variables are
+are in <a href="recap/tasks/bootstrap.html">recap/tasks/bootstrap.rb</a>.  Tasks to alter environment variables are
 in <a href="recap/tasks/env.html">recap/tasks/env.rb</a></p>
 
 <p>In addition, there are extensions for <a href="recap/tasks/bundler.html">bundler</a> and
@@ -153,15 +155,29 @@ in <a href="recap/tasks/env.html">recap/tasks/env.rb</a></p>
     <span class="nb">autoload</span> <span class="ss">:Deploy</span><span class="p">,</span> <span class="s1">&#39;recap/tasks/deploy&#39;</span>
     <span class="nb">autoload</span> <span class="ss">:Env</span><span class="p">,</span> <span class="s1">&#39;recap/tasks/env&#39;</span>
     <span class="nb">autoload</span> <span class="ss">:Foreman</span><span class="p">,</span> <span class="s1">&#39;recap/tasks/foreman&#39;</span>
-  <span class="k">end</span>
-
-  <span class="k">module</span> <span class="nn">Support</span></pre></div>
+    <span class="nb">autoload</span> <span class="ss">:Preflight</span><span class="p">,</span> <span class="s1">&#39;recap/tasks/preflight&#39;</span></pre></div>
       </td>
     </tr>
     <tr id='section-4'>
       <td class=docs>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>Deploying <a href="recap/recipes/rails.html">Rails</a> requires a bit of extra work to ensure that migrations and run and
+assets are generated. These can be included by simply requiring <code>recap/recipes/rails</code> instead of <code>recap/recipes/static</code>
+or <code>recap/recipes/ruby</code> in your <code>Capfile</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nb">autoload</span> <span class="ss">:Rails</span><span class="p">,</span> <span class="s1">&#39;recap/tasks/rails&#39;</span>
+  <span class="k">end</span>
+
+  <span class="k">module</span> <span class="nn">Support</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
         </div>
         <p>For limited compatibility with other existing Capistrano recipes, that were not built for recap,
 see <a href="recap/support/compatibility.html">compatibility</a>.</p>
@@ -170,20 +186,9 @@ see <a href="recap/support/compatibility.html">compatibility</a>.</p>
         <div class='highlight'><pre>    <span class="nb">autoload</span> <span class="ss">:Compatibility</span><span class="p">,</span> <span class="s1">&#39;recap/support/compatibility&#39;</span>
     <span class="nb">autoload</span> <span class="ss">:Namespace</span><span class="p">,</span> <span class="s1">&#39;recap/support/namespace&#39;</span>
     <span class="nb">autoload</span> <span class="ss">:Environment</span><span class="p">,</span> <span class="s1">&#39;recap/support/environment&#39;</span>
+    <span class="nb">autoload</span> <span class="ss">:ShellCommand</span><span class="p">,</span> <span class="s1">&#39;recap/support/shell_command&#39;</span>
+    <span class="nb">autoload</span> <span class="ss">:CLI</span><span class="p">,</span> <span class="s1">&#39;recap/support/cli&#39;</span>
   <span class="k">end</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-5'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-5">&#182;</a>
-        </div>
-        <p>Deploying <a href="recap/recipes/rails.html">Rails</a> requires a bit of extra work to ensure that migrations and run and
-assets are generated. These can be included by simply requiring <code>recap/recipes/rails</code> instead of <code>recap/recipes/static</code>
-or <code>recap/recipes/ruby</code> in your <code>Capfile</code>.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>  <span class="nb">autoload</span> <span class="ss">:Rails</span><span class="p">,</span> <span class="s1">&#39;recap/recipes/rails&#39;</span></pre></div>
       </td>
     </tr>
     <tr id='section-Versioning'>
