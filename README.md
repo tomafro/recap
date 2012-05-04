@@ -13,7 +13,7 @@
 
 ## Documentation
 
-For more information, the main documentation can be found at [http://gofreerange.com/recap/docs](http://http://gofreerange.com/recap/docs).
+For more information, the main documentation can be found at [http://gofreerange.com/recap/docs](http://gofreerange.com/recap/docs).
 
 
 ## Prerequistes
