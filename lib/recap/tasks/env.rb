@@ -73,7 +73,7 @@ module Recap::Tasks::Env
 
     def current_environment
       @current_environment ||= begin
-        if deployed_file_exists?(environment_file, application_home)
+        if deployed_file_exists?(environment_file, '.')
           Recap::Support::Environment.from_string(capture("cat #{environment_file}"))
         else
           Recap::Support::Environment.new

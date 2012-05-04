@@ -130,7 +130,7 @@ describe Recap::Tasks::Bundler do
       end
 
       it 'checks to see whether bundler is installed' do
-        namespace.expects(:exit_code_as_app).with('bundle --version').returns("0")
+        namespace.expects(:exit_code_as_app).with('bundle --version', '.').returns("0")
         config.find_and_execute_task('bundle:check_installed')
       end
 

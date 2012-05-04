@@ -25,7 +25,7 @@ describe Recap::Tasks::Env do
   describe 'Tasks' do
     before do
       config.set :environment_file, 'path/to/.env'
-      namespace.stubs(:deployed_file_exists?).with(config.environment_file).returns(true)
+      namespace.stubs(:deployed_file_exists?).with(config.environment_file, '.').returns(true)
       namespace.stubs(:capture).with("cat #{config.environment_file}").returns('')
       namespace.stubs(:puts)
     end

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'recap/tasks/rails'
 
 describe Recap::Tasks::Rails do
   let :config do
