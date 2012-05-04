@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Recap::VERSION
   s.authors     = ["Tom Ward"]
   s.email       = ["tom@popdog.net"]
-  s.homepage    = "http://code.gofreerange.com/recap"
+  s.homepage    = "http://gofreerange.com/recap"
   s.summary     = %q{GIT based deployment recipes for Capistrano}
   s.description = %q{GIT based deployment recipes for Capistrano}
 
