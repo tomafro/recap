@@ -22,7 +22,8 @@ end
 
 desc 'publish docs'
 task :publish do
-  `scp -r doc/* gofreerange.com:/home/freerange/docs/recap && ssh gofreerange.com "sudo su - freerange -c 'chmod -R g+w /home/freerange/docs/recap'"`
+  path = "/home/freerange/docs/recap"
+  system %{ssh gofreerange.com "sudo rm -fr #{path} && mkdir -p #{path}" && scp -r doc/* gofreerange.com:#{path}}
 end
 
 RSpec::Core::RakeTask.new(:spec) do |t|
