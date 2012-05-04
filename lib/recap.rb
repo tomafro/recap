@@ -1,4 +1,4 @@
-# This is the documentation for [recap](http://github.com/freerange/recap), a simple, opinionated
+# This is the documentation for [recap](https://github.com/freerange/recap), a simple, opinionated
 # set of capistrano deployment recipes.
 #
 # Inspired in part by
@@ -105,7 +105,7 @@
 # ### Versioning and License ###
 #
 # recap uses [semantic versioning](http://semver.org/).
-# The code is available [on github](http://github.com/freerange/recap) and released under the
+# The code is available [on github](https://github.com/freerange/recap) and released under the
 # [MIT License](https://github.com/freerange/recap/blob/master/LICENSE)
 
 module Recap

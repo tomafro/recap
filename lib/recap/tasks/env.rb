@@ -3,7 +3,7 @@
 # [12factor.net](http://www.12factor.net) has [http://www.12factor.net/config](a good set of reasons
 # why this is desirable).
 #
-# To enable this, [recap](http://github.com/freerange/recap) stores these configuration variables
+# To enable this, [recap](https://github.com/freerange/recap) stores these configuration variables
 # in `.env`, and adds a script to the user's `.profile` to set these whenever the environment is
 # loaded (see [bootstrap](bootstrap.html)).
 #

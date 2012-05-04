@@ -4,9 +4,9 @@ require 'recap/tasks'
 require 'recap/support/capistrano_extensions'
 
 # These deployment tasks are designed to work alongside the tasks for
-# [altering environment variables](tasks/env.html), as well as the
-# [preflight checks](tasks/preflight.html) and
-# [bootstrap tasks](tasks/bootstrap.html).
+# [altering environment variables](env.html), as well as the
+# [preflight checks](preflight.html) and
+# [bootstrap tasks](bootstrap.html).
 
 require 'recap/tasks/env'
 require 'recap/tasks/preflight'

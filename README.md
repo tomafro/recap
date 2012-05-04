@@ -1,6 +1,6 @@
 # Recap
 
-[Recap](http://github.com/freerange/recap) is an opinionated set of [Capistrano](https://github.com/capistrano/capistrano) deployment recipes, designed to use git's strengths to deploy applications and websites in a fast and simple manner.
+[Recap](https://github.com/freerange/recap) is an opinionated set of [Capistrano](https://github.com/capistrano/capistrano) deployment recipes, designed to use git's strengths to deploy applications and websites in a fast and simple manner.
 
 
 ## Features & Aims
