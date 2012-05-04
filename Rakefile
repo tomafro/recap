@@ -22,7 +22,7 @@ end
 
 desc 'publish docs'
 task :publish do
-  `scp -r doc/* gofreerange.com:/home/freerange/docs/recap`
+  `scp -r doc/* gofreerange.com:/home/freerange/docs/recap && ssh gofreerange.com 'chmod -R g+w /home/freerange/docs/recap'`
 end
 
 RSpec::Core::RakeTask.new(:spec) do |t|
