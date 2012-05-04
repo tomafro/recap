@@ -1,3 +1,5 @@
+require 'recap/tasks'
+
 module Recap::Tasks::Rails
   extend Recap::Support::Namespace
 
