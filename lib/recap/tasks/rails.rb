@@ -1,4 +1,4 @@
-# The rails tasks add to the standard deployment with tasks to support running
+# The rails tasks build on standard deployment with support for running
 # database migrations and precompiling assets.
 
 require 'recap/tasks'
@@ -7,6 +7,14 @@ module Recap::Tasks::Rails
   extend Recap::Support::Namespace
 
   namespace :rails do
+    # In traditional capistrano deployments, there's a configuration variable
+    # `rails_env` to declare the rails environment.  Recap prefers using
+    # environment variables for things like this, and rails handily supports
+    # the `RAILS_ENV` variable.  As a default, `RAILS_ENV` is set to
+    # `production`, but this can be changed using the `env:set` or
+    # `env:edit` tasks.
+    set_default_env :RAILS_ENV, 'production'
+
     namespace :db do
       task :load_schema do
         if deployed_file_exists?("db/schema.rb")

@@ -98,7 +98,7 @@ module Recap::Tasks::Env
 
   # Default environment values can be set by a recipe using `set_default_env :NAME, 'VALUE'`.
   def set_default_env(name, value)
-    default_env[name] = value
+    default_env[name.to_s] = value
   end
 
   def default_env
