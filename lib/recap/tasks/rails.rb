@@ -1,7 +1,7 @@
 # The rails tasks build on standard deployment with support for running
 # database migrations and precompiling assets.
 
-require 'recap/tasks'
+require 'recap/tasks/deploy'
 
 module Recap::Tasks::Rails
   extend Recap::Support::Namespace

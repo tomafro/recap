@@ -16,6 +16,7 @@ describe Recap::Tasks::Rails do
 
   before do
     config.set :deploy_to, deploy_to
+    config.stubs(:set_default_env)
     Recap::Tasks::Rails.load_into(config)
   end
 

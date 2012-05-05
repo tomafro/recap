@@ -1,6 +1,6 @@
 # These tasks configure recap to use Foreman to stop, start and restart your application processes.
 
-require 'recap/tasks'
+require 'recap/tasks/deploy'
 
 module Recap::Tasks::Foreman
   extend Recap::Support::Namespace

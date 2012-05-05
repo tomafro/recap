@@ -1,6 +1,6 @@
 # The bundler recipe ensures that the application bundle is installed whenever the code is updated.
 
-require 'recap/tasks'
+require 'recap/tasks/deploy'
 
 module Recap::Tasks::Bundler
   extend Recap::Support::Namespace
