@@ -9,6 +9,9 @@
 # In addition, there are extensions for [bundler](tasks/bundler.html),
 # [foreman](tasks/foreman.html), and [rails](tasks/rails.html) that add extra
 # functionality to the standard deploy.
+#
+# Finally, while there's no explicit support, it's still very easy to use recap for
+# [multistage deployments](tasks/multistage.html).
 
 require 'recap'
 
