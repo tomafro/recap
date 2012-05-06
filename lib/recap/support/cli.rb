@@ -1,4 +1,5 @@
 require 'thor'
+require 'recap'
 require 'recap/support/shell_command'
 
 module Recap::Support
@@ -36,7 +37,7 @@ module Recap::Support
     end
 
     def guess_repository
-      ShellCommand.execute('git remote -v').split[1]
+      ShellCommand.execute('git config --get remote.origin.url').strip
     rescue
       warn "Unable to determine git repository.  Setting to <unknown>."
       "<unknown>"
