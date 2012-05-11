@@ -41,7 +41,7 @@ module Recap::Tasks::Bootstrap
       # a new copy with `export ` prefixed to each line, and sources this new copy.
       put_as_app %{
 if [ -s "$HOME/.env" ]; then
-  sed -e 's/\\r//g' -e 's/^/export /g' .env > .recap-env-export
+  sed -e 's/\\r//g' -e 's/^/export /g' $HOME/.env > $HOME/.recap-env-export
   . $HOME/.recap-env-export
 fi
       }, "#{application_home}/.recap"
