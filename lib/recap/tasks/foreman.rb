@@ -12,6 +12,13 @@ module Recap::Tasks::Foreman
     # Foreman startup scripts are exported in `upstart` format by default.
     set(:foreman_export_format, "upstart")
 
+    # Foreman startup scripts are generated based on the standard templates by default
+    set(:foreman_export_template, nil)
+
+    set(:foreman_export_template_path) { foreman_export_template ? "#{deploy_to}/#{foreman_export_template}" : nil }
+
+    set(:foreman_export_template_option) { foreman_export_template_path ? "--template #{foreman_export_template_path}" : nil }
+
     # Scripts are exported (as the the application user) to a temporary location first.
     set(:foreman_tmp_location) { "#{deploy_to}/tmp/foreman" }
 
@@ -19,12 +26,13 @@ module Recap::Tasks::Foreman
     set(:foreman_export_location, "/etc/init")
 
     # The standard foreman export.
-    set(:foreman_export_command) { "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log" }
+    set(:foreman_export_command) { "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log #{foreman_export_template_option}" }
 
     namespace :export do
-      # After each deployment, the startup scripts are exported if the `Procfile` has changed.
+      # After each deployment, the startup scripts are exported if either the `Procfile` or any custom Foreman templates have changed.
       task :if_changed do
-        if deployed_file_changed?(procfile)
+        export_templates_changed = foreman_export_template_path && deployed_file_changed?(foreman_export_template_path)
+        if deployed_file_changed?(procfile) || export_templates_changed
           top.foreman.export.default
         end
       end
