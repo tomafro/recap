@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency('capistrano', '~>2.9.0')
+  s.add_dependency('capistrano', '~>2.9')
   s.add_dependency('thor')
   s.add_dependency('open4')
   s.add_development_dependency('rake', '~>0.9.2')
