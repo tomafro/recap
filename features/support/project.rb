@@ -118,6 +118,7 @@ module ProjectSupport
       FileUtils.rm_rf repository_path
       git 'init'
       write_and_commit_file 'Capfile', Capfile.new(self, options[:capfile] || {})
+      write_and_commit_file 'log/.gitkeep'
     end
 
     def name
