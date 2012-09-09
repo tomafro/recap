@@ -1,6 +1,6 @@
 # Recap encourages the storage of application configuration (such as database passwords, S3 keys and
 # other things that change between deploys) in environment variables.
-# [12factor.net](http://www.12factor.net) has [http://www.12factor.net/config](a good set of reasons
+# [12factor.net](http://www.12factor.net) has [a good set of reasons](http://www.12factor.net/config)
 # why this is desirable).
 #
 # To enable this, [recap](https://github.com/freerange/recap) stores these configuration variables
