@@ -4,19 +4,9 @@ require 'tempfile'
 # as part of a deployments
 
 module Recap::Support::CapistranoExtensions
-  # Run a command as the given user
-  def as_user(user, command, pwd = deploy_to)
-    sudo "su - #{user} -c 'cd #{pwd} && #{command}'"
-  end
-
-  # Run a command as root
-  def as_root(command, pwd = deploy_to)
-    as_user 'root', command, pwd
-  end
-
   # Run a command as the application user
   def as_app(command, pwd = deploy_to)
-    as_user application_user, command, pwd
+    sudo "su - #{application_user} -c 'cd #{pwd} && #{command}'"
   end
 
   # Put a string into a file as the application user
