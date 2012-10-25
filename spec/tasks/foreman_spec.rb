@@ -38,6 +38,35 @@ describe Recap::Tasks::Foreman do
       end
     end
 
+    describe '#foreman_export_template' do
+      it 'defaults to nil' do
+        config.foreman_export_template.should be_nil
+      end
+    end
+
+    describe '#foreman_export_template_path' do
+      it 'defaults to nil' do
+        config.foreman_export_template_path.should be_nil
+      end
+
+      it 'appends foreman_export_template to deploy_to path if foreman_export_template is set' do
+        config.set :deploy_to, '/custom/deploy/location'
+        config.set :foreman_export_template, 'config/foreman/upstart'
+        config.foreman_export_template_path.should eql('/custom/deploy/location/config/foreman/upstart')
+      end
+    end
+
+    describe '#foreman_export_template_option' do
+      it 'defaults to nil' do
+        config.foreman_export_template_option.should be_nil
+      end
+
+      it 'provides the --template option for the foreman export command if foreman_export_template_path is set' do
+        config.set :foreman_export_template_path, '/custom/deploy/location/config/foreman/upstart'
+        config.foreman_export_template_option.should eql('--template /custom/deploy/location/config/foreman/upstart')
+      end
+    end
+
     describe '#foreman_export_location' do
       it 'defaults to /etc/init' do
         config.foreman_export_location.should eql('/etc/init')
@@ -79,21 +108,54 @@ describe Recap::Tasks::Foreman do
         config.set :deploy_to, '/custom/deploy/location'
         config.foreman_export_command.index("--log /custom/deploy/location/log").should_not be_nil
       end
+
+      it 'includes --template option if foreman_export_template is set' do
+        config.set :deploy_to, '/custom/deploy/location'
+        config.set :foreman_export_template, 'config/foreman/upstart'
+        config.foreman_export_command.index("--template /custom/deploy/location/config/foreman/upstart").should_not be_nil
+      end
     end
   end
 
   describe 'Tasks' do
     describe 'foreman:export:if_changed' do
+      before :each do
+        namespace.stubs(:deployed_file_changed?).with(config.procfile).returns(false)
+      end
+
       it 'calls foreman:export if the Procfile has changed' do
         namespace.stubs(:deployed_file_changed?).with(config.procfile).returns(true)
         namespace.export.expects(:default)
         config.find_and_execute_task('foreman:export:if_changed')
       end
 
-      it 'skips foreman:export if the Procfile has not changed' do
-        namespace.stubs(:deployed_file_changed?).with(config.procfile).returns(false)
+      it 'skips foreman:export if the Procfile has changed' do
         namespace.export.expects(:default).never
         config.find_and_execute_task('foreman:export:if_changed')
+      end
+
+      describe 'foreman_export_template is set' do
+        before :each do
+          config.set :foreman_export_template, 'config/foreman/upstart'
+          namespace.stubs(:deployed_file_changed?).with(config.foreman_export_template_path).returns(false)
+        end
+
+        it 'calls foreman:export if the Procfile has changed' do
+          namespace.stubs(:deployed_file_changed?).with(config.procfile).returns(true)
+          namespace.export.expects(:default)
+          config.find_and_execute_task('foreman:export:if_changed')
+        end
+
+        it 'calls foreman:export if any of the templates have changed' do
+          namespace.stubs(:deployed_file_changed?).with(config.foreman_export_template_path).returns(true)
+          namespace.export.expects(:default)
+          config.find_and_execute_task('foreman:export:if_changed')
+        end
+
+        it 'skips foreman:export if neither the Procfile nor any foreman export templates have changed' do
+          namespace.export.expects(:default).never
+          config.find_and_execute_task('foreman:export:if_changed')
+        end
       end
     end
 
