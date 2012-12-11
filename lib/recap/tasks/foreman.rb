@@ -35,6 +35,7 @@ module Recap::Tasks::Foreman
       desc 'Export foreman configuration'
       task :default do
         if deployed_file_exists?(procfile)
+          sudo "mkdir -p #{deploy_to}/log"
           sudo "chown #{application_user}: #{deploy_to}/log"
           as_app foreman_export_command
           sudo "rm -f #{foreman_export_location}/#{application}*"
