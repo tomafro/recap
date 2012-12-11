@@ -23,7 +23,7 @@ module Recap::Tasks::Rails
       end
 
       task :migrate do
-        if deployed_file_changed?("db/schema.rb")
+        if deployed_file_exists?("db/schema.rb") && deployed_file_changed?("db/schema.rb")
           as_app './bin/rake db:migrate'
         end
       end
