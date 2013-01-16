@@ -55,7 +55,7 @@ fi
       end
     end
 
-    # The `bootstrap:user` task sets up the personal accounts of user who can deploy applications.
+    # The `bootstrap:user` task sets up the personal accounts of users who can deploy applications.
     # In order to deploy a particular app, the account's git configuration must be set (so
     # that releases can be tagged), and the account must be a member of the application group.
     desc 'Sets up the server account used by a deploying user'
