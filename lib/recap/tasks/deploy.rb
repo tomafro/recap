@@ -68,11 +68,12 @@ module Recap::Tasks::Deploy
     # task manually as it is run as part of `deploy:setup`.
     task :clone_code, :except => {:no_release => true} do
       on_rollback { as_app "rm -fr #{deploy_to}" }
-      # Before cloning, the directory needs to exist and be both readable and writable by the application group
+      # Before cloning, the directory needs to exist and be both readable and writeable by the application group
       as_app "mkdir -p #{deploy_to}", "~"
       as_app "chmod g+rw #{deploy_to}"
-      # Then clone the code
+      # Then clone the code and change to the given branch
       git "clone #{repository} ."
+      git "reset --hard origin/#{branch}"
     end
 
     # The `deploy` task ensures the environment is set, updates the application code,

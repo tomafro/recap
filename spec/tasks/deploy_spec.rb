@@ -131,9 +131,12 @@ describe Recap::Tasks::Deploy do
 
     describe 'deploy:clone_code' do
       it 'creates deploy_to dir, ensures it\'s group writable, then clones the repository into it' do
+        config.set :branch, 'given-branch'
+
         namespace.expects(:as_app).with('mkdir -p ' + deploy_to, '~').in_sequence(commands)
         namespace.expects(:as_app).with('chmod g+rw ' + deploy_to).in_sequence(commands)
         namespace.expects(:git).with('clone ' + repository + ' .').in_sequence(commands)
+        namespace.expects(:git).with('reset --hard origin/given-branch').in_sequence(commands)
         config.find_and_execute_task('deploy:clone_code')
       end
     end
