@@ -37,6 +37,10 @@ module Recap::Tasks::Deploy
     # not be changed, as the format is matched in the list of tags to find deploy tags.
     set(:release_tag) { Time.now.utc.strftime("%Y%m%d%H%M%S") }
 
+    # If `release_tag` is changed, then `release_matcher` must be too, to a regular expression
+    # that will match all generated release tags.  In general it's best to leave both unchanged.
+    set(:release_matcher) { /\A[0-9]{14}\Z/ }
+
     # On tagging a release, a message is also recorded alongside the tag.  This message can contain
     # anything useful - its contents are not important for the recipe.
     set(:release_message, "Deployed at #{Time.now}")
@@ -97,6 +101,9 @@ module Recap::Tasks::Deploy
 
     # Tag `HEAD` with the release tag and message
     task :tag, :except => {:no_release => true} do
+      unless release_tag =~ release_matcher
+        abort "The release_tag must be matched by the release_matcher regex, #{release_tag} doesn't match #{release_matcher}"
+      end
       on_rollback { git "tag -d #{release_tag}" }
       git "tag #{release_tag} -m '#{release_message}'"
     end

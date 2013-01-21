@@ -77,6 +77,24 @@ describe Recap::Tasks::Deploy do
       end
     end
 
+    describe '#release_matcher' do
+      it 'defaults to a matcher matching timestamps' do
+        ("20130908123422" =~ config.release_matcher).should be_true
+      end
+
+      it 'does not match timestamp-like numbers with too many digits' do
+        ("201309081234221" =~ config.release_matcher).should be_false
+      end
+
+      it 'does not match timestamp-like numbers with too few digits' do
+        ("2013090812342" =~ config.release_matcher).should be_false
+      end
+
+      it 'does not match strings with non-numeric characters' do
+        ("2013090a123421" =~ config.release_matcher).should be_false
+      end
+    end
+
     describe '#latest_tag' do
       it 'memoizes call to latest_tag_from_repository' do
         namespace.stubs(:latest_tag_from_repository).returns('abc123').then.returns('something-else')
@@ -182,12 +200,19 @@ describe Recap::Tasks::Deploy do
 
     describe 'deploy:tag' do
       before do
-        config.set :release_tag, 'abcd1234'
+        config.set :release_tag, '20120101012034'
         config.set :release_message, 'Released into the wild'
       end
 
       it 'tags code with the release tag and release message' do
-        namespace.expects(:git).with('tag abcd1234 -m \'Released into the wild\'')
+        namespace.expects(:git).with('tag 20120101012034 -m \'Released into the wild\'')
+        namespace.find_and_execute_task('deploy:tag')
+      end
+
+      it 'aborts if prospective release_tag does not match release_matcher' do
+        config.set :release_matcher, /abcd/
+        namespace.expects(:abort).with("The release_tag must be matched by the release_matcher regex, 20120101012034 doesn't match (?-mix:abcd)")
+        namespace.stubs(:git)
         namespace.find_and_execute_task('deploy:tag')
       end
     end

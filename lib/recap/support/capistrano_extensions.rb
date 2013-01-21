@@ -56,7 +56,7 @@ module Recap::Support::CapistranoExtensions
   # tags are timestamps, the latest tag will always be the last in the list.
   def latest_tag_from_repository
     tags = capture_git("tag").strip.split
-    tags.grep(/^[0-9]{17}/).last
+    tags.grep(release_matcher).last
   end
 
   # Does the given file exist within the deployment directory?
