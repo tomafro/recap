@@ -28,7 +28,7 @@ module Recap::Tasks::Bundler
       # After cloning or updating the code, we only install the bundle if the `Gemfile` or `Gemfile.lock` have changed.
       desc "Install the latest gem bundle only if Gemfile or Gemfile.lock have changed"
       task :if_changed do
-        if deployed_file_changed?(bundle_gemfile) || deployed_file_changed?(bundle_gemfile_lock)
+        if trigger_update?(bundle_gemfile) || trigger_update?(bundle_gemfile_lock)
           top.bundle.install.default
         end
       end

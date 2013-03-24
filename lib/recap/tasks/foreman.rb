@@ -24,7 +24,7 @@ module Recap::Tasks::Foreman
     namespace :export do
       # After each deployment, the startup scripts are exported if the `Procfile` has changed.
       task :if_changed do
-        if deployed_file_changed?(procfile)
+        if trigger_update?(procfile)
           top.foreman.export.default
         end
       end

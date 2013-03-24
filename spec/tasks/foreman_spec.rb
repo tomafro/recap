@@ -85,13 +85,13 @@ describe Recap::Tasks::Foreman do
   describe 'Tasks' do
     describe 'foreman:export:if_changed' do
       it 'calls foreman:export if the Procfile has changed' do
-        namespace.stubs(:deployed_file_changed?).with(config.procfile).returns(true)
+        namespace.stubs(:trigger_update?).with(config.procfile).returns(true)
         namespace.export.expects(:default)
         config.find_and_execute_task('foreman:export:if_changed')
       end
 
       it 'skips foreman:export if the Procfile has not changed' do
-        namespace.stubs(:deployed_file_changed?).with(config.procfile).returns(false)
+        namespace.stubs(:trigger_update?).with(config.procfile).returns(false)
         namespace.export.expects(:default).never
         config.find_and_execute_task('foreman:export:if_changed')
       end

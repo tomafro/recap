@@ -65,10 +65,14 @@ module Recap::Support::CapistranoExtensions
   end
 
   # Has the given path been created or changed since the previous deployment?  During the first
-  # successful deployment this will always return true.
+  # successful deployment this will always return true if the file exists.
   def deployed_file_changed?(path)
-    return true unless latest_tag
+    return deployed_file_exists?(path) unless latest_tag
     exit_code("cd #{deploy_to} && git diff --exit-code #{latest_tag} origin/#{branch} #{path}") == "1"
+  end
+
+  def trigger_update?(path)
+    force_full_deploy || deployed_file_changed?(path)
   end
 
   Capistrano::Configuration.send :include, self

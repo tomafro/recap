@@ -49,6 +49,9 @@ module Recap::Tasks::Deploy
     # deployments have been made, this will be `nil`.
     set(:latest_tag) { latest_tag_from_repository }
 
+    # Force a complete deploy, even if no trigger files have changed
+    set(:force_full_deploy, false)
+
     # To authenticate with github or other git servers, it is easier (and cleaner) to forward the
     # deploying user's ssh key than manage keys on deployment servers.
     ssh_options[:forward_agent] = true
@@ -90,6 +93,14 @@ module Recap::Tasks::Deploy
         tag
       end
       restart
+    end
+
+    # `deploy:full` rung a standard deploy, but sets the `force_full_deploy` flag
+    # first.  Any parts of the deploy that would normally only be triggered if
+    # a file changes will always run.
+    task :full do
+      set(:force_full_deploy, true)
+      default
     end
 
     # Fetch the latest changes, then update `HEAD` to the deployment branch.

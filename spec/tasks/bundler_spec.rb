@@ -103,22 +103,22 @@ describe Recap::Tasks::Bundler do
 
     describe 'bundle:install:if_changed' do
       it 'calls bundle:install:default if the Gemfile.lock has changed' do
-        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile).returns(false)
-        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(true)
+        namespace.stubs(:trigger_update?).with(config.bundle_gemfile).returns(false)
+        namespace.stubs(:trigger_update?).with(config.bundle_gemfile_lock).returns(true)
         namespace.install.expects(:default)
         config.find_and_execute_task('bundle:install:if_changed')
       end
 
       it 'calls bundle:install:default if the Gemfile has changed' do
-        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile).returns(true)
-        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(false)
+        namespace.stubs(:trigger_update?).with(config.bundle_gemfile).returns(true)
+        namespace.stubs(:trigger_update?).with(config.bundle_gemfile_lock).returns(false)
         namespace.install.expects(:default)
         config.find_and_execute_task('bundle:install:if_changed')
       end
 
       it 'skips bundle_install if neither Gemfile nor Gemfile.lock have changed' do
-        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile).returns(false)
-        namespace.stubs(:deployed_file_changed?).with(config.bundle_gemfile_lock).returns(false)
+        namespace.stubs(:trigger_update?).with(config.bundle_gemfile).returns(false)
+        namespace.stubs(:trigger_update?).with(config.bundle_gemfile_lock).returns(false)
         namespace.install.expects(:default).never
         config.find_and_execute_task('bundle:install:if_changed')
       end

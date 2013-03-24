@@ -189,6 +189,14 @@ describe Recap::Tasks::Deploy do
       end
     end
 
+    describe 'deploy:full' do
+      it 'sets force_full_deploy and calls the default deployment task' do
+        namespace.expects(:default)
+        config.find_and_execute_task('deploy:full')
+        namespace.force_full_deploy.should be_true
+      end
+    end
+
     describe 'deploy:update_code' do
       it 'fetches latest changes, then resets to repository branch' do
         config.set :branch, 'release-branch'
