@@ -15,6 +15,13 @@ module Recap::Tasks::Rails
     # `env:edit` tasks.
     set_default_env :RAILS_ENV, 'production'
 
+    # Rails asset precompilation can be slow, and isn't required on every
+    # deploy.  Unfortunately though, it's hard to tell which deploys need
+    # assets to be compiled, and which don't.  By default, recap will watch
+    # the following files and directories and compile assets if they change
+    # between deploys.
+    set(:asset_precompilation_triggers, %w(app/assets vendor/assets Gemfile.lock config))
+
     namespace :db do
       task :load_schema do
         if deployed_file_exists?("db/schema.rb")
@@ -34,8 +41,16 @@ module Recap::Tasks::Rails
     # and from individual gems) it's not easy to determine whether compilation is
     # required, so it is done on every deploy.
     namespace :assets do
-      task :precompile do
-        as_app "./bin/rake RAILS_GROUPS=assets assets:precompile"
+      namespace :precompile do
+        task :if_changed do
+          if asset_precompilation_triggers.detect {|path| trigger_update?(path)}
+            top.rails.assets.default
+          end
+        end
+
+        task :default do
+          as_app "./bin/rake RAILS_GROUPS=assets assets:precompile"
+        end
       end
     end
 
@@ -45,6 +60,6 @@ module Recap::Tasks::Rails
 
     # On every deploy, after the code is updated, run the database migrations
     # and precompile the assets.
-    after "deploy:update_code", "rails:db:migrate", "rails:assets:precompile"
+    after "deploy:update_code", "rails:db:migrate", "rails:assets:precompile:if_changed"
   end
 end

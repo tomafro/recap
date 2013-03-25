@@ -20,6 +20,17 @@ describe Recap::Tasks::Rails do
     Recap::Tasks::Rails.load_into(config)
   end
 
+  describe 'Settings' do
+    describe '#asset_precompilation_triggers' do
+      it 'includes app/assets, vendor/assets, Gemfile.lock and config' do
+        namespace.asset_precompilation_triggers.include?('app/assets').should be_true
+        namespace.asset_precompilation_triggers.include?('vendor/assets').should be_true
+        namespace.asset_precompilation_triggers.include?('Gemfile.lock').should be_true
+        namespace.asset_precompilation_triggers.include?('config').should be_true
+      end
+    end
+  end
+
   describe 'Tasks' do
     describe 'rails:db:load_schema' do
       it 'loads the schema if db/schema.rb exists' do
@@ -58,6 +69,23 @@ describe Recap::Tasks::Rails do
       end
     end
 
+    describe 'assets:precompile:if_changed' do
+      it 'calls assets:precompileassets:precompile if any of the triggers have changed' do
+        config.set(:asset_precompilation_triggers, ['trigger-one', 'trigger-two'])
+        namespace.stubs(:trigger_update?).with('trigger-one').returns(false)
+        namespace.stubs(:trigger_update?).with('trigger-two').returns(true)
+        namespace.assets.expects(:default)
+        config.find_and_execute_task('rails:assets:precompile:if_changed')
+      end
+
+      it 'skips assets:precompile if none of the triggers have changed' do
+        config.set(:asset_precompilation_triggers, ['trigger-one', 'trigger-two'])
+        namespace.stubs(:trigger_update?).returns(false)
+        namespace.assets.expects(:default).never
+        config.find_and_execute_task('rails:assets:precompile:if_changed')
+      end
+    end
+
     describe 'assets:precompile' do
       it 'compiles assets on the server' do
         namespace.expects(:as_app).with('./bin/rake RAILS_GROUPS=assets assets:precompile')
@@ -84,7 +112,7 @@ describe Recap::Tasks::Rails do
 
     it 'runs `rails:assets:precompile` after `deploy:update_code`' do
       config.stubs(:find_and_execute_task)
-      config.expects(:find_and_execute_task).with('rails:assets:precompile')
+      config.expects(:find_and_execute_task).with('rails:assets:precompile:if_changed')
       config.trigger :after, config.find_task('deploy:update_code')
     end
   end
