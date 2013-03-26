@@ -27,8 +27,8 @@ describe Recap::Tasks::Foreman do
 
   describe 'Settings' do
     describe '#procfile' do
-      it 'defaults to deploy_to + /Procfile' do
-        config.procfile.should eql(deploy_to + '/Procfile')
+      it 'defaults Procfile' do
+        config.procfile.should eql('Procfile')
       end
     end
 

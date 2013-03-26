@@ -7,7 +7,7 @@ module Recap::Tasks::Foreman
 
   namespace :foreman do
     # Processes are declared in a `Procfile`, by default in the root of the application directory.
-    set(:procfile) { "#{deploy_to}/Procfile" }
+    set(:procfile) { "Procfile" }
 
     # Foreman startup scripts are exported in `upstart` format by default.
     set(:foreman_export_format, "upstart")

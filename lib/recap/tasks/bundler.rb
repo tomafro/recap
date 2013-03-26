@@ -7,7 +7,7 @@ module Recap::Tasks::Bundler
 
   namespace :bundle do
     # Each bundle is declared in a `Gemfile`, by default in the root of the application directory.
-    set(:bundle_gemfile) { "#{deploy_to}/Gemfile" }
+    set(:bundle_gemfile) { "Gemfile" }
 
     # As well as a `Gemfile`, application repositories should also contain a `Gemfile.lock`.
     set(:bundle_gemfile_lock) { "#{bundle_gemfile}.lock" }

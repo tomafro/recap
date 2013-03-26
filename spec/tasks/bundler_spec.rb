@@ -21,8 +21,8 @@ describe Recap::Tasks::Bundler do
 
   describe 'Settings' do
     describe '#bundle_gemfile' do
-      it 'defaults to deploy_to + /Gemfile' do
-        config.bundle_gemfile.should eql(deploy_to + '/Gemfile')
+      it 'defaults to Gemfile' do
+        config.bundle_gemfile.should eql('Gemfile')
       end
     end
 

@@ -71,8 +71,16 @@ module Recap::Support::CapistranoExtensions
     exit_code("cd #{deploy_to} && git diff --exit-code #{latest_tag} origin/#{branch} #{path}") == "1"
   end
 
+  def changed_files
+    @changed_files ||= if latest_tag
+      capture_git("diff --name-only #{latest_tag} origin/#{branch} | cat").split
+    else
+      capture_git("ls-files | cat").split
+    end
+  end
+
   def trigger_update?(path)
-    force_full_deploy || deployed_file_changed?(path)
+    force_full_deploy || changed_files.detect {|p| p[0, path.length] == path}
   end
 
   Capistrano::Configuration.send :include, self
