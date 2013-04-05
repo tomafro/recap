@@ -44,7 +44,7 @@ module Recap::Tasks::Rails
       namespace :precompile do
         task :if_changed do
           if asset_precompilation_triggers.detect {|path| trigger_update?(path)}
-            top.rails.assets.default
+            top.rails.assets.precompile.default
           end
         end
 

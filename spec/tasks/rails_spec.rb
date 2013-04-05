@@ -74,7 +74,7 @@ describe Recap::Tasks::Rails do
         config.set(:asset_precompilation_triggers, ['trigger-one', 'trigger-two'])
         namespace.stubs(:trigger_update?).with('trigger-one').returns(false)
         namespace.stubs(:trigger_update?).with('trigger-two').returns(true)
-        namespace.assets.expects(:default)
+        namespace.assets.precompile.expects(:default)
         config.find_and_execute_task('rails:assets:precompile:if_changed')
       end
 
