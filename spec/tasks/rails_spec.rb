@@ -99,11 +99,6 @@ describe Recap::Tasks::Rails do
       Recap::Tasks::Deploy.load_into(config)
     end
 
-    it 'runs `rails:db:load_schema` after `deploy:clone_code`' do
-      config.expects(:find_and_execute_task).with('rails:db:load_schema')
-      config.trigger :after, config.find_task('deploy:clone_code')
-    end
-
     it 'runs `rails:db:migrate` after `deploy:update_code`' do
       config.stubs(:find_and_execute_task)
       config.expects(:find_and_execute_task).with('rails:db:migrate')

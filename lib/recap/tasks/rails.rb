@@ -54,10 +54,6 @@ module Recap::Tasks::Rails
       end
     end
 
-    # After the code is first cloned (during `deploy:setup`) load the schema into
-    # the database.
-    after "deploy:clone_code", "rails:db:load_schema"
-
     # On every deploy, after the code is updated, run the database migrations
     # and precompile the assets.
     after "deploy:update_code", "rails:db:migrate", "rails:assets:precompile:if_changed"
