@@ -15,3 +15,8 @@ package { 'foreman':
   provider => gem,
   ensure => present
 }
+
+file { '/usr/local/bin/ruby':
+  ensure => 'link',
+  target => '/opt/ruby/bin/ruby',
+}

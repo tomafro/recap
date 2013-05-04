@@ -77,7 +77,7 @@ Then /^the previous project version should be deployed$/ do
 end
 
 Then /^the deployed project should include version "([^"]*)" of "([^"]*)"$/ do |version, gem|
-  project.run_on_server("bin/#{gem} --version").strip.should eql(version)
+  project.run_on_server("ruby bin/#{gem} --version").strip.should eql(version)
 end
 
 Then /^the variable "([^"]*)" should be set (?:back )?to "([^"]*)"$/ do |name, value|
@@ -85,7 +85,7 @@ Then /^the variable "([^"]*)" should be set (?:back )?to "([^"]*)"$/ do |name, v
 end
 
 Then /^the variable "([^"]*)" should be set to the application's PATH$/ do |name|
-  path = project.run_on_server("echo $PATH", ".").strip
+  path = project.run_on_server("sudo su - #{project.name} -c 'echo $PATH'", ".").strip
   project.run_on_server("sudo su - #{project.name} -c 'env | grep #{name}'", ".").strip.should eql("#{name}=#{path}")
 end
 
