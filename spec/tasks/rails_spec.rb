@@ -54,9 +54,18 @@ describe Recap::Tasks::Rails do
         config.find_and_execute_task('rails:db:migrate')
       end
 
-      it 'does nothing if the schema has not changed' do
+      it 'runs migrations if migrations have changed' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(true)
         namespace.stubs(:trigger_update?).with('db/schema.rb').returns(false)
+        namespace.stubs(:trigger_update?).with('db/migrations/').returns(true)
+        namespace.expects(:as_app).with('./bin/rake db:migrate')
+        config.find_and_execute_task('rails:db:migrate')
+      end
+
+      it 'does nothing if the schema and migrations have not changed' do
+        namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(true)
+        namespace.stubs(:trigger_update?).with('db/schema.rb').returns(false)
+        namespace.stubs(:trigger_update?).with('db/migrations/').returns(false)
         namespace.expects(:as_app).never
         config.find_and_execute_task('rails:db:migrate')
       end
