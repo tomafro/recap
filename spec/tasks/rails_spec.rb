@@ -63,7 +63,6 @@ describe Recap::Tasks::Rails do
 
       it 'does nothing if the schema does not exist' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(false)
-        namespace.stubs(:trigger_update?).with('db/schema.rb').returns(true)
         namespace.expects(:as_app).never
         config.find_and_execute_task('rails:db:migrate')
       end
