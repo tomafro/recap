@@ -30,8 +30,7 @@ module Recap::Tasks::Rails
       end
 
       task :migrate do
-        if deployed_file_exists?("db/schema.rb") &&
-          (trigger_update?("db/schema.rb") || trigger_update?("db/migrations/"))
+        if deployed_file_exists?("db/schema.rb") && trigger_update?("db/migrations/")
           as_app './bin/rake db:migrate'
         end
       end
