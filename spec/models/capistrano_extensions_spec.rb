@@ -38,4 +38,35 @@ describe Recap::Support::CapistranoExtensions do
       config.edit_file('remote/path/to/file')
     end
   end
+
+  describe '#trigger_update?' do
+    context 'when forcing full deploy' do
+      before(:each) do
+        config.stubs(:force_full_deploy).returns(true)
+      end
+
+      it 'returns true' do
+        config.trigger_update?('path/to/file').should be_true
+      end
+    end
+
+    context 'when not forcing full deploy' do
+      before(:each) do
+        config.stubs(:force_full_deploy).returns(false)
+        config.stubs(:changed_files).returns(['path/to/changed/file', 'directory/containing/changed/file'])
+      end
+
+      it 'returns false for a file path which has not changed' do
+        config.trigger_update?('no/changes/here').should be_false
+      end
+
+      it 'returns true for a file path which has changed' do
+        config.trigger_update?('path/to/changed/file').should be_true
+      end
+
+      it 'returns true for a directory path which contains a changed file' do
+        config.trigger_update?('directory/containing/changed/').should be_true
+      end
+    end
+  end
 end
