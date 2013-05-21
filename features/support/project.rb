@@ -208,6 +208,7 @@ module ProjectSupport
     def regenerate_bundle
       write_and_commit_file 'Gemfile', gemfile
       # Nasty hack to generate a Gemfile.lock
+      @server.run "cd /recap/share/projects/#{name} && /opt/ruby/bin/bundle install"
       commit_files 'Gemfile.lock'
     end
 
