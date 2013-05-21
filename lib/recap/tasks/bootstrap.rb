@@ -65,6 +65,10 @@ fi
       run "git config --global user.name '#{git_user_name}'"
       run "git config --global user.email '#{git_user_email}'"
       sudo "usermod --append -G #{application_group} #{remote_username}"
+
+      if repository.match /github\.com/
+        run "(mkdir -p ~/.ssh && touch ~/.ssh/known_hosts && ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep 'github.com') || ssh-keyscan -H github.com > ~/.ssh/known_hosts"
+      end
     end
 
     # The `bootstrap` task simply runs both the `bootstrap:application` and `bootstrap:user` tasks
