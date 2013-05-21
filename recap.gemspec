@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency('open4')
   s.add_development_dependency('rake', '~>0.9.2')
   s.add_development_dependency('fl-rocco', '~>1.0.0')
-  s.add_development_dependency('rspec', '~>2.7.0')
+  s.add_development_dependency('rspec', '~>2.13.0')
   s.add_development_dependency('mocha', '~>0.10.0')
   s.add_development_dependency('cucumber', '~>1.1.4')
   s.add_development_dependency('faker', '~>1.0.1')
