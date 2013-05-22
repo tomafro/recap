@@ -18,8 +18,17 @@ module Recap::Tasks::Foreman
     # After exports, the scripts are moved to their final location, usually `/etc/init`.
     set(:foreman_export_location, "/etc/init")
 
+    # Optionally specifies the number of each process type to run. The value passed in should be in the
+    # format process=num,process=num.
+    set(:foreman_concurrency, nil)
+
     # The standard foreman export.
-    set(:foreman_export_command) { "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log" }
+    set(:foreman_export_command) {
+      cmd = "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log"
+      cmd << " --concurrency #{foreman_concurrency}" if foreman_concurrency
+
+      cmd
+    }
 
     namespace :export do
       # After each deployment, the startup scripts are exported if the `Procfile` has changed.
