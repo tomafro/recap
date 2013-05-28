@@ -16,7 +16,7 @@ describe Recap::Tasks::Rails do
 
   before do
     config.set :deploy_to, deploy_to
-    config.set :force_full_deploy, to: false
+    config.set :force_full_deploy, :to => false
     config.stubs(:set_default_env)
     Recap::Tasks::Rails.load_into(config)
   end
@@ -57,7 +57,7 @@ describe Recap::Tasks::Rails do
 
       it 'runs migrations if migrations have changed' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(true)
-        namespace.stubs(:changed_files).returns(["db/migrate/12345_migration.rb"])
+        namespace.stubs(:changed_files).returns(["db/migrate/12345_migrations.rb"])
         namespace.expects(:as_app).with('./bin/rake db:migrate')
         config.find_and_execute_task('rails:db:migrate')
       end
