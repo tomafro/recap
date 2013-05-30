@@ -5,8 +5,8 @@ describe Recap::Support::CLI do
 
   describe 'ssh' do
 
-    p `env`
-
+    puts `env`
+    puts "B"
     File.write('recap-ssh-config', %{
 Host default
   HostName 127.0.0.1
@@ -18,7 +18,8 @@ Host default
   LogLevel FATAL
       })
 
-    p `ssh -F recap-ssh-config env`
+    puts `ssh -F recap-ssh-config default env`
+    puts "C"
     p `ssh 127.0.0.1 env`
 
   end
