@@ -54,15 +54,17 @@ puts File.read(authorized_key_path)
     File.write('recap-ssh-config', %{
 Host default
   HostName 127.0.0.1
+  User travis
   Port 22
   UserKnownHostsFile /dev/null
   StrictHostKeyChecking no
   PasswordAuthentication no
+  IdentityFile "#{File.expand_path('insecure-private-key')}"
   IdentitiesOnly yes
   LogLevel FATAL
       })
 
-    # puts `ssh -F recap-ssh-config default env`
+    puts `ssh -F recap-ssh-config default env`
     # puts "C"
     # p `ssh 127.0.0.1 env`
 
