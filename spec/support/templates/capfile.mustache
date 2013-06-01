@@ -1,0 +1,19 @@
+require '{{ recap_require }}'
+
+set :user, '{{ user }}'
+
+ssh_options[:port] = {{ port }}
+ssh_options[:keys] = ['{{ private_key_path }}']
+
+server '{{ host_name }}', :web
+
+# Each project has its own location shared between the host machine and the VM
+
+set :application, '{{ project_name }}'
+set :repository, '/recap/share/projects/{{ project_name }}'
+
+# Finally, to ensure tests don't fail if deployments are made within a second of each other
+# which they can do when automated like this, we use a finer-grained release tag
+
+set(:release_tag) { Time.now.utc.strftime("%Y%m%d%H%M%S%L") }
+set(:release_matcher) { /\A[0-9]{17}\Z/ }
