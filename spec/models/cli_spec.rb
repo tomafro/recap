@@ -39,6 +39,7 @@ NE5OgEXk2wVfZczCZpigBKbKZHNYcelXtTt/nP3rsCuGcM4h53s=
 -----END RSA PRIVATE KEY-----
 })
 
+`chmod 600 insecure-private-key`
 
 FileUtils.mkdir_p File.expand_path("~/.ssh")
 authorized_key_path = File.expand_path("~/.ssh/authorized_keys")
@@ -64,9 +65,9 @@ Host default
   LogLevel FATAL
       })
 
-    puts `ssh -F recap-ssh-config default env`
-    # puts "C"
-    # p `ssh 127.0.0.1 env`
+puts `ssh -vF recap-ssh-config default env`
+#     # puts "C"
+#     # p `ssh 127.0.0.1 env`
 
   end
 end
