@@ -99,6 +99,7 @@ describe Recap::Tasks::Foreman do
 
     describe 'foreman:export' do
       it 'runs the foreman export command, then moves the exported files to the export location' do
+        config.server 'foo.example.com', :app
         namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(true)
         namespace.expects(:sudo).with("mkdir -p #{config.deploy_to}/log").in_sequence(commands)
         namespace.expects(:sudo).with("chown #{config.application_user}: #{config.deploy_to}/log").in_sequence(commands)
@@ -113,6 +114,21 @@ describe Recap::Tasks::Foreman do
         namespace.expects(:as_app).never
         namespace.expects(:sudo).never
         config.find_and_execute_task('foreman:export')
+      end
+
+      context 'when server options specify concurrency' do
+        before do
+          config.server 'huge.example.com', :app, processes: { web: 10, queue: 10 }
+          config.server 'small.example.com', :app, processes: { web: 1 }
+        end
+
+        it 'exports with concurrency argument' do
+          namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(true)
+          namespace.stubs(:sudo)
+          namespace.expects(:as_app).with("#{config.foreman_export_command} --concurrency web=10,queue=10")
+          namespace.expects(:as_app).with("#{config.foreman_export_command} --concurrency web=1")
+          config.find_and_execute_task('foreman:export')
+        end
       end
     end
 

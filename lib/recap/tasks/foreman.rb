@@ -1,4 +1,9 @@
 # These tasks configure recap to use Foreman to stop, start and restart your application processes.
+#
+# You may declare the number of each process type to when defining servers:
+#
+#    server 'huge.example.com', :app, processes: { web: 10, queue: 10 }
+#    server 'small.example.com', :app, processes: { web: 1 }
 
 require 'recap/tasks/deploy'
 
@@ -18,16 +23,9 @@ module Recap::Tasks::Foreman
     # After exports, the scripts are moved to their final location, usually `/etc/init`.
     set(:foreman_export_location, "/etc/init")
 
-    # Optionally specifies the number of each process type to run. The value passed in should be in the
-    # format process=num,process=num.
-    set(:foreman_concurrency, nil)
-
     # The standard foreman export.
     set(:foreman_export_command) {
-      cmd = "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log"
-      cmd << " --concurrency #{foreman_concurrency}" if foreman_concurrency
-
-      cmd
+      "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log"
     }
 
     namespace :export do
@@ -44,11 +42,18 @@ module Recap::Tasks::Foreman
       desc 'Export foreman configuration'
       task :default do
         if deployed_file_exists?(procfile)
-          sudo "mkdir -p #{deploy_to}/log"
-          sudo "chown #{application_user}: #{deploy_to}/log"
-          as_app foreman_export_command
-          sudo "rm -f #{foreman_export_location}/#{application}*"
-          sudo "cp #{foreman_tmp_location}/* #{foreman_export_location}"
+          find_servers_for_task(current_task).each do |server|
+            sudo "mkdir -p #{deploy_to}/log"
+            sudo "chown #{application_user}: #{deploy_to}/log"
+            if server.options.has_key?(:processes)
+              procs = server.options[:processes].map { |process, count| "#{process}=#{count}" }.join(',')
+              as_app "#{foreman_export_command} --concurrency #{procs}"
+            else
+              as_app foreman_export_command
+            end
+            sudo "rm -f #{foreman_export_location}/#{application}*"
+            sudo "cp #{foreman_tmp_location}/* #{foreman_export_location}"
+          end
         end
       end
     end
