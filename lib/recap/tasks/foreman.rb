@@ -43,16 +43,17 @@ module Recap::Tasks::Foreman
       task :default do
         if deployed_file_exists?(procfile)
           find_servers_for_task(current_task).each do |server|
-            sudo "mkdir -p #{deploy_to}/log"
-            sudo "chown #{application_user}: #{deploy_to}/log"
+            sudo "mkdir -p #{deploy_to}/log", hosts: server
+            sudo "chown #{application_user}: #{deploy_to}/log", hosts: server
             if server.options.has_key?(:processes)
               procs = server.options[:processes].map { |process, count| "#{process}=#{count}" }.join(',')
-              as_app "#{foreman_export_command} --concurrency #{procs}"
+              # TODO: We could use Capistrano::Configuration#as_app here if latter passed options to underlying #sudo
+              sudo "su - #{application_user} -c 'cd #{deploy_to} && #{foreman_export_command} --concurrency #{procs}'", hosts: server
             else
-              as_app foreman_export_command
+              sudo "su - #{application_user} -c 'cd #{deploy_to} && #{foreman_export_command}'", hosts: server
             end
-            sudo "rm -f #{foreman_export_location}/#{application}*"
-            sudo "cp #{foreman_tmp_location}/* #{foreman_export_location}"
+            sudo "rm -f #{foreman_export_location}/#{application}*", hosts: server
+            sudo "cp #{foreman_tmp_location}/* #{foreman_export_location}", hosts: server
           end
         end
       end

@@ -100,12 +100,13 @@ describe Recap::Tasks::Foreman do
     describe 'foreman:export' do
       it 'runs the foreman export command, then moves the exported files to the export location' do
         config.server 'foo.example.com', :app
+        server = config.find_servers.first
         namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(true)
-        namespace.expects(:sudo).with("mkdir -p #{config.deploy_to}/log").in_sequence(commands)
-        namespace.expects(:sudo).with("chown #{config.application_user}: #{config.deploy_to}/log").in_sequence(commands)
-        namespace.expects(:as_app).with(config.foreman_export_command).in_sequence(commands)
-        namespace.expects(:sudo).with("rm -f #{config.foreman_export_location}/#{config.application}*").in_sequence(commands)
-        namespace.expects(:sudo).with("cp #{config.foreman_tmp_location}/* #{config.foreman_export_location}").in_sequence(commands)
+        namespace.expects(:sudo).with("mkdir -p #{config.deploy_to}/log", hosts: server).in_sequence(commands)
+        namespace.expects(:sudo).with("chown #{config.application_user}: #{config.deploy_to}/log", hosts: server).in_sequence(commands)
+        namespace.expects(:sudo).with("su - #{config.application_user} -c 'cd #{config.deploy_to} && #{config.foreman_export_command}'", hosts: server).in_sequence(commands)
+        namespace.expects(:sudo).with("rm -f #{config.foreman_export_location}/#{config.application}*", hosts: server).in_sequence(commands)
+        namespace.expects(:sudo).with("cp #{config.foreman_tmp_location}/* #{config.foreman_export_location}", hosts: server).in_sequence(commands)
         config.find_and_execute_task('foreman:export')
       end
 
@@ -125,8 +126,10 @@ describe Recap::Tasks::Foreman do
         it 'exports with concurrency argument' do
           namespace.stubs(:deployed_file_exists?).with(config.procfile).returns(true)
           namespace.stubs(:sudo)
-          namespace.expects(:as_app).with("#{config.foreman_export_command} --concurrency web=10,queue=10")
-          namespace.expects(:as_app).with("#{config.foreman_export_command} --concurrency web=1")
+          config.find_servers.each do |server|
+            procs = server.options[:processes].map { |p, c| "#{p}=#{c}" }.join(',')
+            namespace.expects(:sudo).with("su - #{config.application_user} -c 'cd #{config.deploy_to} && #{config.foreman_export_command} --concurrency #{procs}'", hosts: server)
+          end
           config.find_and_execute_task('foreman:export')
         end
       end
