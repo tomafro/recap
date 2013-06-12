@@ -2,4 +2,6 @@ rvm:
   - 1.9.3
   - 2.0.0
 before_install:
-  - /usr/local/bin/gem install bundler
+  - ln -s /opt/ruby/bin/ruby `which ruby`
+  - ln -s /opt/ruby/bin/bundle `which bundle`
+
