@@ -27,6 +27,8 @@ describe 'managing processes' do
     puts server.run('which gem')
     puts server.run('ls /opt/ruby/bin')
 
+
+
     puts `which bundle`
 
 
@@ -45,6 +47,11 @@ server: ./bin/example-gem --server
     }
 
     project.run_cap 'bootstrap'
+
+    puts '>>>>>>>>>>>>'
+
+    puts server.run("sudo su - #{project.name} -c env")
+
     project.run_cap 'deploy:setup'
   end
 
