@@ -25,12 +25,15 @@ describe 'managing processes' do
     puts server.run('which bundle')
     puts server.run('which ruby')
     puts server.run('which gem')
-    puts server.run('which env')
 
     puts `which bundle`
 
 
     puts `env`
+
+    puts '----'
+
+    puts server.run('env')
 
 
     project.add_example_gem('example-gem', '1.0')
