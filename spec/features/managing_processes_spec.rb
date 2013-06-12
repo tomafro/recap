@@ -25,6 +25,11 @@ describe 'managing processes' do
     puts server.run('which bundle')
     puts server.run('which ruby')
 
+    puts `which bundle`
+
+
+    puts `env`
+
 
     project.add_example_gem('example-gem', '1.0')
     project.add_gem('foreman', '0.63.0')
@@ -37,18 +42,18 @@ server: ./bin/example-gem --server
     project.run_cap 'deploy:setup'
   end
 
-  it 'declaring and running an application process' do
-    project.run_cap 'deploy'
+  # it 'declaring and running an application process' do
+  #   project.run_cap 'deploy'
 
-    processes_owned_by_project.include?("./bin/example-gem --server").should be_true
-  end
+  #   processes_owned_by_project.include?("./bin/example-gem --server").should be_true
+  # end
 
-  it 'processes have access to environment variables' do
-    project.run_cap 'env:set MONSTER=gargoyle'
-    project.run_cap 'deploy'
+  # it 'processes have access to environment variables' do
+  #   project.run_cap 'env:set MONSTER=gargoyle'
+  #   project.run_cap 'deploy'
 
-    process_environment['MONSTER'].should eql('gargoyle')
-  end
+  #   process_environment['MONSTER'].should eql('gargoyle')
+  # end
 
   def processes_owned_by_project
     server.run("ps -U #{project.name} u")
