@@ -24,6 +24,8 @@ describe 'managing processes' do
   before :each do
     puts server.run('which bundle')
     puts server.run('which ruby')
+    puts server.run('which gem')
+    puts server.run('which env')
 
     puts `which bundle`
 
