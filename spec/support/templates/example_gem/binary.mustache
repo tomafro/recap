@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'webrick'
 
-GEM_VERSION = "<%= version %>"
+GEM_VERSION = "{{ version }}"
 
 class Server
   class Action < WEBrick::HTTPServlet::AbstractServlet
@@ -32,6 +32,7 @@ class Server
   end
 end
 
+trap("USR2") { puts "USR2 trapped" }
 trap("SIGINT") { exit! }
 trap("TERM") { exit! }
 

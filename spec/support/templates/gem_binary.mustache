@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+require 'webrick'
+
+GEM_VERSION = "{{ version }}"
+
+class Server
+  class Action < WEBrick::HTTPServlet::AbstractServlet
+    def do_GET(request, response)
+      response.status = 200
+      response['Content-Type'] = "text/plain"
+      response.body = body
+    end
+  end
+
+  class Version < Action
+    def body
+      GEM_VERSION
+    end
+  end
+
+  class Env < Action
+    def body
+      ENV.keys.sort.map {|k| "#{k}=#{ENV[k]}" }.join("\n")
+    end
+  end
+
+  def self.start
+    server = WEBrick::HTTPServer.new(:Port => 3500)
+    server.mount "/env", Env
+    server.mount "/version", Version
+    server.start
+  end
+end
+
+trap("SIGINT") { exit! }
+trap("TERM") { exit! }
+
+case ARGV[0]
+when "--version" then puts GEM_VERSION
+when "--env" then ENV.keys.sort.each {|k| puts "#{k}=#{ENV[k]}"}
+when "--server" then Server.start
+else puts "Unknown option"
+end

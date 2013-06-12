@@ -1,0 +1,5 @@
+# For recap tests, all gems are built and placed in vendor/cache,
+# so no source should be required.
+{{#gems}}
+gem '{{name}}', '{{ version }}'
+{{/gems}}

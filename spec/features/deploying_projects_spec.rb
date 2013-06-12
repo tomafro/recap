@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'deploying a project' do
   let(:server) { Server.instance }
-  let(:project) { Project.new(type: 'static', ssh_config: server.ssh_config) }
+  let(:project) { Project.new(type: 'ruby', server: server) }
 
   it 'deploying for the first time' do
     project.run_cap 'bootstrap'

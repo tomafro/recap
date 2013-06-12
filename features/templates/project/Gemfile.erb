@@ -1,7 +1,0 @@
-source :rubygems
-<% if foreman %>
-gem 'foreman'
-<% end %>
-<% gems.each do |gem, version| %>
-gem '<%= gem %>', :git => '/recap/share/gems/<%= gem %>', :tag => '<%= version %>'
-<% end %>

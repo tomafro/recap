@@ -16,10 +16,18 @@ class Repository
     git('log --pretty=format:"%H"').split("\n")
   end
 
-  def write_and_commit(file, content = '')
+  def write(file, content = '')
     File.write path(file), content
+  end
+
+  def write_and_commit(file, content = '')
+    write file, content
+    commit_all
+  end
+
+  def commit_all
     git "add --all"
-    git "commit -m 'Added #{file}'"
+    git "commit -m 'Updated project'"
   end
 
   private

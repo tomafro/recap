@@ -26,4 +26,8 @@ class Capfile < Mustache
   def user
     @options[:ssh_config][:user]
   end
+
+  def additions
+    @additions ||= []
+  end
 end

@@ -17,3 +17,5 @@ set :repository, '/recap/share/projects/{{ project_name }}'
 
 set(:release_tag) { Time.now.utc.strftime("%Y%m%d%H%M%S%L") }
 set(:release_matcher) { /\A[0-9]{17}\Z/ }
+{{#additions}}{{{.}}}
+{{/additions}}
