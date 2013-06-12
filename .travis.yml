@@ -2,6 +2,6 @@ rvm:
   - 1.9.3
   - 2.0.0
 before_install:
-  - ln -s /opt/ruby/bin/ruby `which ruby`
-  - ln -s /opt/ruby/bin/bundle `which bundle`
+  - ln -s `which ruby` /opt/ruby/bin/ruby
+  - ln -s `which bundle` /opt/ruby/bin/bundle
 
