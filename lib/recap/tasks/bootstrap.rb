@@ -40,18 +40,18 @@ module Recap::Tasks::Bootstrap
       # `env:edit` tasks).  The script loads the `.env` file in the users home folder, creates
       # a new copy with `export ` prefixed to each line, and sources this new copy.
       put_as_app %{
-if [ -s "$HOME/.env" ]; then
-  sed -e 's/\\r//g' -e 's/^/export /g' $HOME/.env > $HOME/.recap-env-export
-  . $HOME/.recap-env-export
+if [ -s #{application_home}/.env ]; then
+  sed -e 's/\\r//g' -e 's/^/export /g' #{application_home}/.env > #{application_home}/.recap-env-export
+  . #{application_home}/.recap-env-export
 fi
       }, "#{application_home}/.recap"
 
       # Finally, `.profile` needs to source the `.recap` script, so that the configuration environment is
       # available whenever the environment is loaded.
-      as_app "touch .profile", "~"
+      as_app "touch .profile", "#{application_home}"
 
-      if exit_code("grep '\\. $HOME/\\.recap' #{application_home}/.profile") != "0"
-        as_app %{echo ". \\$HOME/.recap" >> .profile}, "~"
+      if exit_code("grep '\\. #{application_home}/\\.recap' #{application_home}/.profile") != "0"
+        as_app %{echo ". #{application_home}/.recap" >> .profile}, "#{application_home}"
       end
     end
 
@@ -67,7 +67,7 @@ fi
       sudo "usermod --append -G #{application_group} #{remote_username}"
 
       if repository.match /github\.com/
-        run "(mkdir -p ~/.ssh && touch ~/.ssh/known_hosts && ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep 'github.com') || ssh-keyscan -H github.com > ~/.ssh/known_hosts"
+        run "(mkdir -p #{application_home}/.ssh && touch #{application_home}/.ssh/known_hosts && ssh-keygen -f #{application_home}/.ssh/known_hosts -H -F github.com | grep 'github.com') || ssh-keyscan -H github.com > #{application_home}/.ssh/known_hosts"
       end
     end
 
