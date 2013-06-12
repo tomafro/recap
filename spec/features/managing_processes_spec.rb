@@ -22,6 +22,10 @@ describe 'managing processes' do
   let(:project) { Project.new(type: 'ruby', server: server) }
 
   before :each do
+    puts server.run('which bundle')
+    puts server.run('which ruby')
+
+
     project.add_example_gem('example-gem', '1.0')
     project.add_gem('foreman', '0.63.0')
 
