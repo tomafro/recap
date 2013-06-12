@@ -42,11 +42,11 @@ server: ./bin/example-gem --server
     project.run_cap 'deploy:setup'
   end
 
-  # it 'declaring and running an application process' do
-  #   project.run_cap 'deploy'
+  it 'declaring and running an application process' do
+    project.run_cap 'deploy'
 
-  #   processes_owned_by_project.include?("./bin/example-gem --server").should be_true
-  # end
+    processes_owned_by_project.include?("./bin/example-gem --server").should be_true
+  end
 
   # it 'processes have access to environment variables' do
   #   project.run_cap 'env:set MONSTER=gargoyle'
