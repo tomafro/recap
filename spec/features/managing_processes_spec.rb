@@ -49,7 +49,7 @@ server: ./bin/example-gem --server
     project.run_cap 'bootstrap'
 
     puts '>>>>>>>>>>>>'
-    puts '/usr/bin/ruby --version'
+    puts server.run('/usr/bin/ruby --version')
 
     puts server.run("sudo su - #{project.name} -c env")
 
