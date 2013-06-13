@@ -4,3 +4,4 @@ rvm:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install ruby 1.9.3
+  - sudo /usr/local/bin/gem install bundler

@@ -25,7 +25,8 @@ describe 'managing processes' do
     puts server.run('which bundle')
     puts server.run('which ruby')
     puts server.run('which gem')
-    puts server.run('ls /opt/ruby/bin')
+    puts server.run('ruby --version')
+    puts server.run('gem --version')
 
 
 
