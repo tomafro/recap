@@ -30,6 +30,7 @@ describe 'managing processes' do
 
 
     puts `which bundle`
+    puts `which gem`
 
 
     puts `env`

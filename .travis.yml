@@ -2,6 +2,5 @@ rvm:
   - 1.9.3
   - 2.0.0
 before_install:
-  - sudo mv /usr/local/bin/ruby /usr/local/bin/ruby.old && sudo ln -s `which ruby` /usr/local/bin/ruby
-  - sudo ln -s `which bundle` /usr/local/bin/bundle
-
+  - sudo apt-get update -qq
+  - sudo apt-get install ruby 1.9.3
