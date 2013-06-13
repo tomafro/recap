@@ -49,7 +49,7 @@ module Recap::Support::CapistranoExtensions
   end
 
   def exit_code_as_app(command, pwd = deploy_to)
-    capture(%|sudo -p 'sudo password: ' su - #{application_user} -c 'cd #{pwd} && #{command} > /dev/null 2>&1'; echo $?|).strip
+    capture(%|sudo -p 'sudo password: ' su - #{application_user} -c 'cd #{pwd} && #{command} > /dev/null 2>&1'; echo $?|).split("\n").last.strip
   end
 
   # Find the latest tag from the repository.  As `git tag` returns tags in order, and our release
