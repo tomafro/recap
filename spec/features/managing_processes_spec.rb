@@ -28,8 +28,6 @@ describe 'managing processes' do
     puts server.run('ruby --version')
     puts server.run('gem --version')
 
-    puts `sudo su - #{project.name} -c which bundle`
-
 
     project.add_example_gem('example-gem', '1.0')
     project.add_gem('foreman', '0.63.0')
@@ -39,6 +37,10 @@ server: ./bin/example-gem --server
     }
 
     project.run_cap 'bootstrap'
+
+
+    puts `sudo su - #{project.name} -c which bundle`
+
 
     puts '>>>>>>>>>>>>'
     puts server.run('/usr/bin/ruby --version')
