@@ -28,17 +28,7 @@ describe 'managing processes' do
     puts server.run('ruby --version')
     puts server.run('gem --version')
 
-
-
-    puts `which bundle`
-    puts `which gem`
-
-
-    puts `env`
-
-    puts '----'
-
-    puts server.run('env')
+    puts `sudo su - #{project.name} -c which bundle`
 
 
     project.add_example_gem('example-gem', '1.0')
