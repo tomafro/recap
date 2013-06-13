@@ -50,7 +50,7 @@ module Recap::Tasks::Bundler
     end
 
     task :check_installed do
-      p exit_code_as_app('bundle --version', '.')
+      abort exit_code_as_app('bundle --version', '.').inspect
       if exit_code_as_app('bundle --version', '.') != "0"
         abort "The application user '#{application_user}' cannot execute `bundle`.  Please check you have bundler installed."
       end
