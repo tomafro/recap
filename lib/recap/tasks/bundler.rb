@@ -51,6 +51,8 @@ module Recap::Tasks::Bundler
 
     task :check_installed do
       puts exit_code_as_app('bundle --version', '.')
+      puts capture('env')
+      puts capture('which bundle')
       if exit_code_as_app('bundle --version', '.') != "0"
         abort "The application user '#{application_user}' cannot execute `bundle`.  Please check you have bundler installed."
       end
