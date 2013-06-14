@@ -30,6 +30,7 @@ describe 'managing processes' do
 
     puts server.run('sudo which gem')
     puts server.run('sudo gem install bundler')
+    puts server.run('/usr/local/bin/gem environment')
 
 
     project.add_example_gem('example-gem', '1.0')
@@ -82,6 +83,7 @@ server: ./bin/example-gem --server
   end
 
   after :each do
+    `cat capistrano.log`
     server.run "sudo stop #{project.name}"
     server.run "rm -rf /etc/init/#{project.name}*"
   end
