@@ -28,6 +28,9 @@ describe 'managing processes' do
     puts server.run('ruby --version')
     puts server.run('gem --version')
 
+    puts server.run('sudo which gem')
+    puts server.run('sudo gem install bundler')
+
 
     project.add_example_gem('example-gem', '1.0')
     project.add_gem('foreman', '0.63.0')
