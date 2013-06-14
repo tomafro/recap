@@ -38,8 +38,6 @@ server: ./bin/example-gem --server
 
     project.run_cap 'bootstrap'
 
-    project.run("")
-
     puts "hello"
     puts `sudo su - #{project.name} -c which ruby`
     puts `sudo su - #{project.name} -c which gem`
