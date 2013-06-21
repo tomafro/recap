@@ -67,7 +67,7 @@ fi
       sudo "usermod --append -G #{application_group} #{remote_username}"
 
       if repository.match /github\.com/
-        run "(mkdir -p #{application_home}/.ssh && touch #{application_home}/.ssh/known_hosts && ssh-keygen -f #{application_home}/.ssh/known_hosts -H -F github.com | grep 'github.com') || ssh-keyscan -H github.com > #{application_home}/.ssh/known_hosts"
+        as_app "mkdir -p #{application_home}/.ssh; touch #{application_home}/.ssh/known_hosts; (ssh-keygen -f #{application_home}/.ssh/known_hosts -H -F github.com | grep 'github.com') || ssh-keyscan -H github.com > #{application_home}/.ssh/known_hosts", "/"
       end
     end
 
