@@ -10,7 +10,7 @@ module Recap::Support::CapistranoExtensions
   end
 
   def as_app_once(command, pwd = deploy_to)
-    sudo "su - #{application_user} -c 'cd #{pwd} && #{command}'", once: true
+    sudo "su - #{application_user} -c 'cd #{pwd} && #{command}'", :once => true
   end
 
   # Put a string into a file as the application user
