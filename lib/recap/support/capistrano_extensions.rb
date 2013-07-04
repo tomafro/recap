@@ -9,6 +9,10 @@ module Recap::Support::CapistranoExtensions
     sudo "su - #{application_user} -c 'cd #{pwd} && #{command}'"
   end
 
+  def as_app_once(command, pwd = deploy_to)
+    sudo "su - #{application_user} -c 'cd #{pwd} && #{command}'", once: true
+  end
+
   # Put a string into a file as the application user
   def put_as_app(string, path)
     put string, "/tmp/recap-put-as-app"

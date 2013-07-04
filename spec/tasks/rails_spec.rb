@@ -36,13 +36,13 @@ describe Recap::Tasks::Rails do
     describe 'rails:db:load_schema' do
       it 'loads the schema if db/schema.rb exists' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(true)
-        namespace.expects(:as_app).with('./bin/rake db:create db:schema:load')
+        namespace.expects(:as_app_once).with('./bin/rake db:create db:schema:load')
         config.find_and_execute_task('rails:db:load_schema')
       end
 
       it 'does nothing if db/schema.rb does not exist' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(false)
-        namespace.expects(:as_app).never
+        namespace.expects(:as_app_once).never
         config.find_and_execute_task('rails:db:load_schema')
       end
     end
@@ -51,21 +51,21 @@ describe Recap::Tasks::Rails do
       it 'runs migrations if schema.rb has changed' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(true)
         namespace.stubs(:changed_files).returns(["db/schema.rb"])
-        namespace.expects(:as_app).with('./bin/rake db:migrate')
+        namespace.expects(:as_app_once).with('./bin/rake db:migrate')
         config.find_and_execute_task('rails:db:migrate')
       end
 
       it 'runs migrations if migrations have changed' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(true)
         namespace.stubs(:changed_files).returns(["db/migrate/12345_migrations.rb"])
-        namespace.expects(:as_app).with('./bin/rake db:migrate')
+        namespace.expects(:as_app_once).with('./bin/rake db:migrate')
         config.find_and_execute_task('rails:db:migrate')
       end
 
       it 'does nothing if the migrations have not changed' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(true)
         namespace.stubs(:trigger_update?).with('db/').returns(false)
-        namespace.expects(:as_app).never
+        namespace.expects(:as_app_once).never
         config.find_and_execute_task('rails:db:migrate')
       end
 

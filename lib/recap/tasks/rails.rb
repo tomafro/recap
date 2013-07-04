@@ -25,13 +25,13 @@ module Recap::Tasks::Rails
     namespace :db do
       task :load_schema do
         if deployed_file_exists?("db/schema.rb")
-          as_app './bin/rake db:create db:schema:load'
+          as_app_once './bin/rake db:create db:schema:load'
         end
       end
 
       task :migrate do
         if deployed_file_exists?("db/schema.rb") && trigger_update?("db/")
-          as_app './bin/rake db:migrate'
+          as_app_once './bin/rake db:migrate'
         end
       end
     end
