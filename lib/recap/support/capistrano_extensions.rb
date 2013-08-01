@@ -87,5 +87,31 @@ module Recap::Support::CapistranoExtensions
     force_full_deploy || changed_files.detect {|p| p[0, path.length] == path}
   end
 
+  def claim_lock(message)
+    begin
+      sudo "[ ! -e #{deploy_lock_file} ] && echo '#{message}' > #{deploy_lock_file}"
+    rescue Exception => e
+      abort %{
+Failed to claim lock: " + capture("cat #{deploy_lock_file}"
+
+If you think this lock no longer applies, clear it using the `deploy:unlock` task
+and try again.
+}
+    end
+  end
+
+  def release_lock
+    sudo "rm -rf #{deploy_lock_file}"
+  end
+
+  def transaction_with_lock(message)
+    on_rollback { release_lock }
+    transaction do
+      claim_lock(message)
+      yield
+      release_lock
+    end
+  end
+
   Capistrano::Configuration.send :include, self
 end

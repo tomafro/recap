@@ -161,6 +161,7 @@ describe Recap::Tasks::Deploy do
 
     describe 'deploy' do
       it 'runs env:set, deploy:update_code, deploy:tag and then deploy:restart tasks' do
+        namespace.stubs(:transaction_with_lock).yields
         env = stub('env')
         config.stubs(:env).returns(env)
         env.expects('set')
@@ -170,20 +171,20 @@ describe Recap::Tasks::Deploy do
         config.find_and_execute_task('deploy')
       end
 
-      it 'calls deploy:update_code task within a transaction' do
-        namespace.stubs(:transaction)
+      it 'calls deploy:update_code task within a locked transaction' do
+        namespace.stubs(:transaction_with_lock)
         namespace.expects(:update_code).never
         config.find_and_execute_task('deploy')
       end
 
-      it 'calls deploy:tag task within a transaction' do
-        namespace.stubs(:transaction)
+      it 'calls deploy:tag task within a locked transaction' do
+        namespace.stubs(:transaction_with_lock)
         namespace.expects(:tag).never
         config.find_and_execute_task('deploy')
       end
 
       it 'calls restart outside the transaction' do
-        namespace.stubs(:transaction)
+        namespace.stubs(:transaction_with_lock)
         namespace.expects(:restart)
         config.find_and_execute_task('deploy')
       end
@@ -239,6 +240,28 @@ describe Recap::Tasks::Deploy do
         config.stubs(:latest_tag).returns(nil)
         namespace.rollback.expects(:abort).with('This app is not currently deployed')
         namespace.find_and_execute_task('deploy:rollback')
+      end
+    end
+
+    describe 'deploy:lock' do
+      it 'locks deployments with the message DEPLOY_LOCK_MESSAGE if available' do
+        ENV.stubs("[]").with("DEPLOY_LOCK_MESSAGE").returns("custom-message")
+        namespace.expects(:claim_lock).with("custom-message")
+        namespace.find_and_execute_task('deploy:lock')
+      end
+
+      it 'locks deployments with a default message if no message provided' do
+        now = Time.now
+        Time.stubs(:now).returns(now)
+        namespace.expects(:claim_lock).with("Manually locked at #{Time.now}")
+        namespace.find_and_execute_task('deploy:lock')
+      end
+    end
+
+    describe 'deploy:unlock' do
+      it 'removes any existing locks' do
+        namespace.expects(:release_lock)
+        namespace.find_and_execute_task('deploy:unlock')
       end
     end
 

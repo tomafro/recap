@@ -52,6 +52,13 @@ module Recap::Tasks::Deploy
     # Force a complete deploy, even if no trigger files have changed
     set(:force_full_deploy, false)
 
+    # A lock file is used to ensure deployments don't overlap
+    set(:deploy_lock_file) { "#{deploy_to}/.recap-lock"}
+
+    # The lock file is set to include a message that can be displayed
+    # if claiming the lock fails
+    set(:deploy_lock_message) { "Deployment in progress (started #{Time.now.to_s})" }
+
     # To authenticate with github or other git servers, it is easier (and cleaner) to forward the
     # deploying user's ssh key than manage keys on deployment servers.
     ssh_options[:forward_agent] = true
@@ -87,7 +94,7 @@ module Recap::Tasks::Deploy
     # tags the release and restarts the application.
     desc "Deploy the latest application code"
     task :default do
-      transaction do
+      transaction_with_lock deploy_lock_message do
         top.env.set
         update_code
         tag
@@ -147,6 +154,19 @@ module Recap::Tasks::Deploy
     desc "Remove all deployed files"
     task :destroy do
       sudo "rm -rf #{deploy_to}"
+    end
+
+    # As well as locking during each deployment, locks can manually be set with `deploy:lock`.  To
+    # use a custom lock message, do `DEPLOY_LOCK_MESSAGE="My message" cap deploy:lock`.  Locking
+    # prevents deployments, but not other tasks.
+    task :lock do
+      claim_lock ENV['DEPLOY_LOCK_MESSAGE'] || "Manually locked at #{Time.now}"
+    end
+
+    # To unlock a manually set lock, or a lock that has been left behind in error, the `deploy:unlock`
+    # task can be used.
+    task :unlock do
+      release_lock
     end
   end
 end
