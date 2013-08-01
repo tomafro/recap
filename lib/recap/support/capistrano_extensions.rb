@@ -92,7 +92,7 @@ module Recap::Support::CapistranoExtensions
       sudo "[ ! -e #{deploy_lock_file} ] && echo '#{message}' > #{deploy_lock_file}"
     rescue Exception => e
       abort %{
-Failed to claim lock: " + capture("cat #{deploy_lock_file}"
+Failed to claim lock: #{capture("cat #{deploy_lock_file}")}
 
 If you think this lock no longer applies, clear it using the `deploy:unlock` task
 and try again.
