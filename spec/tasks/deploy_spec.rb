@@ -59,6 +59,12 @@ describe Recap::Tasks::Deploy do
       it 'defaults to master' do
         config.branch.should eql('master')
       end
+
+      it 'honours value in pre-set variable' do
+        config.set(:branch, 'branch-from-command-line')
+        Recap::Tasks::Deploy.load_into(config)
+        config.branch.should eql('branch-from-command-line')
+      end
     end
 
     describe '#deploy_to' do

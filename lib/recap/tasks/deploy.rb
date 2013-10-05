@@ -27,7 +27,7 @@ module Recap::Tasks::Deploy
     set(:application_group) { application_user }
 
     # Deployments can be made from any branch. `master` is used by default.
-    set(:branch, 'master')
+    set(:branch, fetch(:branch, 'master'))
 
     # Unlike a standard capistrano deployment, all releases are stored directly in the `deploy_to`
     # directory.  The default is `/home/#{application_user}/app`.
