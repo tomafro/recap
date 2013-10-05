@@ -15,7 +15,7 @@ module Recap::Tasks::Bootstrap
   extend Recap::Support::Namespace
 
   # The bootstrap namespace has a couple of task that help configure application and personal accounts
-  # and personal accounts to meet these requirements.
+  # to meet these requirements.
   namespace :bootstrap do
     set(:remote_username) { capture('whoami').strip }
     set(:application_home) { "/home/#{application_user}"}
