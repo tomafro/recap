@@ -1,7 +1,7 @@
 require 'tempfile'
 
 # These methods are used by recap tasks to run commands and detect when files have changed
-# as part of a deployments
+# as part of a deployment.
 
 module Recap::Support::CapistranoExtensions
   # Run a command as the application user
