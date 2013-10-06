@@ -10,5 +10,5 @@ module Recap::Support::Compatibility
 
   # As `git` to manages releases, all deployments are placed directly in the `deploy_to` folder.  The
   # `current_path` is always this directory (no symlinking required).
-  set(:current_path) { deploy_to }
+  _cset(:current_path) { deploy_to }
 end

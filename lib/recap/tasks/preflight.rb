@@ -27,7 +27,7 @@ module Recap::Tasks::Preflight
     before 'deploy:setup', 'preflight:check'
     before 'deploy', 'preflight:check'
 
-    set(:remote_username) { capture('whoami').strip }
+    _cset(:remote_username) { capture('whoami').strip }
 
     task :check do
       # First check the `application_user` exists.

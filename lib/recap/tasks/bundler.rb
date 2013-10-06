@@ -7,22 +7,22 @@ module Recap::Tasks::Bundler
 
   namespace :bundle do
     # Each bundle is declared in a `Gemfile`, by default in the root of the application directory.
-    set(:bundle_gemfile) { "Gemfile" }
+    _cset(:bundle_gemfile) { "Gemfile" }
 
     # As well as a `Gemfile`, application repositories should also contain a `Gemfile.lock`.
-    set(:bundle_gemfile_lock) { "#{bundle_gemfile}.lock" }
+    _cset(:bundle_gemfile_lock) { "#{bundle_gemfile}.lock" }
 
     # An application's gems are installed within the application directory.  By default they are
     # placed under `vendor/gems`.
-    set(:bundle_path) { "#{deploy_to}/vendor/gems" }
+    _cset(:bundle_path) { "#{deploy_to}/vendor/gems" }
 
     # Not all gems are needed for production environments, so by default the `development`, `test` and
     # `assets` groups are skipped.
-    set(:bundle_without) { "development test" }
+    _cset(:bundle_without) { "development test" }
 
     # The main bundle install command uses all the settings above, together with the `--deployment`,
     # `--binstubs` and `--quiet` flags
-    set(:bundle_install_command) { "bundle install --gemfile #{bundle_gemfile} --path #{bundle_path} --deployment --quiet --binstubs --without #{bundle_without}" }
+    _cset(:bundle_install_command) { "bundle install --gemfile #{bundle_gemfile} --path #{bundle_path} --deployment --quiet --binstubs --without #{bundle_without}" }
 
     namespace :install do
       # After cloning or updating the code, we only install the bundle if the `Gemfile` or `Gemfile.lock` have changed.

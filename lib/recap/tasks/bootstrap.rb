@@ -17,8 +17,8 @@ module Recap::Tasks::Bootstrap
   # The bootstrap namespace has a couple of task that help configure application and personal accounts
   # to meet these requirements.
   namespace :bootstrap do
-    set(:remote_username) { capture('whoami').strip }
-    set(:application_home) { "/home/#{application_user}"}
+    _cset(:remote_username) { capture('whoami').strip }
+    _cset(:application_home) { "/home/#{application_user}"}
 
     # The `bootstrap:application` task sets up the account on the server the application itself uses.  This
     # account should be dedicated to running this application.

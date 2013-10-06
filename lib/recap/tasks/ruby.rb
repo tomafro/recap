@@ -2,7 +2,7 @@ module Recap::Tasks::Ruby
   extend Recap::Support::Namespace
 
   namespace :ruby do
-    set(:skip_rails_recipe_not_used_warning, false)
+    _cset(:skip_rails_recipe_not_used_warning, false)
 
     task :preflight do
       if exit_code("grep rails #{deploy_to}/Gemfile") == "0"

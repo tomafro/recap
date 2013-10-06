@@ -20,7 +20,7 @@ module Recap::Tasks::Rails
     # assets to be compiled, and which don't.  By default, recap will watch
     # the following files and directories and compile assets if they change
     # between deploys.
-    set(:asset_precompilation_triggers, %w(app/assets vendor/assets Gemfile.lock config))
+    _cset(:asset_precompilation_triggers, %w(app/assets vendor/assets Gemfile.lock config))
 
     namespace :db do
       task :load_schema do

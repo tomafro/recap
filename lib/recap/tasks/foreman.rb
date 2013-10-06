@@ -7,24 +7,24 @@ module Recap::Tasks::Foreman
 
   namespace :foreman do
     # Processes are declared in a `Procfile`, by default in the root of the application directory.
-    set(:procfile) { "Procfile" }
+    _cset(:procfile) { "Procfile" }
 
     # Foreman startup scripts are exported in `upstart` format by default.
-    set(:foreman_export_format, "upstart")
+    _cset(:foreman_export_format, "upstart")
 
     # Foreman startup scripts are generated based on the standard templates by default
-    set(:foreman_template, nil)
+    _cset(:foreman_template, nil)
 
-    set(:foreman_template_option) { foreman_template ? "--template #{foreman_template}" : nil}
+    _cset(:foreman_template_option) { foreman_template ? "--template #{foreman_template}" : nil}
 
     # Scripts are exported (as the the application user) to a temporary location first.
-    set(:foreman_tmp_location) { "#{deploy_to}/tmp/foreman" }
+    _cset(:foreman_tmp_location) { "#{deploy_to}/tmp/foreman" }
 
     # After exports, the scripts are moved to their final location, usually `/etc/init`.
-    set(:foreman_export_location, "/etc/init")
+    _cset(:foreman_export_location, "/etc/init")
 
     # The standard foreman export.
-    set(:foreman_export_command) { "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log #{foreman_template_option}" }
+    _cset(:foreman_export_command) { "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log #{foreman_template_option}" }
 
     namespace :export do
       # After each deployment, the startup scripts are exported if either the `Procfile` or any custom Foreman templates have changed.
