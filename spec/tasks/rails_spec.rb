@@ -40,11 +40,20 @@ describe Recap::Tasks::Rails do
         config.find_and_execute_task('rails:db:load_schema')
       end
 
-      it 'does nothing if db/schema.rb does not exist' do
+      it 'loads the structure if db/schema.rb does not exist but db/structure.sql does' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(false)
+        namespace.stubs(:deployed_file_exists?).with('db/structure.sql').returns(true)
+        namespace.expects(:as_app_once).with('./bin/rake db:create db:structure:load')
+        config.find_and_execute_task('rails:db:load_schema')
+      end
+
+      it 'does nothing if neither db/schema.rb nor db/structure.sql exists' do
+        namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(false)
+        namespace.stubs(:deployed_file_exists?).with('db/structure.sql').returns(false)
         namespace.expects(:as_app_once).never
         config.find_and_execute_task('rails:db:load_schema')
       end
+
     end
 
     describe 'rails:db:migrate' do
@@ -55,8 +64,24 @@ describe Recap::Tasks::Rails do
         config.find_and_execute_task('rails:db:migrate')
       end
 
+      it 'runs migrations if structure.sql has changed' do
+        namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(false)
+        namespace.stubs(:deployed_file_exists?).with('db/structure.sql').returns(true)
+        namespace.stubs(:changed_files).returns(["db/structure.sql"])
+        namespace.expects(:as_app_once).with('./bin/rake db:migrate')
+        config.find_and_execute_task('rails:db:migrate')
+      end
+
       it 'runs migrations if migrations have changed' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(true)
+        namespace.stubs(:changed_files).returns(["db/migrate/12345_migrations.rb"])
+        namespace.expects(:as_app_once).with('./bin/rake db:migrate')
+        config.find_and_execute_task('rails:db:migrate')
+      end
+
+      it 'runs migrations if migrations have changed (using structure)' do
+        namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(false)
+        namespace.stubs(:deployed_file_exists?).with('db/structure.sql').returns(true)
         namespace.stubs(:changed_files).returns(["db/migrate/12345_migrations.rb"])
         namespace.expects(:as_app_once).with('./bin/rake db:migrate')
         config.find_and_execute_task('rails:db:migrate')
@@ -69,8 +94,17 @@ describe Recap::Tasks::Rails do
         config.find_and_execute_task('rails:db:migrate')
       end
 
-      it 'does nothing if the schema does not exist' do
+      it 'does nothing if the migrations have not changed (using structure)' do
         namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(false)
+        namespace.stubs(:deployed_file_exists?).with('db/structure.sql').returns(true)
+        namespace.stubs(:trigger_update?).with('db/').returns(false)
+        namespace.expects(:as_app_once).never
+        config.find_and_execute_task('rails:db:migrate')
+      end
+
+      it 'does nothing if both the schema and the structure do not exist' do
+        namespace.stubs(:deployed_file_exists?).with('db/schema.rb').returns(false)
+        namespace.stubs(:deployed_file_exists?).with('db/structure.sql').returns(false)
         namespace.expects(:as_app).never
         config.find_and_execute_task('rails:db:migrate')
       end
