@@ -26,11 +26,13 @@ module Recap::Tasks::Rails
       task :load_schema do
         if deployed_file_exists?("db/schema.rb")
           as_app_once './bin/rake db:create db:schema:load'
+        elsif deployed_file_exists?("db/structure.sql")
+          as_app_once './bin/rake db:create db:structure:load'
         end
       end
 
       task :migrate do
-        if deployed_file_exists?("db/schema.rb") && trigger_update?("db/")
+        if (deployed_file_exists?("db/schema.rb") || deployed_file_exists?("db/structure.sql")) && trigger_update?("db/")
           as_app_once './bin/rake db:migrate'
         end
       end
