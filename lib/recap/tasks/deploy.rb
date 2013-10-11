@@ -86,7 +86,7 @@ module Recap::Tasks::Deploy
       as_app "mkdir -p #{deploy_to}", "~"
       as_app "chmod g+rw #{deploy_to}"
       # Then clone the code and change to the given branch
-      git "clone #{repository} ."
+      run "if [ ! -d #{deploy_to}/.git ]; then umask 002 && sg #{application_group} -c \"git clone #{repository} #{deploy_to}\"; fi"
       git "reset --hard origin/#{branch}"
     end
 
