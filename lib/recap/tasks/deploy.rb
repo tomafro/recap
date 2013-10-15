@@ -86,8 +86,10 @@ module Recap::Tasks::Deploy
       as_app "mkdir -p #{deploy_to}", "~"
       as_app "chmod g+rw #{deploy_to}"
       # Then clone the code and change to the given branch
-      git "clone #{repository} ."
-      git "reset --hard origin/#{branch}"
+      unless deployed_dir_exists?(".git")
+        git "clone #{repository} ."
+        git "reset --hard origin/#{branch}"
+      end
     end
 
     # The `deploy` task ensures the environment is set, updates the application code,
