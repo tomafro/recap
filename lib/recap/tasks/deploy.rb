@@ -159,12 +159,14 @@ module Recap::Tasks::Deploy
     # As well as locking during each deployment, locks can manually be set with `deploy:lock`.  To
     # use a custom lock message, do `DEPLOY_LOCK_MESSAGE="My message" cap deploy:lock`.  Locking
     # prevents deployments, but not other tasks.
+    desc "Lock deployments. Use the DEPLOY_LOCK_MESSAGE enviornment variable to set a custom message"
     task :lock do
       claim_lock ENV['DEPLOY_LOCK_MESSAGE'] || "Manually locked at #{Time.now}"
     end
 
     # To unlock a manually set lock, or a lock that has been left behind in error, the `deploy:unlock`
     # task can be used.
+    desc "Unlock deployments"
     task :unlock do
       release_lock
     end
