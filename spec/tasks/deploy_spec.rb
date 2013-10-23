@@ -159,6 +159,7 @@ describe Recap::Tasks::Deploy do
 
         namespace.expects(:as_app).with('mkdir -p ' + deploy_to, '~').in_sequence(commands)
         namespace.expects(:as_app).with('chmod g+rw ' + deploy_to).in_sequence(commands)
+        namespace.expects(:deployed_dir_exists?).with('.git').in_sequence(commands)
         namespace.expects(:git).with('clone ' + repository + ' .').in_sequence(commands)
         namespace.expects(:git).with('reset --hard origin/given-branch').in_sequence(commands)
         config.find_and_execute_task('deploy:clone_code')
