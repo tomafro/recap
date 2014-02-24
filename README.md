@@ -1,5 +1,7 @@
 # Recap
 
+[![Build Status](https://travis-ci.org/tomafro/recap.png?branch=master)](https://travis-ci.org/tomafro/recap)
+
 [Recap](https://github.com/freerange/recap) is an opinionated set of [Capistrano](https://github.com/capistrano/capistrano) deployment recipes, that use git's strengths to deploy applications and websites in a fast and simple manner.
 
 
