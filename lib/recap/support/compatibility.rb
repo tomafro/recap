@@ -11,4 +11,7 @@ module Recap::Support::Compatibility
   # As `git` to manages releases, all deployments are placed directly in the `deploy_to` folder.  The
   # `current_path` is always this directory (no symlinking required).
   _cset(:current_path) { deploy_to }
+
+  # Deploys do not require source code to be local so using the HEAD on server
+  _cset(:real_revision) { capture_git('rev-parse HEAD') }
 end
