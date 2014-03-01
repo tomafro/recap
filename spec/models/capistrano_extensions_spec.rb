@@ -67,6 +67,22 @@ describe Recap::Support::CapistranoExtensions do
       it 'returns true for a directory path which contains a changed file' do
         config.trigger_update?('directory/containing/changed/').should be_true
       end
+
+      it 'returns true for a regex that matches a changed file' do
+        config.trigger_update?(/^path\/to\/changed\/file/).should be_true
+      end
+
+      it 'returns false for a regex that does not match a changed file' do
+        config.trigger_update?(/^no\/changes\/here/).should be_false
+      end
+
+      it 'returns false for a regex matching a directory with no changes' do
+        config.trigger_update?(/^no\/changes\//).should be_false
+      end
+
+      it 'returns true for a regex matching a directory with changes' do
+        config.trigger_update?(/^path\/to\//).should be_true
+      end
     end
   end
 end
