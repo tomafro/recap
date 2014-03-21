@@ -24,9 +24,15 @@ module Recap::Tasks::Bootstrap
     # account should be dedicated to running this application.
     desc 'Sets up the server account used by the application, including home directory and environment support'
     task :application do
+
+      # If the group doesn't already exist on the server, the task creates it.
+      if exit_code("getent group #{application_user}").strip != "0"
+        sudo "/usr/sbin/groupadd #{application_user}"
+      end
+
       # If the account doesn't already exist on the server, the task creates it.
       if exit_code("id #{application_user}").strip != "0"
-        sudo "useradd #{application_user} -d #{application_home}"
+        sudo "/usr/sbin/useradd #{application_user} -d #{application_home} -g #{application_user}"
       end
 
       # If the home directory doesn't exist, or isn't both readable and writable by members of the application
