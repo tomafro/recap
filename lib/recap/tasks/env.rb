@@ -24,7 +24,7 @@ module Recap::Tasks::Env
   extend Recap::Support::Namespace
 
   namespace :env do
-    _cset(:environment_file) { "/home/#{application_user}/.env" }
+    _cset(:environment_file) { "`echo ~#{application_user}`/.env" }
 
     # The `env` task displays the current configuration environment.  Note that this doesn't
     # include all environment variables, only those stored in the `.env` file.
