@@ -51,6 +51,17 @@ The source code is available [on Github](https://github.com/freerange/recap).
     `$ bundle exec cucumber`
 
 
+## Publishing documentation
+
+This defaults to publishing to gofreerange.com but that can be customised by setting the `RECAP_DOCS_HOST` environment variable.
+
+    $ rake doc publish
+
+*NOTE*. The recap docs rely on a rocco.css file being available at `#{RECAP_DOCS_HOST}/stylesheets/rocco.css`. This was [added to our site in e41bac][e41bac]
+
+[e41bac]: https://github.com/freerange/site/commit/e41bac9954eddd2ca9dda0f8d034bb3f8ac77bd3
+
+
 ## Credits
 
 Recap was written by [Tom Ward](http://tomafro.net) and the other members of [Go Free Range](http://gofreerange.com).
