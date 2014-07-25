@@ -19,7 +19,7 @@ module Recap::Tasks::Foreman
     set(:foreman_export_location, "/etc/init")
 
     # The standard foreman export.
-    set(:foreman_export_command) { "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log" }
+    set(:foreman_export_command) { "./bin/foreman export #{foreman_export_format} #{foreman_tmp_location} --procfile #{procfile} --app #{application} --user #{application_user} --log #{deploy_to}/log --env #{environment_file}" }
 
     namespace :export do
       # After each deployment, the startup scripts are exported if the `Procfile` has changed.
