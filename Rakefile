@@ -9,7 +9,7 @@ task :doc do
   FileUtils.cd('lib') do
     files = Dir['**/*.rb']
     files.each do |source_file|
-      rocco = Rocco.new(source_file, files.to_a, {:stylesheet => "http://#{RECAP_DOCS_HOST}/stylesheets/rocco.css"})
+      rocco = Rocco.new(source_file, files.to_a, {:stylesheet => "https://#{RECAP_DOCS_HOST}/stylesheets/rocco.css"})
       dest_file = '../doc/' + source_file.sub(Regexp.new("#{File.extname(source_file)}$"), '.html')
       FileUtils.mkdir_p(File.dirname(dest_file))
       File.open(dest_file, 'wb') { |fd| fd.write(rocco.to_html) }
