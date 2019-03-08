@@ -89,7 +89,13 @@ module Recap::Support::CapistranoExtensions
   end
 
   def trigger_update?(path)
-    force_full_deploy || changed_files.detect {|p| p[0, path.length] == path}
+    force_full_deploy || changed_files.detect {|p|
+      if path.is_a?(Regexp)
+        p =~ path
+      else
+        p[0, path.length] == path
+      end
+    }
   end
 
   def claim_lock(message)
